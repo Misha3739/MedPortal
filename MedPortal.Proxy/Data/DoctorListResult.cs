@@ -2,12 +2,10 @@ using System.Collections.Generic;
 
 namespace MedPortal.Proxy.Data
 {
-    public class ClinicListResult
+    public class DoctorListResult
     {
-        public IList<Clinic> ClinicList { get; set; }
+        public IList<Doctor> DoctorList { get; set; }
         
         public long Total { get; set; }
-
-        
     }
 }

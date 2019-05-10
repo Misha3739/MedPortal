@@ -9,12 +9,12 @@ using RestSharp;
 
 namespace MedPortal.Proxy.Controllers
 {
-    public class ClinicController : MedPortalControllerBase
+    public class DoctorsController : MedPortalControllerBase
     {
-        [HttpGet("api/clinics")]
+        [HttpGet("api/doctors")]
         public async Task<IActionResult> GetClinics()
         {
-            var data = await GetData<ClinicListResult>("clinic/list");
+            var data = await GetData<DoctorListResult>("doctor/list");
             return Ok(data);
         }
     }
