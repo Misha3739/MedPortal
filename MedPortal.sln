@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedPortal.Proxy", "MedPortal.Proxy\MedPortal.Proxy.csproj", "{DAAA045C-61C4-4161-8F78-7A0F9E2D70DF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedPortal.Data", "MedPortal.Data\MedPortal.Data.csproj", "{2C04CA3C-8CD5-40CE-AB71-B6AB08C2AE46}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{DAAA045C-61C4-4161-8F78-7A0F9E2D70DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DAAA045C-61C4-4161-8F78-7A0F9E2D70DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DAAA045C-61C4-4161-8F78-7A0F9E2D70DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C04CA3C-8CD5-40CE-AB71-B6AB08C2AE46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C04CA3C-8CD5-40CE-AB71-B6AB08C2AE46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C04CA3C-8CD5-40CE-AB71-B6AB08C2AE46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C04CA3C-8CD5-40CE-AB71-B6AB08C2AE46}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
