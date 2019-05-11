@@ -1,8 +1,14 @@
-﻿using MedPortal.Proxy.Middleware;
+﻿using AutoMapper;
+using MedPortal.Data.DTO;
+using MedPortal.Data.Persistence;
+using MedPortal.Data.Repositories;
+using MedPortal.Proxy.Mapping;
+using MedPortal.Proxy.Middleware;
 using MedPortal.Proxy.Utility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -23,6 +29,14 @@ namespace MedPortal.Proxy
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            services.AddScoped(options => mappingConfig.CreateMapper());
+
+            
             var apiConfiguration = Configuration.GetSection(nameof(ApiConfiguration)).Get<ApiConfiguration>();
                 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -31,6 +45,14 @@ namespace MedPortal.Proxy
             {
                 Authenticator = new HttpBasicAuthenticator(apiConfiguration.Login, apiConfiguration.Password)
             });
+
+            services.AddDbContext<IDataContext, DataContext>(option => option.UseSqlServer(
+                Configuration.GetConnectionString("MedPortal")
+                ));
+            
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddTransient<IHighloadedRepository<HCity>, CityRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

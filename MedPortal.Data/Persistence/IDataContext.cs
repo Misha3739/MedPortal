@@ -1,5 +1,8 @@
+using System.Data;
+using System.Threading.Tasks;
 using MedPortal.Data.DTO;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace MedPortal.Data.Persistence
 {
@@ -14,5 +17,9 @@ namespace MedPortal.Data.Persistence
         DbSet<HStation> Stations { get; set; }
         DbSet<HStreet> Streets { get; set; }
         DbSet<HTelemed> Telemeds { get; set; }
+
+        IDbContextTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
+
+        Task<int> SaveChangesAsync();
     }
 }

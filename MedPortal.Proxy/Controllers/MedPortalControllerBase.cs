@@ -2,6 +2,8 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using AutoMapper;
+using MedPortal.Data.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +21,10 @@ namespace MedPortal.Proxy.Controllers
 
         private IAuthenticator _authenticator;
 
+        private IUnitOfWork _unitOfWork;
+
+        private IMapper _mapper;
+
         public IRestClient RestClient
         {
             get
@@ -35,6 +41,18 @@ namespace MedPortal.Proxy.Controllers
         {
             get => _logger ?? (_logger = HttpContext.RequestServices.GetService<ILogger<MedPortalControllerBase>>());
             set => _logger = value;
+        }
+        
+        public IUnitOfWork UnitOfWork
+        {
+            get => _unitOfWork ?? (_unitOfWork = HttpContext.RequestServices.GetService<IUnitOfWork>());
+            set => _unitOfWork = value;
+        }
+        
+        public IMapper Mapper
+        {
+            get => _mapper ?? (_mapper = HttpContext.RequestServices.GetService<IMapper>());
+            set => _mapper = value;
         }
 
         protected async Task<T> GetData<T>(string resource)

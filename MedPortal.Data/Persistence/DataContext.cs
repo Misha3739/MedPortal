@@ -1,6 +1,10 @@
+using System.Data;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using MedPortal.Data.DTO;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace MedPortal.Data.Persistence
 {
@@ -19,7 +23,16 @@ namespace MedPortal.Data.Persistence
         public DbSet<HStation> Stations { get; set; }
         public DbSet<HStreet> Streets { get; set; }
         public DbSet<HTelemed> Telemeds { get; set; }
-        
+        public IDbContextTransaction BeginTransaction(IsolationLevel isolationLevel)
+        {
+            return Database.BeginTransaction(isolationLevel);
+        }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            return await SaveChangesAsync(true);
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             foreach (var relationship in modelBuilder.Model.GetEntityTypes()
@@ -30,5 +43,7 @@ namespace MedPortal.Data.Persistence
                         
             base.OnModelCreating(modelBuilder);
         }
+        
+        
     }
 }
