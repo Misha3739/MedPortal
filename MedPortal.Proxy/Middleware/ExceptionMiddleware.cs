@@ -39,7 +39,8 @@ namespace MedPortal.Proxy.Middleware
             {
                 StatusCode = context.Response.StatusCode,
                 Message = "Internal Server Error from the custom middleware.",
-                Description = exception.Message
+                Description = exception.Message,
+				InnerException = exception.InnerException
             }.ToString());
         }
     }

@@ -6,8 +6,8 @@ namespace MedPortal.Proxy.Data
         public string Name { get; set; }
         public string Alias { get; set; }
         public object Phone { get; set; }
-        public string Latitude { get; set; }
-        public string Longitude { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
         public long SearchType { get; set; }
         public bool HasDiagnostic { get; set; }
         public long TimeZone { get; set; }

@@ -1,0 +1,11 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/MedPortal.Data/bin/Debug/netcoreapp2.2
+/MedPortal.Data/obj/
+/MedPortal.Proxy/bin/
+/MedPortal.Proxy/obj/
+/MedPortal.Data/bin/
+/MedPortal.sln.DotSettings.user
+/.vs

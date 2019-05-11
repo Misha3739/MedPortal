@@ -12,9 +12,9 @@ namespace MedPortal.Data.Repositories
 {
     public class Repository<T> : IHighloadedRepository<T> where T : class, IHEntity
     {
-        private readonly IDataContext _dataContext;
+        protected readonly IDataContext _dataContext;
 
-        private readonly DbSet<T> _dbSet;
+        protected readonly DbSet<T> _dbSet;
 
         public Repository(IDataContext dataContext)
         {
@@ -53,26 +53,30 @@ namespace MedPortal.Data.Repositories
             _dbSet.Remove(item);
         }
 
-        public async Task BulkUpdate(IList<T> items)
-        {
-            using (var transaction = _dataContext.BeginTransaction())
-            {
-                foreach (var item in items)
-                {
-                    var existed = _dbSet.FirstOrDefault(i => i.OriginId == item.OriginId);
-                    if (existed == null)
-                    {
-                        await _dbSet.AddAsync(item);
-                    }
-                    else
-                    {
-                        ReflectionUtils.Copy(item, existed);
-                    }
-                }
-
-                await _dataContext.SaveChangesAsync();
-                transaction.Commit();
-            }
+        public async Task BulkUpdateAsync(IList<T> items) {
+	        await BulkUpdateInternalAsync(items);
         }
+
+        protected virtual async Task BulkUpdateInternalAsync(IList<T> items) {
+	        using (var transaction = _dataContext.BeginTransaction())
+	        {
+		        var existedItems = _dbSet.ToList();
+		        foreach (var item in items)
+		        {
+			        var existed = existedItems.FirstOrDefault(i => i.OriginId == item.OriginId);
+			        if (existed == null)
+			        {
+				        await _dbSet.AddAsync(item);
+			        }
+			        else
+			        {
+				        ReflectionUtils.Copy(item, existed);
+			        }
+		        }
+
+		        await _dataContext.SaveChangesAsync();
+		        transaction.Commit();
+	        }
+		}
     }
 }

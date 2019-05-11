@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using System.Globalization;
+using AutoMapper;
 using MedPortal.Data.DTO;
 using MedPortal.Data.Persistence;
 using MedPortal.Data.Repositories;
@@ -7,6 +9,7 @@ using MedPortal.Proxy.Middleware;
 using MedPortal.Proxy.Utility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -53,7 +56,8 @@ namespace MedPortal.Proxy
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddTransient(typeof(IHighloadedRepository<>), typeof(Repository<>));
-        }
+            services.AddTransient<IHighloadedRepository<HStation>, StationsRepository>();
+		}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -67,10 +71,19 @@ namespace MedPortal.Proxy
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            
-            app.UseMiddleware<ExceptionMiddleware>();
 
-            //app.UseHttpsRedirection();
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+	            DefaultRequestCulture = new RequestCulture(new CultureInfo("en-US"))
+	            ,
+	            SupportedCultures = new List<CultureInfo>
+	            {
+		            new CultureInfo("ru-RU")
+	            }
+            });
+
+			app.UseMiddleware<ExceptionMiddleware>();
+
             app.UseMvc();
         }
     }

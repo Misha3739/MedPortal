@@ -1,7 +1,10 @@
+using System.Linq;
+
 namespace MedPortal.Data.Repositories.Utilities
 {
-    public static class ReflectionUtils
-    {
+    public static class ReflectionUtils {
+	    private static readonly string[] IgnoreFiels = { "Id" };
+
         public static TTarget Copy<TSource,TTarget>(TSource source) where TTarget : class, new()
         { 
             TTarget target = new TTarget();
@@ -31,7 +34,7 @@ namespace MedPortal.Data.Repositories.Utilities
             {
                 foreach (var childProperty in childProperties)
                 {
-                    if (parentProperty.Name == childProperty.Name && parentProperty.PropertyType == childProperty.PropertyType)
+                    if (parentProperty.Name == childProperty.Name && parentProperty.PropertyType == childProperty.PropertyType && !IgnoreFiels.Contains(childProperty.Name))
                     {
                         childProperty.SetValue(target, parentProperty.GetValue(source));
                     }

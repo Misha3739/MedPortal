@@ -8,7 +8,7 @@ namespace MedPortal.Proxy.Data
 
         public string Alias { get; set; }
 
-        public long LineId { get; set; }
+        public long CityId { get; set; }
 
         public double Longitude { get; set; }
 
@@ -16,6 +16,8 @@ namespace MedPortal.Proxy.Data
 
         public string LineColor { get; set; }
 
-        public long TimeWalking { get; set; }
-    }
+        public string LineName { get; set; }
+
+		public long TimeWalking { get; set; }
+	}
 }
