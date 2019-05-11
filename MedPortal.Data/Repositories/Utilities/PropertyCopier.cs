@@ -1,4 +1,4 @@
-namespace MedPortal.Data.Repositories
+namespace MedPortal.Data.Repositories.Utilities
 {
     public static class ReflectionUtils
     {

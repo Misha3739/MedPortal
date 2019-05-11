@@ -6,10 +6,15 @@ namespace MedPortal.Data.DTO
 {
     public class HStation : HGeoObject
     {
-        public long BranchId { get; set; }
-        public HBranch Branch { get; set; }
-        
-        public long CityId { get; set; }
+		[Required]
+		[MaxLength(6)]
+		public string LineColor { get; set; }
+
+		[Required]
+		[MaxLength(100)]
+		public string LineName { get; set; }
+
+		public long CityId { get; set; }
         public HCity City { get; set; }
     }
 }

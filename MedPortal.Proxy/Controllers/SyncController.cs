@@ -13,13 +13,16 @@ namespace MedPortal.Proxy.Controllers
     {
         private readonly IHighloadedRepository<HCity> _cityRepository;
         private readonly IHighloadedRepository<HDistrict> _districtRepository;
-        private readonly IHighloadedRepository<HBranch> _branchesRepository;
+        private readonly IHighloadedRepository<HStation> _stationsRepository;
 
-        public SyncController(IHighloadedRepository<HCity> cityRepository, IHighloadedRepository<HBranch> branchesRepository, IHighloadedRepository<HDistrict> districtRepository)
+        public SyncController(
+	        IHighloadedRepository<HCity> cityRepository, 
+	        IHighloadedRepository<HDistrict> districtRepository,
+	        IHighloadedRepository<HStation> stationsRepository)
         {
             _cityRepository = cityRepository;
-            _branchesRepository = branchesRepository;
             _districtRepository = districtRepository;
+            _stationsRepository = stationsRepository;
         }
 
         [HttpPut("api/sync/cities")]
@@ -32,14 +35,7 @@ namespace MedPortal.Proxy.Controllers
 
         }
         
-        [HttpPut("api/sync/stations")]
-        public async Task<IActionResult> SyncStations()
-        {
-            CityListResult cities = await GetData<CityListResult>("branch");
-            var hCities = cities.CityList.Select(c => Mapper.Map<City, HCity>(c)).ToList();
-            await _cityRepository.BulkUpdate(hCities);
-            return Ok();
-        }
+       
         
         [HttpPut("api/sync/districts")]
         public async Task<IActionResult> SyncDistrics()
@@ -64,19 +60,11 @@ namespace MedPortal.Proxy.Controllers
 
             cities = await _cityRepository.GetAsync();
             
-            var branches = (from stationInfo in stationsInfos
-                group stationInfo by (stationInfo.LineName, stationInfo.LineColor,stationInfo.CityId, stationInfo.CityId) into branch
-                select new HBranch()
-                {
-                    Name = branch.Key.Item1, 
-                    LineColor = branch.Key.Item2,
-                    CityId = cities.First(c => c.OriginId == branch.Key.Item3).Id,
-                    OriginId = branch.Key.Item4,
-                }).ToList();
-            
-            await _branchesRepository.BulkUpdate(branches);
+          
             return Ok();
         }
         
     }
+
+   
 }

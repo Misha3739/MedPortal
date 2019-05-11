@@ -6,7 +6,7 @@ using MedPortal.Data.DTO;
 
 namespace MedPortal.Data.Repositories
 {
-    public interface IRepository<T> where T : IHEntity
+    public interface IRepository<T> where T : class
     {
         Task<List<T>> GetAsync(Expression<Func<T, bool>> predicate = null);
         

@@ -8,7 +8,6 @@ namespace MedPortal.Data.Persistence
 {
     public interface IDataContext
     {
-        DbSet<HBranch> Branches { get; set; }
         DbSet<HCity> Cities { get; set; }
         DbSet<HClinic> Clinics { get; set; }
         DbSet<HDistrict> Districs { get; set; }

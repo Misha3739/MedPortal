@@ -14,7 +14,6 @@ namespace MedPortal.Data.Persistence
             : base(options) {   
         }
 
-        public DbSet<HBranch> Branches { get; set; }
         public DbSet<HCity> Cities { get; set; }
         public DbSet<HClinic> Clinics { get; set; }
         public DbSet<HDistrict> Districs { get; set; }
@@ -45,7 +44,6 @@ namespace MedPortal.Data.Persistence
             modelBuilder.Entity<HStreet>().HasIndex(c => c.OriginId).IsUnique();
             modelBuilder.Entity<HDistrict>().HasIndex(c => c.OriginId).IsUnique();
             modelBuilder.Entity<HStation>().HasIndex(c => c.OriginId).IsUnique();
-            modelBuilder.Entity<HBranch>().HasIndex(c => c.OriginId).IsUnique();
             
             modelBuilder.Entity<HClinic>().HasIndex(c => c.OriginId).IsUnique();
             modelBuilder.Entity<HDoctor>().HasIndex(c => c.OriginId).IsUnique();

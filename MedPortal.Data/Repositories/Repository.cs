@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MedPortal.Data.DTO;
 using MedPortal.Data.Persistence;
+using MedPortal.Data.Repositories.Utilities;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedPortal.Data.Repositories

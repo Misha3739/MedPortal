@@ -14,7 +14,10 @@ namespace MedPortal.Proxy.Mapping
             CreateMap<District, HDistrict>().ForMember(c => c.OriginId, 
                     opt => opt.MapFrom(c => c.Id))
                 .ForMember(c => c.Id, opt => opt.Ignore());
-            CreateMap<Doctor, HDoctor>().ForMember(c => c.OriginId, 
+            CreateMap<Station, HStation>().ForMember(c => c.OriginId,
+		            opt => opt.MapFrom(c => c.Id))
+	            .ForMember(c => c.Id, opt => opt.Ignore());
+			CreateMap<Doctor, HDoctor>().ForMember(c => c.OriginId, 
                 opt => opt.MapFrom(c => c.Id))
                 .ForMember(c => c.Id, opt => opt.Ignore());
             CreateMap<Clinic, HClinic>().ForMember(c => c.OriginId, 
@@ -23,10 +26,6 @@ namespace MedPortal.Proxy.Mapping
             CreateMap<DoctorSpeciality, HSpeciality>().ForMember(c => c.OriginId, 
                 opt => opt.MapFrom(c => c.Id))
                 .ForMember(c => c.Id, opt => opt.Ignore());
-            CreateMap<Station, HStation>().ForMember(c => c.OriginId, 
-                opt => opt.MapFrom(c => c.Id))
-                .ForMember(c => c.Id, opt => opt.Ignore());
-            
         }
     }
 }
