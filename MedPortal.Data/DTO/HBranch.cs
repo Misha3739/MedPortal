@@ -6,5 +6,8 @@ namespace MedPortal.Data.DTO
     {
         [MaxLength(6)]
         public string LineColor { get; set; }
+        
+        public long CityId { get; set; }
+        public HCity City { get; set; }
     }
 }
