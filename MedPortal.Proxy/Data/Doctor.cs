@@ -28,7 +28,7 @@ namespace MedPortal.Proxy.Data
         
         public IList<ClinicsInfo> ClinicsInfo { get; set; }
         public string Alias { get; set; }
-        public IList<DoctorSpeciality> Specialities { get; set; }
+        public IList<Speciality> Specialities { get; set; }
         public IList<Station> Stations { get; set; }
         public IList<Clinic> BookingClinics { get; set; }
         public bool IsActive { get; set; }
@@ -43,7 +43,7 @@ namespace MedPortal.Proxy.Data
         {
             Clinics = new List<Clinic>();
             ClinicsInfo = new List<ClinicsInfo>();
-            Specialities = new List<DoctorSpeciality>();
+            Specialities = new List<Speciality>();
             Stations = new List<Station>();
             BookingClinics = new List<Clinic>();
         }

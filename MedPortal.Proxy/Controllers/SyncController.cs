@@ -16,15 +16,18 @@ namespace MedPortal.Proxy.Controllers
         private readonly IHighloadedRepository<HCity> _cityRepository;
         private readonly IHighloadedRepository<HDistrict> _districtRepository;
         private readonly IHighloadedRepository<HStation> _stationsRepository;
+        private readonly IHighloadedRepository<HSpeciality> _specialitiesRepository;
 
-        public SyncController(
+		public SyncController(
 	        IHighloadedRepository<HCity> cityRepository, 
 	        IHighloadedRepository<HDistrict> districtRepository,
-	        IHighloadedRepository<HStation> stationsRepository)
+	        IHighloadedRepository<HStation> stationsRepository, 
+	        IHighloadedRepository<HSpeciality> specialitiesRepository)
         {
             _cityRepository = cityRepository;
             _districtRepository = districtRepository;
             _stationsRepository = stationsRepository;
+            _specialitiesRepository = specialitiesRepository;
         }
 
         [HttpPut("api/sync/cities")]
@@ -67,7 +70,16 @@ namespace MedPortal.Proxy.Controllers
             return Ok();
         }
 
-        [HttpPut("api/sync/clinics")]
+        [HttpPut("api/sync/specialities")]
+        public async Task<IActionResult> SyncSpecialities()
+        {
+	        SpecialityListResult specialities = await GetData<SpecialityListResult>("speciality");
+	        var hSpecialities = specialities.SpecList.Select(c => Mapper.Map<Speciality, HSpeciality>(c)).ToList();
+	        await _specialitiesRepository.BulkUpdateAsync(hSpecialities);
+	        return Ok();
+        }
+
+		[HttpPut("api/sync/clinics")]
         public async Task<IActionResult> SyncClinicData()
         {
             var data = await GetData<ClinicListResult>("clinic/list");
