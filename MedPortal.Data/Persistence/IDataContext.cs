@@ -21,5 +21,7 @@ namespace MedPortal.Data.Persistence
         IDbContextTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
 
         Task<int> SaveChangesAsync();
+
+        DbSet<T> Set<T>() where T : class;
     }
 }
