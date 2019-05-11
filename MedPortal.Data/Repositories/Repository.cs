@@ -58,7 +58,7 @@ namespace MedPortal.Data.Repositories
             {
                 foreach (var item in items)
                 {
-                    if (!(item.OriginId.HasValue && await FindByOriginIdAsync(item.OriginId.Value) != null))
+                    if (!_dbSet.Any(i=>i.OriginId == item.OriginId))
                     {
                         await _dbSet.AddAsync(item);
                     }

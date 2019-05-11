@@ -4,6 +4,6 @@ namespace MedPortal.Data.DTO
     {
         long Id { get; set; }
         
-        long? OriginId { get; set; }
+        long OriginId { get; set; }
     }
 }

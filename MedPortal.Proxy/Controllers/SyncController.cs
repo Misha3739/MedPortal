@@ -25,12 +25,14 @@ namespace MedPortal.Proxy.Controllers
         {
             var data = await GetData<ClinicListResult>("clinic/list");
             var cities = (from clinic in data.ClinicList
-                group clinic by (clinic.City, clinic.Stations?.FirstOrDefault()?.CityId) into city
+                group clinic by (clinic.City, clinic.Stations?.FirstOrDefault()?.CityId ?? 0) into city
                 select new HCity(){ Name = city.Key.Item1, OriginId = city.Key.Item2 }).ToList();
 
             var stationsInfos = data.ClinicList.SelectMany(c => c.Stations);
                
             await _cityRepository.BulkUpdate(cities);
+
+            cities = await _cityRepository.GetAsync();
             
             var branches = (from stationInfo in stationsInfos
                 group stationInfo by (stationInfo.LineName, stationInfo.LineColor,stationInfo.CityId, stationInfo.CityId) into branch
@@ -38,7 +40,7 @@ namespace MedPortal.Proxy.Controllers
                 {
                     Name = branch.Key.Item1, 
                     LineColor = branch.Key.Item2,
-                    CityId = _cityRepository.FindByOriginIdAsync(branch.Key.Item3).Result.Id,
+                    CityId = cities.First(c => c.OriginId == branch.Key.Item3).Id,
                     OriginId = branch.Key.Item4,
                 }).ToList();
             

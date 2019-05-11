@@ -40,6 +40,17 @@ namespace MedPortal.Data.Persistence
             {
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
             }
+
+            modelBuilder.Entity<HCity>().HasIndex(c => c.OriginId).IsUnique();
+            modelBuilder.Entity<HStreet>().HasIndex(c => c.OriginId).IsUnique();
+            modelBuilder.Entity<HDistrict>().HasIndex(c => c.OriginId).IsUnique();
+            modelBuilder.Entity<HStation>().HasIndex(c => c.OriginId).IsUnique();
+            modelBuilder.Entity<HBranch>().HasIndex(c => c.OriginId).IsUnique();
+            
+            modelBuilder.Entity<HClinic>().HasIndex(c => c.OriginId).IsUnique();
+            modelBuilder.Entity<HDoctor>().HasIndex(c => c.OriginId).IsUnique();
+            modelBuilder.Entity<HSpeciality>().HasIndex(c => c.OriginId).IsUnique();
+            modelBuilder.Entity<HTelemed>().HasIndex(c => c.OriginId).IsUnique();
                         
             base.OnModelCreating(modelBuilder);
         }

@@ -17,6 +17,6 @@ namespace MedPortal.Data.DTO
         public double Longitude{ get; set; }
         public double Latitude{ get; set; }
         
-        public long? OriginId { get; set; }
+        public long OriginId { get; set; }
     }
 }

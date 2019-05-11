@@ -47,6 +47,6 @@ namespace MedPortal.Data.DTO
         public string RatingReviewsLabel { get; set; }
         public bool IsExclusivePrice { get; set; }
         
-        public long? OriginId { get; set; }
+        public long OriginId { get; set; }
     }
 }
