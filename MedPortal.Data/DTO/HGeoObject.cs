@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MedPortal.Data.DTO
 {
-    public abstract class HGeoObject
+    public abstract class HGeoObject : IHEntity
     {
         [Key]
         public long Id { get; set; }

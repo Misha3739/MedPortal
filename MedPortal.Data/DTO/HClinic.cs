@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MedPortal.Data.DTO
 {
-    public class HClinic
+    public class HClinic : IHEntity
     {
         [Key]
         public long Id { get; set; }
