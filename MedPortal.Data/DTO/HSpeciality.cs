@@ -13,5 +13,7 @@ namespace MedPortal.Data.DTO
         
         [MaxLength(200)]
         public string Alias { get; set; }
+        
+        public long? OriginId { get; set; }
     }
 }

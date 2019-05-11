@@ -46,5 +46,7 @@ namespace MedPortal.Data.DTO
         public HTelemed Telemed { get; set; }
         public string RatingReviewsLabel { get; set; }
         public bool IsExclusivePrice { get; set; }
+        
+        public long? OriginId { get; set; }
     }
 }

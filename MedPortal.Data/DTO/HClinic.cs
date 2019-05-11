@@ -46,5 +46,7 @@ namespace MedPortal.Data.DTO
         
         public bool OnlineRecordDoctor { get; set; }
         public bool IsActive { get; set; }
+        
+        public long? OriginId { get; set; }
     }
 }

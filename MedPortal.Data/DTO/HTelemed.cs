@@ -12,5 +12,7 @@ namespace MedPortal.Data.DTO
         
         public long HClinicId { get; set; }
         public HClinic HClinic { get; set; }
+        
+        public long? OriginId { get; set; }
     }
 }
