@@ -20,6 +20,16 @@ namespace MedPortal.Proxy.Controllers
             _branchesRepository = branchesRepository;
         }
 
+        [HttpPut("api/sync/cities")]
+        public async Task<IActionResult> SyncCities()
+        {
+            CityListResult cities = await GetData<CityListResult>("city");
+            var hCities = cities.CityList.Select(c => Mapper.Map<City, HCity>(c)).ToList();
+            await _cityRepository.BulkUpdate(hCities);
+            return Ok();
+
+        }
+
         [HttpPut("api/sync/clinics")]
         public async Task<IActionResult> SyncClinicData()
         {
