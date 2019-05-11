@@ -58,9 +58,14 @@ namespace MedPortal.Data.Repositories
             {
                 foreach (var item in items)
                 {
-                    if (!_dbSet.Any(i=>i.OriginId == item.OriginId))
+                    var existed = _dbSet.FirstOrDefault(i => i.OriginId == item.OriginId);
+                    if (existed == null)
                     {
                         await _dbSet.AddAsync(item);
+                    }
+                    else
+                    {
+                        ReflectionUtils.Copy(item, existed);
                     }
                 }
 

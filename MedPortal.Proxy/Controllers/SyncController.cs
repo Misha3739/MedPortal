@@ -12,12 +12,14 @@ namespace MedPortal.Proxy.Controllers
     public class SyncController : MedPortalControllerBase
     {
         private readonly IHighloadedRepository<HCity> _cityRepository;
+        private readonly IHighloadedRepository<HDistrict> _districtRepository;
         private readonly IHighloadedRepository<HBranch> _branchesRepository;
 
-        public SyncController(IHighloadedRepository<HCity> cityRepository, IHighloadedRepository<HBranch> branchesRepository)
+        public SyncController(IHighloadedRepository<HCity> cityRepository, IHighloadedRepository<HBranch> branchesRepository, IHighloadedRepository<HDistrict> districtRepository)
         {
             _cityRepository = cityRepository;
             _branchesRepository = branchesRepository;
+            _districtRepository = districtRepository;
         }
 
         [HttpPut("api/sync/cities")]
@@ -28,6 +30,24 @@ namespace MedPortal.Proxy.Controllers
             await _cityRepository.BulkUpdate(hCities);
             return Ok();
 
+        }
+        
+        [HttpPut("api/sync/stations")]
+        public async Task<IActionResult> SyncStations()
+        {
+            CityListResult cities = await GetData<CityListResult>("branch");
+            var hCities = cities.CityList.Select(c => Mapper.Map<City, HCity>(c)).ToList();
+            await _cityRepository.BulkUpdate(hCities);
+            return Ok();
+        }
+        
+        [HttpPut("api/sync/districts")]
+        public async Task<IActionResult> SyncDistrics()
+        {
+            DistrictListResult cities = await GetData<DistrictListResult>("district");
+            var hDistrics = cities.DistrictList.Select(c => Mapper.Map<District, HDistrict>(c)).ToList();
+            await _districtRepository.BulkUpdate(hDistrics);
+            return Ok();
         }
 
         [HttpPut("api/sync/clinics")]
