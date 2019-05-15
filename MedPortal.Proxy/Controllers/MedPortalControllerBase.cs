@@ -1,11 +1,11 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using MedPortal.Data.Persistence;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RestSharp;
@@ -55,25 +55,66 @@ namespace MedPortal.Proxy.Controllers
             set => _mapper = value;
         }
 
-        protected async Task<T> GetData<T>(string resource)
-        {
-            IRestRequest request = new RestRequest(resource, Method.GET);
-            
-            var result = await RestClient.ExecuteGetTaskAsync<T>(request);
-            
-            Logger.LogInformation($"Requested to: {request.Resource}, Method: {request.Method}, Response code: {result.StatusCode}");
-            
-            if (result.StatusCode != HttpStatusCode.OK)
-            {
-                throw new HttpRequestException($"Request returned status code: {result.StatusCode}");
-            }
+		protected async Task<T> GetDataAsync<T>(string resource)
+		{
+			IRestRequest request = new RestRequest(resource, Method.GET);
 
-            if (result.Data == null)
-            {
-                throw new FormatException($"Cannot deserialize result from {result.Content}");
-            }
+			var result = await RestClient.ExecuteGetTaskAsync<T>(request);
 
-            return result.Data;
-        }
-    }
+			Logger.LogInformation($"Requested to: {request.Resource}, Method: {request.Method}, Response code: {result.StatusCode}");
+
+			if (result.StatusCode != HttpStatusCode.OK)
+			{
+				throw new HttpRequestException($"Request returned status code: {result.StatusCode}");
+			}
+
+			if (result.Data == null)
+			{
+				throw new FormatException($"Cannot deserialize result from {result.Content}");
+			}
+
+			return result.Data;
+		}
+
+		protected async Task<T> GetDataWithPollingAsync<T>(string resource) {
+			int timeout = 3 * 1000 * 10;
+			CancellationTokenSource cts = new CancellationTokenSource();
+
+			HttpStatusCode defaultHttpStatusCode = (HttpStatusCode) (-1);
+
+			IRestRequest request = new RestRequest(resource, Method.GET);
+			IRestResponse<T> result = new RestResponse<T>() {
+				StatusCode = defaultHttpStatusCode
+			};
+
+			try {
+				cts.CancelAfter(timeout);
+
+				Task t = Task.Run(async () => {
+					while (result.StatusCode == defaultHttpStatusCode ||
+					       result.StatusCode == HttpStatusCode.Unauthorized) {
+						result = await RestClient.ExecuteGetTaskAsync<T>(request, cts.Token);
+						await Task.Delay(1000, cts.Token);
+					}
+				}, cts.Token);
+
+				await Task.WhenAll(t);
+			}
+			catch (OperationCanceledException) {
+			}
+
+			Logger.LogInformation(
+				$"Requested to: {request.Resource}, Method: {request.Method}, Response code: {result.StatusCode}");
+
+			if (result.StatusCode != HttpStatusCode.OK) {
+				throw new HttpRequestException($"Request returned status code: {result.StatusCode}");
+			}
+
+			if (result.Data == null) {
+				throw new FormatException($"Cannot deserialize result from {result.Content}");
+			}
+
+			return result.Data;
+		}
+	}
 }

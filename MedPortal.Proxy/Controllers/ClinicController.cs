@@ -14,7 +14,7 @@ namespace MedPortal.Proxy.Controllers
         [HttpGet("api/clinics")]
         public async Task<IActionResult> GetClinics()
         {
-            var data = await GetData<ClinicListResult>("clinic/list");
+            var data = await GetDataWithPollingAsync<ClinicListResult>("clinic/list");
             return Ok(data);
         }
     }

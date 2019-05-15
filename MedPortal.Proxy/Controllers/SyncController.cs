@@ -33,7 +33,7 @@ namespace MedPortal.Proxy.Controllers
         [HttpPut("api/sync/cities")]
         public async Task<IActionResult> SyncCities()
         {
-            CityListResult cities = await GetData<CityListResult>("city");
+            CityListResult cities = await GetDataWithPollingAsync<CityListResult>("city");
             var hCities = cities.CityList.Select(c => Mapper.Map<City, HCity>(c)).ToList();
             await _cityRepository.BulkUpdateAsync(hCities);
             return Ok();
@@ -47,7 +47,7 @@ namespace MedPortal.Proxy.Controllers
 			foreach (var city in cities)
 			{
 				try {
-					var stations = await GetData<StationsListResult>($"metro/city/{city.OriginId}");
+					var stations = await GetDataWithPollingAsync<StationsListResult>($"metro/city/{city.OriginId}");
 					var hStations = stations.MetroList.Select(s => Mapper.Map<Station, HStation>(s)).ToList();
 					hStations.ForEach(s => s.CityId = cities.First(c => c.OriginId == s.CityId).Id);
 					await _stationsRepository.BulkUpdateAsync(hStations);
@@ -64,7 +64,7 @@ namespace MedPortal.Proxy.Controllers
 		[HttpPut("api/sync/districts")]
         public async Task<IActionResult> SyncDistrics()
         {
-            DistrictListResult cities = await GetData<DistrictListResult>("district");
+            DistrictListResult cities = await GetDataWithPollingAsync<DistrictListResult>("district");
             var hDistrics = cities.DistrictList.Select(c => Mapper.Map<District, HDistrict>(c)).ToList();
             await _districtRepository.BulkUpdateAsync(hDistrics);
             return Ok();
@@ -73,7 +73,7 @@ namespace MedPortal.Proxy.Controllers
         [HttpPut("api/sync/specialities")]
         public async Task<IActionResult> SyncSpecialities()
         {
-	        SpecialityListResult specialities = await GetData<SpecialityListResult>("speciality");
+	        SpecialityListResult specialities = await GetDataWithPollingAsync<SpecialityListResult>("speciality");
 	        var hSpecialities = specialities.SpecList.Select(c => Mapper.Map<Speciality, HSpeciality>(c)).ToList();
 	        await _specialitiesRepository.BulkUpdateAsync(hSpecialities);
 	        return Ok();
@@ -82,7 +82,7 @@ namespace MedPortal.Proxy.Controllers
 		[HttpPut("api/sync/clinics")]
         public async Task<IActionResult> SyncClinicData()
         {
-            var data = await GetData<ClinicListResult>("clinic/list");
+            var data = await GetDataWithPollingAsync<ClinicListResult>("clinic/list");
             var cities = (from clinic in data.ClinicList
                 group clinic by (clinic.City, clinic.Stations?.FirstOrDefault()?.CityId ?? 0) into city
                 select new HCity(){ Name = city.Key.Item1, OriginId = city.Key.Item2 }).ToList();
