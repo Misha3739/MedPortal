@@ -72,15 +72,16 @@ namespace MedPortal.Proxy
                 app.UseHsts();
             }
 
+            #if Windows
             app.UseRequestLocalization(new RequestLocalizationOptions
             {
-	            DefaultRequestCulture = new RequestCulture(new CultureInfo("en-US"))
-	            ,
+	            DefaultRequestCulture = new RequestCulture(new CultureInfo("en-US")),
 	            SupportedCultures = new List<CultureInfo>
 	            {
 		            new CultureInfo("ru-RU")
 	            }
             });
+            #endif
 
 			app.UseMiddleware<ExceptionMiddleware>();
 
