@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using AutoMapper;
 using MedPortal.Data.DTO;
 using MedPortal.Data.Persistence;
@@ -72,16 +73,14 @@ namespace MedPortal.Proxy
                 app.UseHsts();
             }
 
-            #if Windows
-            app.UseRequestLocalization(new RequestLocalizationOptions
-            {
-	            DefaultRequestCulture = new RequestCulture(new CultureInfo("en-US")),
-	            SupportedCultures = new List<CultureInfo>
-	            {
-		            new CultureInfo("ru-RU")
-	            }
-            });
-            #endif
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+	            app.UseRequestLocalization(new RequestLocalizationOptions {
+		            DefaultRequestCulture = new RequestCulture(new CultureInfo("en-US")),
+		            SupportedCultures = new List<CultureInfo> {
+			            new CultureInfo("ru-RU")
+		            }
+	            });
+            }
 
 			app.UseMiddleware<ExceptionMiddleware>();
 
