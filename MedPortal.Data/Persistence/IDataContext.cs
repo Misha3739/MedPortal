@@ -17,7 +17,13 @@ namespace MedPortal.Data.Persistence
         DbSet<HStreet> Streets { get; set; }
         DbSet<HTelemed> Telemeds { get; set; }
 
-        IDbContextTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
+		DbSet<HClinicDoctors> ClinicDoctors { get; set; }
+		DbSet<HClinicStations> ClinicStations { get; set; }
+		DbSet<HDistrictStations> DistrictStations { get; set; }
+		DbSet<HDoctorSpecialities> DoctorSpecialities { get; set; }
+
+
+		IDbContextTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
 
         Task<int> SaveChangesAsync();
 

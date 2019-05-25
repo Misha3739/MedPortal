@@ -22,6 +22,12 @@ namespace MedPortal.Data.Persistence
         public DbSet<HStation> Stations { get; set; }
         public DbSet<HStreet> Streets { get; set; }
         public DbSet<HTelemed> Telemeds { get; set; }
+
+        public DbSet<HClinicDoctors> ClinicDoctors { get; set; }
+        public DbSet<HClinicStations> ClinicStations { get; set; }
+        public DbSet<HDistrictStations> DistrictStations { get; set; }
+        public DbSet<HDoctorSpecialities> DoctorSpecialities { get; set; }
+
         public IDbContextTransaction BeginTransaction(IsolationLevel isolationLevel)
         {
             return Database.BeginTransaction(isolationLevel);
