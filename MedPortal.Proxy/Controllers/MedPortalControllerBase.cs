@@ -19,8 +19,6 @@ namespace MedPortal.Proxy.Controllers
 
         private ILogger<MedPortalControllerBase> _logger;
 
-        private IAuthenticator _authenticator;
-
         private IUnitOfWork _unitOfWork;
 
         private IMapper _mapper;
@@ -30,8 +28,6 @@ namespace MedPortal.Proxy.Controllers
             get
             {
                 _restClient = _restClient ?? HttpContext.RequestServices.GetService<IRestClient>();
-                _restClient.Authenticator = _authenticator ?? (_authenticator =
-                    HttpContext.RequestServices.GetService<IAuthenticator>());
                 return _restClient;
             }
             set => _restClient = value;
