@@ -2,8 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MedPortal.Data.DTO
 {
-    public class HDistrictStations
-    {
+    public class HDistrictStations : IEntity
+	{
         [Key]
         public long Id { get; set; }
         

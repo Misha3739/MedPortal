@@ -7,7 +7,7 @@ using MedPortal.Data.Repositories.Utilities;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedPortal.Data.Repositories {
-	public class StationsRepository : Repository<HStation> {
+	public class StationsRepository : HighloadedRepository<HStation> {
 		public StationsRepository(IDataContext dataContext) : base(dataContext) {
 		}
 

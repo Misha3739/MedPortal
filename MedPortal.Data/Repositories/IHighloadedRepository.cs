@@ -6,6 +6,8 @@ namespace MedPortal.Data.Repositories
 {
     public interface IHighloadedRepository<T> : IRepository<T> where T : class, IHEntity
     {
-        Task BulkUpdateAsync(IList<T> items);
+	    Task<T> FindByOriginIdAsync(long originId);
+
+		Task BulkUpdateAsync(IList<T> items);
     }
 }

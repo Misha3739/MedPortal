@@ -1,9 +1,7 @@
 namespace MedPortal.Data.DTO
 {
-    public interface IHEntity
-    {
-        long Id { get; set; }
-        
+    public interface IHEntity : IEntity
+    {        
         long OriginId { get; set; }
     }
 }
