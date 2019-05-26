@@ -22,6 +22,7 @@ namespace MedPortal.Data.Persistence
         public DbSet<HStation> Stations { get; set; }
         public DbSet<HStreet> Streets { get; set; }
         public DbSet<HTelemed> Telemeds { get; set; }
+        public DbSet<Log> Logs { get; set; }        
 
         public DbSet<HClinicDoctors> ClinicDoctors { get; set; }
         public DbSet<HClinicStations> ClinicStations { get; set; }

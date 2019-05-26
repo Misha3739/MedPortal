@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+
+using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using AutoMapper;
@@ -55,8 +56,8 @@ namespace MedPortal.Proxy
                 ));
             
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+            services.AddTransient<IRepository<Log>, LogRepository>();
+			services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient(typeof(IHighloadedRepository<>), typeof(HighloadedRepository<>));
 		}
 
@@ -82,8 +83,11 @@ namespace MedPortal.Proxy
 	            });
             }
 
+        
+            app.UseMiddleware<RequestResponseLoggingMiddleware>();
+              
 			app.UseMiddleware<ExceptionMiddleware>();
-
+			
             app.UseMvc();
         }
     }
