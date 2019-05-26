@@ -9,5 +9,7 @@ namespace MedPortal.Data.Repositories
 	    Task<T> FindByOriginIdAsync(long originId);
 
 		Task BulkUpdateAsync(IList<T> items);
+
+		Task CheckConstraints(bool value);
     }
 }

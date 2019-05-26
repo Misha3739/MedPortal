@@ -97,17 +97,23 @@ namespace MedPortal.Proxy.Controllers {
 		}
 
 		private async Task<IActionResult> SyncStationsInternalAsync() {
-			await ParallelQueriesAsync(SyncStationsPerCityAsync, "Stations");
+			await _stationsRepository.CheckConstraints(false);
+			await SplitQueriesByCityAsync(SyncStationsPerCityAsync, "Stations");
+			await _stationsRepository.CheckConstraints(true);
 			return Ok();
 		}
 
 		private async Task<IActionResult> SyncDistrictsInternalAsync() {
-			await ParallelQueriesAsync(SyncDistrictsPerCityAsync, "Districts");
+			await _districtRepository.CheckConstraints(false);
+			await SplitQueriesByCityAsync(SyncDistrictsPerCityAsync, "Districts");
+			await _districtRepository.CheckConstraints(true);
 			return Ok();
 		}
 
 		private async Task<IActionResult> SyncStreetsInternalAsync() {
-			await ParallelQueriesAsync(SyncStreetsPerCityAsync, "Streets");
+			await _streetsRepository.CheckConstraints(false);
+			await SplitQueriesByCityAsync(SyncStreetsPerCityAsync, "Streets");
+			await _streetsRepository.CheckConstraints(true);
 			return Ok();
 		}
 
@@ -119,7 +125,9 @@ namespace MedPortal.Proxy.Controllers {
 		}
 
 		private async Task<IActionResult> SyncClinicDataInternalAsync() {
-			await ParallelQueriesAsync(SyncClinicPerCityAsync, "Clinics");
+			await _clinicsRepository.CheckConstraints(false);
+			await SplitQueriesByCityAsync(SyncClinicPerCityAsync, "Clinics");
+			await _clinicsRepository.CheckConstraints(true);
 			return Ok();
 		}
 
@@ -183,21 +191,15 @@ namespace MedPortal.Proxy.Controllers {
 			}
 		}
 
-		private async Task ParallelQueriesAsync(Func<HCity, string, Task> action, string identifier) {
+		private async Task SplitQueriesByCityAsync(Func<HCity, string, Task> action, string identifier) {
 			AddItemToDictionary(identifier);
 			var cities = await _cityRepository.GetAsync();
-
-			List<Task> tasks = new List<Task>();
-
 			foreach (var city in cities) {
-				tasks.Add(Task.Run(async () => {
-					try {
-						await action(city, identifier);
-					} catch (Exception e) {
-						Logger.Log(LogLevel.Error, $"Error on saving {identifier} for city: {city.Name}:{e}");
-					}
-				}));
-				await Task.WhenAll(tasks);
+				try {
+					await action(city, identifier);
+				} catch (Exception e) {
+					Logger.Log(LogLevel.Error, $"Error on saving {identifier} for city: {city.Name}:{e}");
+				}
 			}
 		}
 

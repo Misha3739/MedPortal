@@ -29,5 +29,9 @@ namespace MedPortal.Data.Persistence
         Task<int> SaveChangesAsync();
 
         DbSet<T> Set<T>() where T : class;
+
+        Task<int> ExecuteSqlCommand(string command);
+
+        string GetTableName<T>(DbSet<T> dbSet) where T : class, IEntity;
     }
 }

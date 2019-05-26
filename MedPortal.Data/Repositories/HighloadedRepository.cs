@@ -19,9 +19,19 @@ namespace MedPortal.Data.Repositories {
 			await BulkUpdateInternalAsync(items);
 		}
 
+		public async Task CheckConstraints(bool value) {
+			string tableName = _dataContext.GetTableName(_dbSet);
+			if (value) {
+				await _dataContext.ExecuteSqlCommand($"ALTER TABLE {tableName} CHECK CONSTRAINT ALL");
+			} else {
+				await _dataContext.ExecuteSqlCommand($"ALTER TABLE {tableName} NOCHECK CONSTRAINT ALL");
+			}
+		}
+
 		protected virtual async Task BulkUpdateInternalAsync(IList<T> items) {
-			if(items == null || !items.Any())
-				return;;
+			if (items == null || !items.Any())
+				return;
+			;
 			using (var transaction = _dataContext.BeginTransaction()) {
 				var existedItems = _dbSet.ToList();
 				foreach (var item in items) {
