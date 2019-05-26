@@ -35,14 +35,14 @@ namespace MedPortal.Data.DTO
         
         public string Logo { get; set; }
         
-        public long HDistrictId { get; set; }
+        public long? HDistrictId { get; set; }
         public HDistrict HDistrict { get; set; }
         
         public double Longitude { get; set; }
         public double Latitude { get; set; }
         
         public long? ParentId { get; set; }
-        public HClinic Parent { get; set; }
+        //public HClinic Parent { get; set; }
         
         public bool OnlineRecordDoctor { get; set; }
         public bool IsActive { get; set; }

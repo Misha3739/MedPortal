@@ -4,14 +4,16 @@ using MedPortal.Data.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MedPortal.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20190525171214_StreetAndDistrictCityId")]
+    partial class StreetAndDistrictCityId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,6 +103,8 @@ namespace MedPortal.Data.Migrations
 
                     b.HasIndex("OriginId")
                         .IsUnique();
+
+                    b.HasIndex("ParentId");
 
                     b.ToTable("Clinics");
                 });
@@ -419,6 +423,11 @@ namespace MedPortal.Data.Migrations
                     b.HasOne("MedPortal.Data.DTO.HStreet", "HStreet")
                         .WithMany()
                         .HasForeignKey("HStreetId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MedPortal.Data.DTO.HClinic", "Parent")
+                        .WithMany()
+                        .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

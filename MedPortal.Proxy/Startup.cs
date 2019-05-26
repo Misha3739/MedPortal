@@ -58,7 +58,6 @@ namespace MedPortal.Proxy
 
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient(typeof(IHighloadedRepository<>), typeof(HighloadedRepository<>));
-			services.AddTransient<IHighloadedRepository<HStation>, StationsRepository>();
 		}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

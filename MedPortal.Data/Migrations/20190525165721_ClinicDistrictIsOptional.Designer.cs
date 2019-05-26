@@ -4,14 +4,16 @@ using MedPortal.Data.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MedPortal.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20190525165721_ClinicDistrictIsOptional")]
+    partial class ClinicDistrictIsOptional
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -102,6 +104,8 @@ namespace MedPortal.Data.Migrations
                     b.HasIndex("OriginId")
                         .IsUnique();
 
+                    b.HasIndex("ParentId");
+
                     b.ToTable("Clinics");
                 });
 
@@ -152,8 +156,6 @@ namespace MedPortal.Data.Migrations
                     b.Property<string>("Alias")
                         .HasMaxLength(100);
 
-                    b.Property<long>("CityId");
-
                     b.Property<double>("Latitude");
 
                     b.Property<double>("Longitude");
@@ -165,8 +167,6 @@ namespace MedPortal.Data.Migrations
                     b.Property<long>("OriginId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CityId");
 
                     b.HasIndex("OriginId")
                         .IsUnique();
@@ -358,8 +358,6 @@ namespace MedPortal.Data.Migrations
                     b.Property<string>("Alias")
                         .HasMaxLength(100);
 
-                    b.Property<long>("CityId");
-
                     b.Property<double>("Latitude");
 
                     b.Property<double>("Longitude");
@@ -371,8 +369,6 @@ namespace MedPortal.Data.Migrations
                     b.Property<long>("OriginId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CityId");
 
                     b.HasIndex("OriginId")
                         .IsUnique();
@@ -420,6 +416,11 @@ namespace MedPortal.Data.Migrations
                         .WithMany()
                         .HasForeignKey("HStreetId")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("MedPortal.Data.DTO.HClinic", "Parent")
+                        .WithMany()
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("MedPortal.Data.DTO.HClinicDoctors", b =>
@@ -445,14 +446,6 @@ namespace MedPortal.Data.Migrations
                     b.HasOne("MedPortal.Data.DTO.HStation", "Station")
                         .WithMany()
                         .HasForeignKey("StationId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("MedPortal.Data.DTO.HDistrict", b =>
-                {
-                    b.HasOne("MedPortal.Data.DTO.HCity", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
@@ -491,14 +484,6 @@ namespace MedPortal.Data.Migrations
                 });
 
             modelBuilder.Entity("MedPortal.Data.DTO.HStation", b =>
-                {
-                    b.HasOne("MedPortal.Data.DTO.HCity", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("MedPortal.Data.DTO.HStreet", b =>
                 {
                     b.HasOne("MedPortal.Data.DTO.HCity", "City")
                         .WithMany()

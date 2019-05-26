@@ -17,6 +17,11 @@ namespace MedPortal.Proxy.Mapping
             CreateMap<Station, HStation>().ForMember(c => c.OriginId,
 		            opt => opt.MapFrom(c => c.Id))
 	            .ForMember(c => c.Id, opt => opt.Ignore());
+            CreateMap<Street, HStreet>().ForMember(c => c.OriginId,
+		            opt => opt.MapFrom(c => c.Id))
+	            .ForMember(c => c.Name,
+		            opt => opt.MapFrom(c => c.Title))
+				.ForMember(c => c.Id, opt => opt.Ignore());
 			CreateMap<Doctor, HDoctor>().ForMember(c => c.OriginId, 
                 opt => opt.MapFrom(c => c.Id))
                 .ForMember(c => c.Id, opt => opt.Ignore());

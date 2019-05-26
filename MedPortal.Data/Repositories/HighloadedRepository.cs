@@ -20,6 +20,8 @@ namespace MedPortal.Data.Repositories {
 		}
 
 		protected virtual async Task BulkUpdateInternalAsync(IList<T> items) {
+			if(items == null || !items.Any())
+				return;;
 			using (var transaction = _dataContext.BeginTransaction()) {
 				var existedItems = _dbSet.ToList();
 				foreach (var item in items) {
