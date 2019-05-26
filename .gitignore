@@ -9,3 +9,6 @@
 /MedPortal.Data/bin/
 /MedPortal.sln.DotSettings.user
 /.vs
+/MedPortal.ApiSyncService/obj/Debug/netcoreapp2.2
+/MedPortal.ApiSyncService/obj
+/MedPortal.ApiSyncService/bin/Debug/netcoreapp2.2
