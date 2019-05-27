@@ -21,6 +21,8 @@ namespace MedPortal.ApiSyncService.Engine {
 
 		private IMapper _mapper;
 
+		private readonly SemaphoreSlim _restClientSlim = new SemaphoreSlim(4);
+
 		public IRestClient RestClient {
 			get {
 				_restClient = _restClient ?? DIProvider.ServiceProvider.GetService<IRestClient>();
@@ -48,9 +50,12 @@ namespace MedPortal.ApiSyncService.Engine {
 			IRestRequest request = new RestRequest(resource, Method.GET);
 
 			IRestResponse<T> result = null;
-			var restClient = DIProvider.ServiceProvider.GetService<IRestClient>();
-
-			result = await restClient.ExecuteGetTaskAsync<T>(request);
+			await _restClientSlim.WaitAsync();
+			try {
+				result = await RestClient.ExecuteGetTaskAsync<T>(request);
+			} finally {
+				_restClientSlim.Release();
+			}
 
 			Logger.LogInformation(
 				$"Requested to: {request.Resource}, Method: {request.Method}, Response code: {result.StatusCode}");
@@ -70,8 +75,6 @@ namespace MedPortal.ApiSyncService.Engine {
 			int timeout = 3 * 1000 * 10;
 			CancellationTokenSource cts = new CancellationTokenSource();
 
-			var restClient = DIProvider.ServiceProvider.GetService<IRestClient>();
-
 			HttpStatusCode defaultHttpStatusCode = (HttpStatusCode) (-1);
 
 			IRestRequest request = new RestRequest(resource, Method.GET);
@@ -85,7 +88,13 @@ namespace MedPortal.ApiSyncService.Engine {
 				Task t = Task.Run(async () => {
 					while (result.StatusCode == defaultHttpStatusCode ||
 					       result.StatusCode == HttpStatusCode.Unauthorized) {
-						result = await restClient.ExecuteGetTaskAsync<T>(request, cts.Token);
+						await _restClientSlim.WaitAsync(cts.Token);
+						try {
+							result = await RestClient.ExecuteGetTaskAsync<T>(request, cts.Token);
+						} finally {
+							_restClientSlim.Release();
+						}
+
 						await Task.Delay(1000, cts.Token);
 					}
 				}, cts.Token);
