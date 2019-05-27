@@ -1,7 +1,10 @@
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Des.EntityFrameworkCore.Extensions;
 using MedPortal.Data.DTO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -47,6 +50,15 @@ namespace MedPortal.Data.Persistence {
 			var tableNameAnnotation = entityType.GetAnnotation("Relational:TableName");
 			var tableName = tableNameAnnotation.Value.ToString();
 			return tableName;
+		}
+
+
+		public async Task BulkInsertAsync<T>(IList<T> entities) where T : class {
+			await DbContextBulkExtensions.BulkInsertAsync(this, entities);
+		}
+
+		public async Task BulkUpdateAsync<T>(IList<T> entities) where T : class {
+			await DbContextBulkExtensions.BulkUpdateAsync(this, entities);
 		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {

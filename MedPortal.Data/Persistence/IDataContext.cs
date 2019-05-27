@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using MedPortal.Data.DTO;
@@ -35,5 +36,8 @@ namespace MedPortal.Data.Persistence
 
 		IModel Model { get; }
         string GetTableName<T>(DbSet<T> dbSet) where T : class, IEntity;
-    }
+
+        Task BulkInsertAsync<T>(IList<T> entities) where T : class;
+        Task BulkUpdateAsync<T>(IList<T> entities) where T : class;
+	}
 }

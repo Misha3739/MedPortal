@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using MedPortal.Data.DTO;
 using MedPortal.Data.Persistence;
-using MedPortal.Data.Repositories.Utilities;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedPortal.Data.Repositories {
@@ -31,19 +30,16 @@ namespace MedPortal.Data.Repositories {
 		protected virtual async Task BulkUpdateInternalAsync(IList<T> items) {
 			if (items == null || !items.Any())
 				return;
-			;
+			
 			using (var transaction = _dataContext.BeginTransaction()) {
-				var existedItems = _dbSet.ToList();
-				foreach (var item in items) {
-					var existed = existedItems.FirstOrDefault(i => i.OriginId == item.OriginId);
-					if (existed == null) {
-						await _dbSet.AddAsync(item);
-					} else {
-						ReflectionUtils.Copy(item, existed);
-					}
+				var existingOriginIds = _dbSet.Select(c => c.OriginId).ToList();
+				var itemsToUpdate = items.Where(item => existingOriginIds.Contains(item.OriginId)).ToList();
+				var itemsToInsert = items.Except(itemsToUpdate).ToList();
+				if (itemsToInsert.Any()) {
+					await _dataContext.BulkInsertAsync(itemsToInsert);
 				}
+				await _dataContext.BulkUpdateAsync(itemsToUpdate);
 
-				await _dataContext.SaveChangesAsync();
 				transaction.Commit();
 			}
 		}
