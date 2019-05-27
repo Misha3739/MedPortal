@@ -2,6 +2,7 @@ using System.Data;
 using System.Threading.Tasks;
 using MedPortal.Data.DTO;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace MedPortal.Data.Persistence
@@ -32,6 +33,7 @@ namespace MedPortal.Data.Persistence
 
         Task<int> ExecuteSqlCommand(string command);
 
+		IModel Model { get; }
         string GetTableName<T>(DbSet<T> dbSet) where T : class, IEntity;
     }
 }
