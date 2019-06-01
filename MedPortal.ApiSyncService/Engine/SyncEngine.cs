@@ -32,13 +32,14 @@ namespace MedPortal.ApiSyncService.Engine {
 
 		public async Task SyncAll() {
 			try {
-				//await SyncCitiesInternalAsync();
-				//await SyncDistrictsInternalAsync();
-				//await SyncStreetsInternalAsync();
-				//await SyncStationsInternalAsync();
-				//await SyncSpecialitiesInternalAsync();
+				await SyncCitiesInternalAsync();
+				await SyncDistrictsInternalAsync();
+				await SyncStreetsInternalAsync();
+				await SyncStationsInternalAsync();
+				await SyncSpecialitiesInternalAsync();
 				await SyncClinicDataInternalAsync();
-			} finally {
+			}
+			finally {
 				foreach (var key in _saved.Keys) {
 					LogLevel level = _saved[key].Total == _saved[key].Saved ? LogLevel.Information : LogLevel.Critical;
 					Logger.Log(level, $"{key}  Total: {_saved[key].Total}, Saved: {_saved[key].Saved}");
@@ -53,21 +54,15 @@ namespace MedPortal.ApiSyncService.Engine {
 		}
 
 		private async Task SyncStationsInternalAsync() {
-			await _unitOfWork.CheckConstraints<HStation>(false);
 			await SplitQueriesInParallelAsync(SyncStationsPerCityAsync, "Stations");
-			await _unitOfWork.CheckConstraints<HStation>(true);
 		}
 
 		private async Task SyncDistrictsInternalAsync() {
-			await _unitOfWork.CheckConstraints<HDistrict>(false);
 			await SplitQueriesInParallelAsync(SyncDistrictsPerCityAsync, "Districts");
-			await _unitOfWork.CheckConstraints<HDistrict>(true);
 		}
 
 		private async Task SyncStreetsInternalAsync() {
-			await _unitOfWork.CheckConstraints<HStreet>(false);
 			await SplitQueriesInParallelAsync(SyncStreetsPerCityAsync, "Streets");
-			await _unitOfWork.CheckConstraints<HStreet>(true);
 		}
 
 		private async Task SyncSpecialitiesInternalAsync() {
@@ -77,9 +72,7 @@ namespace MedPortal.ApiSyncService.Engine {
 		}
 
 		private async Task SyncClinicDataInternalAsync() {
-			await _unitOfWork.CheckConstraints<HClinic>(false);
 			await SplitQueriesInParallelAsync(SyncClinicPerCityAsync, "Clinics");
-			await _unitOfWork.CheckConstraints<HClinic>(true);
 		}
 
 		private async Task SyncDistrictsPerCityAsync(HCity city, string identifier) {
@@ -121,8 +114,11 @@ namespace MedPortal.ApiSyncService.Engine {
 			var districts = await districtsRepository.GetAsync(d => d.CityId == city.Id);
 			var streets = await streetsRepository.GetAsync(d => d.CityId == city.Id);
 
+			var noneDistrict = districtsRepository.FindAsync(d => d.Name == "NONE");
+			var noneStreet = streetsRepository.FindAsync(d => d.Name == "NONE");
+
 			ClinicListResult clinics = new ClinicListResult();
-			int bulkSize = 5;
+			int bulkSize = 100;
 			var bulkList = new List<HClinic>();
 			int i = 0;
 			while (clinics.ClinicList == null || clinics.ClinicList.Any()) {
@@ -134,9 +130,9 @@ namespace MedPortal.ApiSyncService.Engine {
 					foreach (var clinic in clinics.ClinicList) {
 						var hClinic = Mapper.Map<Clinic, HClinic>(clinic);
 						hClinic.HCityId = city.Id;
-						hClinic.HStreetId = streets.First(s => s.OriginId == clinic.StreetId).Id;
+						hClinic.HStreetId = streets.FirstOrDefault(s => s.OriginId == clinic.StreetId)?.Id ?? noneStreet.Id;
 						hClinic.HDistrictId =
-							districts.FirstOrDefault(s => s.OriginId == clinic.DistrictId)?.Id;
+							districts.FirstOrDefault(s => s.OriginId == clinic.DistrictId)?.Id ?? noneDistrict.Id;
 						hClinic.ParentId =
 							(await clinicsRepository.FindAsync(s => s.OriginId == clinic.ParentId))
 							?.Id;
