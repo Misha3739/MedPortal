@@ -77,6 +77,8 @@ namespace MedPortal.Data.Persistence {
 			modelBuilder.Entity<HSpeciality>().HasIndex(c => c.OriginId).IsUnique();
 			modelBuilder.Entity<HTelemed>().HasIndex(c => c.OriginId).IsUnique();
 
+			modelBuilder.Entity<HClinicStations>().HasIndex(x => new {x.ClinicId, x.StationId }).IsUnique();
+
 			base.OnModelCreating(modelBuilder);
 		}
 	}

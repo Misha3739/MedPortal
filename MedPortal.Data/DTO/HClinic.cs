@@ -48,5 +48,7 @@ namespace MedPortal.Data.DTO
         public bool IsActive { get; set; }
         
         public long OriginId { get; set; }
+
+		public virtual ICollection<HClinicStations> Stations { get; set; }
     }
 }
