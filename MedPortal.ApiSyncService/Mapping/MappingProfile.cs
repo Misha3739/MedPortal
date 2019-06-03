@@ -27,7 +27,8 @@ namespace MedPortal.Proxy.Mapping
                 .ForMember(c => c.Id, opt => opt.Ignore());
             CreateMap<Clinic, HClinic>().ForMember(c => c.OriginId, 
                 opt => opt.MapFrom(c => c.Id))
-                .ForMember(c => c.Id, opt => opt.Ignore());
+                .ForMember(c => c.Id, opt => opt.Ignore())
+				.ForMember(c => c.Stations, opt => opt.Ignore()); ;
             CreateMap<Speciality, HSpeciality>().ForMember(c => c.OriginId, 
                 opt => opt.MapFrom(c => c.Id))
                 .ForMember(c => c.Id, opt => opt.Ignore());

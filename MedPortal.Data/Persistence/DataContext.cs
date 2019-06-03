@@ -61,6 +61,10 @@ namespace MedPortal.Data.Persistence {
 			await DbContextBulkExtensions.BulkUpdateAsync(this, entities);
 		}
 
+		public async Task BulkDeleteAsync<T>(IList<T> entities) where T : class {
+			await DbContextBulkExtensions.BulkDeleteAsync(this, entities);
+		}
+
 		protected override void OnModelCreating(ModelBuilder modelBuilder) {
 			foreach (var relationship in modelBuilder.Model.GetEntityTypes()
 				.SelectMany(e => e.GetForeignKeys())) {

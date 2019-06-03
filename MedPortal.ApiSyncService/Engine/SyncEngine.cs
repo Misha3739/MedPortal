@@ -111,6 +111,10 @@ namespace MedPortal.ApiSyncService.Engine {
 			var districtsRepository = DIProvider.ServiceProvider.GetService<IHighloadedRepository<HDistrict>>();
 			var clinicsRepository = DIProvider.ServiceProvider.GetService<IHighloadedRepository<HClinic>>();
 			var streetsRepository = DIProvider.ServiceProvider.GetService<IHighloadedRepository<HStreet>>();
+			var stationsRepository = DIProvider.ServiceProvider.GetService<IRepository<HStation>>();
+
+			var stations = await stationsRepository.GetAsync();
+
 			var districts = await districtsRepository.GetAsync(d => d.CityId == city.Id);
 			var streets = await streetsRepository.GetAsync(d => d.CityId == city.Id);
 
@@ -133,6 +137,12 @@ namespace MedPortal.ApiSyncService.Engine {
 						hClinic.HStreetId = streets.FirstOrDefault(s => s.OriginId == clinic.StreetId)?.Id ?? noneStreet.Id;
 						hClinic.HDistrictId =
 							districts.FirstOrDefault(s => s.OriginId == clinic.DistrictId)?.Id ?? noneDistrict.Id;
+
+						var stationIds = clinic.Stations.Select(s => s.Id).ToList();
+						hClinic.Stations = stations.Where(s => stationIds.Contains(s.OriginId)).Select(s => new HClinicStations() {
+							StationId = s.Id,
+							Clinic = hClinic
+						}).ToList();
 						hClinic.ParentId =
 							(await clinicsRepository.FindAsync(s => s.OriginId == clinic.ParentId))
 							?.Id;

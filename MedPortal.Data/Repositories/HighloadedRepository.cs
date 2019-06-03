@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,17 +31,23 @@ namespace MedPortal.Data.Repositories {
 		protected virtual async Task BulkUpdateInternalAsync(IList<T> items) {
 			if (items == null || !items.Any())
 				return;
-			
+
 			using (var transaction = _dataContext.BeginTransaction()) {
 				var existingOriginIds = _dbSet.Select(c => c.OriginId).ToList();
 				var itemsToUpdate = items.Where(item => existingOriginIds.Contains(item.OriginId)).ToList();
 				var itemsToInsert = items.Except(itemsToUpdate).ToList();
-				if (itemsToInsert.Any()) {
-					await _dataContext.BulkInsertAsync(itemsToInsert);
-				}
-				await _dataContext.BulkUpdateAsync(itemsToUpdate);
+				try {
+					if (itemsToInsert.Any())
+					{
+						await _dataContext.BulkInsertAsync(itemsToInsert);
+					}
 
-				transaction.Commit();
+					await _dataContext.BulkUpdateAsync(itemsToUpdate);
+					transaction.Commit();
+				} catch (Exception) {
+					transaction.Rollback();
+				}
+				
 			}
 		}
 	}
