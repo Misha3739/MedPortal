@@ -16,7 +16,7 @@ namespace MedPortal.Data.Repositories {
 		}
 
 		public async Task BulkUpdateAsync(IList<T> items) {
-			await BulkUpdateInternalAsync(items);
+			await BulkUpdateInternalAsync(items, false);
 		}
 
 		public async Task CheckConstraints(bool value) {
@@ -28,7 +28,7 @@ namespace MedPortal.Data.Repositories {
 			}
 		}
 
-		protected virtual async Task BulkUpdateInternalAsync(IList<T> items) {
+		protected virtual async Task BulkUpdateInternalAsync(IList<T> items, bool assignIds) {
 			if (items == null || !items.Any())
 				return;
 
@@ -37,8 +37,7 @@ namespace MedPortal.Data.Repositories {
 				var itemsToUpdate = items.Where(item => existingOriginIds.Contains(item.OriginId)).ToList();
 				var itemsToInsert = items.Except(itemsToUpdate).ToList();
 				try {
-					if (itemsToInsert.Any())
-					{
+					if (itemsToInsert.Any()) {
 						await _dataContext.BulkInsertAsync(itemsToInsert);
 					}
 
@@ -48,6 +47,16 @@ namespace MedPortal.Data.Repositories {
 					transaction.Rollback();
 				}
 				
+			}
+
+			if (assignIds) {
+				var originIds = items.Select(c => c.OriginId).ToList();
+				Dictionary<long, long> ids = _dbSet.Where(c => originIds.Contains(c.OriginId))
+					.Select(c => new { c.OriginId, c.Id }).ToDictionary(x => x.OriginId, x => x.Id);
+				foreach (var item in items) {
+					item.Id = ids[item.OriginId];
+				}
+
 			}
 		}
 	}

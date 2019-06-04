@@ -10,26 +10,22 @@ namespace MedPortal.Data.Repositories {
 		public ClinicsHighloadedRepoistory(IDataContext dataContext) : base(dataContext) {
 		}
 
-		protected override async Task BulkUpdateInternalAsync(IList<HClinic> items) {
+		protected override async Task BulkUpdateInternalAsync(IList<HClinic> items, bool assignIds) {
 			if (!items.Any()) {
 				return;
 			}
 
-			await base.BulkUpdateInternalAsync(items);
-			var originIds = items.Select(c => c.OriginId).ToList();
+			await base.BulkUpdateInternalAsync(items, true);
 
 			using (var transaction = _dataContext.BeginTransaction()) {
 				var clinicStations = items.SelectMany(clinic => clinic.Stations).ToList();
-				Dictionary<long, long> clinicOriginIds = _dbSet.Where(c => originIds.Contains(c.OriginId))
-					.Select(c => new {c.OriginId, c.Id}).ToDictionary(x => x.OriginId, x => x.Id);
 				foreach (var clinic in items) {
-					clinic.Id = clinicOriginIds[clinic.OriginId];
 					foreach (var station in clinic.Stations) {
 						station.ClinicId = clinic.Id;
 					}
 				}
 
-				var clinicIds = clinicOriginIds.Select(c => c.Value).ToList();
+				var clinicIds = items.Select(c => c.Id).ToList();
 				var existedClinicStations =
 					_dataContext.ClinicStations.Where(c => clinicIds.Contains(c.ClinicId)).ToList();
 				try {
