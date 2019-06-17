@@ -4,14 +4,16 @@ using MedPortal.Data.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MedPortal.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20190602083829_FixHDoctors")]
+    partial class FixHDoctors
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -136,10 +138,9 @@ namespace MedPortal.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StationId");
+                    b.HasIndex("ClinicId");
 
-                    b.HasIndex("ClinicId", "StationId")
-                        .IsUnique();
+                    b.HasIndex("StationId");
 
                     b.ToTable("ClinicStations");
                 });
@@ -207,8 +208,6 @@ namespace MedPortal.Data.Migrations
 
                     b.Property<string>("Category");
 
-                    b.Property<long?>("CityId");
-
                     b.Property<string>("Degree");
 
                     b.Property<long>("Departure");
@@ -260,8 +259,6 @@ namespace MedPortal.Data.Migrations
                     b.Property<string>("TextSpec");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CityId");
 
                     b.HasIndex("OriginId")
                         .IsUnique();
@@ -466,7 +463,7 @@ namespace MedPortal.Data.Migrations
             modelBuilder.Entity("MedPortal.Data.DTO.HClinicStations", b =>
                 {
                     b.HasOne("MedPortal.Data.DTO.HClinic", "Clinic")
-                        .WithMany("Stations")
+                        .WithMany()
                         .HasForeignKey("ClinicId")
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -494,14 +491,6 @@ namespace MedPortal.Data.Migrations
                     b.HasOne("MedPortal.Data.DTO.HStation", "Station")
                         .WithMany()
                         .HasForeignKey("StationId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("MedPortal.Data.DTO.HDoctor", b =>
-                {
-                    b.HasOne("MedPortal.Data.DTO.HCity", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

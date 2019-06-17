@@ -77,6 +77,8 @@ namespace MedPortal.ApiSyncService
 			services.AddTransient(typeof(IHighloadedRepository<>), typeof(HighloadedRepository<>));
 
 			services.AddTransient<IHighloadedRepository<HClinic>,ClinicsHighloadedRepoistory>();
+			
+			services.AddTransient<IHighloadedRepository<HDoctor>, DoctorsHighloadedRepoistory>();
 
 			services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
 

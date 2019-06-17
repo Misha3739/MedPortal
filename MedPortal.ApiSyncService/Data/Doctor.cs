@@ -21,31 +21,30 @@ namespace MedPortal.Proxy.Data
         public string TextCourse { get; set; }
         public string TextExperience { get; set; }
         public long ExperienceYear { get; set; }
-        public long Price { get; set; }
-        public long SpecialPrice { get; set; }
+        public long? Price { get; set; }
+        public long? SpecialPrice { get; set; }
         public long Departure { get; set; }
-        public IList<Clinic> Clinics { get; set; }
+        public IList<long> Clinics { get; set; }
         
         public IList<ClinicsInfo> ClinicsInfo { get; set; }
         public string Alias { get; set; }
         public IList<Speciality> Specialities { get; set; }
         public IList<Station> Stations { get; set; }
-        public IList<Clinic> BookingClinics { get; set; }
         public bool IsActive { get; set; }
         public long KidsReception { get; set; }
         public long OpinionCount { get; set; }
         public string TextAbout { get; set; }
-        public Telemed Telemed { get; set; }
+        public IList<Telemed> Telemed { get; set; }
         public string RatingReviewsLabel { get; set; }
         public bool IsExclusivePrice { get; set; }
 
         public Doctor()
         {
-            Clinics = new List<Clinic>();
+            Clinics = new List<long>();
             ClinicsInfo = new List<ClinicsInfo>();
             Specialities = new List<Speciality>();
             Stations = new List<Station>();
-            BookingClinics = new List<Clinic>();
+            Telemed = new List<Telemed>();
         }
     }
 }

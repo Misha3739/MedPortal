@@ -30,7 +30,7 @@ namespace MedPortal.Data.DTO
         public string TextExperience { get; set; }
         
         public long ExperienceYear { get; set; }
-        public long Price { get; set; }
+        public long? Price { get; set; }
         public long? SpecialPrice { get; set; }
         public long Departure { get; set; }
         
@@ -41,12 +41,17 @@ namespace MedPortal.Data.DTO
         public long KidsReception { get; set; }
         public long OpinionCount { get; set; }
         public string TextAbout { get; set; }
-        
-        public long? TelemedId { get; set; }
-        public HTelemed Telemed { get; set; }
-        public string RatingReviewsLabel { get; set; }
+
+        public long? CityId { get; set; }
+		public HCity City { get; set; }
+		
+		public string RatingReviewsLabel { get; set; }
         public bool IsExclusivePrice { get; set; }
         
         public long OriginId { get; set; }
+        
+        public ICollection<HClinicDoctors> Clinics { get; set; }
+        
+        public ICollection<HDoctorSpecialities> Specialities { get; set; }
     }
 }

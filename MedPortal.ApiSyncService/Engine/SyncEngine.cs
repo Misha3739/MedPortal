@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using MedPortal.Data.DTO;
 using MedPortal.Data.Persistence;
@@ -10,8 +11,10 @@ using MedPortal.Proxy.Data;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace MedPortal.ApiSyncService.Engine {
-	public class SyncEngine : EngineBase {
+namespace MedPortal.ApiSyncService.Engine
+{
+	public class SyncEngine : EngineBase
+	{
 		private readonly IHighloadedRepository<HCity> _cityRepository;
 		private readonly IHighloadedRepository<HSpeciality> _specialitiesRepository;
 		private readonly IUnitOfWork _unitOfWork;
@@ -23,7 +26,7 @@ namespace MedPortal.ApiSyncService.Engine {
 
 		public SyncEngine(
 			IHighloadedRepository<HCity> cityRepository,
-			IHighloadedRepository<HSpeciality> specialitiesRepository, 
+			IHighloadedRepository<HSpeciality> specialitiesRepository,
 			IUnitOfWork unitOfWork) {
 			_cityRepository = cityRepository;
 			_specialitiesRepository = specialitiesRepository;
@@ -38,13 +41,17 @@ namespace MedPortal.ApiSyncService.Engine {
 				await SyncStationsInternalAsync();
 				await SyncSpecialitiesInternalAsync();
 				await SyncClinicDataInternalAsync();
-			}
-			finally {
+				await SyncDoctorsAsync();
+			} finally {
 				foreach (var key in _saved.Keys) {
 					LogLevel level = _saved[key].Total == _saved[key].Saved ? LogLevel.Information : LogLevel.Critical;
 					Logger.Log(level, $"{key}  Total: {_saved[key].Total}, Saved: {_saved[key].Saved}");
 				}
 			}
+		}
+
+		private async Task SyncDoctorsAsync() {
+			await SplitQueriesInParallelAsync(SyncDoctorsPerCityAsync, "Doctors");
 		}
 
 		private async Task SyncCitiesInternalAsync() {
@@ -78,7 +85,7 @@ namespace MedPortal.ApiSyncService.Engine {
 		private async Task SyncDistrictsPerCityAsync(HCity city, string identifier) {
 			DistrictListResult districts =
 				await GetDataWithPollingAsync<DistrictListResult>($"district?city={city.OriginId}");
-			IncrementDictionary(identifier, 0,districts.DistrictList.Count);
+			IncrementDictionary(identifier, 0, districts.DistrictList.Count);
 			var hDistrics = districts.DistrictList.Select(c => Mapper.Map<District, HDistrict>(c)).ToList();
 			hDistrics.ForEach(d => d.CityId = city.Id);
 			var districtsRepository = DIProvider.ServiceProvider.GetService<IHighloadedRepository<HDistrict>>();
@@ -89,7 +96,7 @@ namespace MedPortal.ApiSyncService.Engine {
 		private async Task SyncStreetsPerCityAsync(HCity city, string identifier) {
 			StreetListResult streets =
 				await GetDataWithPollingAsync<StreetListResult>($"street?city={city.OriginId}");
-			IncrementDictionary(identifier, 0,streets.StreetList.Count);
+			IncrementDictionary(identifier, 0, streets.StreetList.Count);
 			var hStreets = streets.StreetList.Select(c => Mapper.Map<Street, HStreet>(c)).ToList();
 			hStreets.ForEach(s => s.CityId = city.Id);
 			var streetsRepository = DIProvider.ServiceProvider.GetService<IHighloadedRepository<HStreet>>();
@@ -129,8 +136,8 @@ namespace MedPortal.ApiSyncService.Engine {
 				try {
 					clinics = await GetDataWithPollingAsync<ClinicListResult>(
 						$"clinic/list?city={city.OriginId}&start={i * bulkSize}&count={bulkSize}");
-					IncrementDictionary(identifier, 0,clinics.ClinicList.Count);
-					
+					IncrementDictionary(identifier, 0, clinics.ClinicList.Count);
+
 					foreach (var clinic in clinics.ClinicList) {
 						var hClinic = Mapper.Map<Clinic, HClinic>(clinic);
 						hClinic.HCityId = city.Id;
@@ -150,7 +157,7 @@ namespace MedPortal.ApiSyncService.Engine {
 					}
 
 					await clinicsRepository.BulkUpdateAsync(bulkList);
-					IncrementDictionary(identifier,bulkList.Count);
+					IncrementDictionary(identifier, bulkList.Count);
 				} catch (Exception e) {
 					Logger.Log(LogLevel.Error, $"Error on saving Clinics for city: {city.Name}:{e}. Position: {i * bulkSize}");
 				}
@@ -177,7 +184,47 @@ namespace MedPortal.ApiSyncService.Engine {
 			await Task.WhenAll(tasks);
 		}
 
-		
+		private async Task SyncDoctorsPerCityAsync(HCity city, string identifier) {
+			var doctors = await GetDataWithPollingAsync<DoctorListResult>($"doctor/list?city={city.OriginId}");
+
+			IncrementDictionary(identifier, 0, doctors.DoctorList.Count);
+
+			var specialitiesRepository = DIProvider.ServiceProvider.GetService<IRepository<HSpeciality>>();
+
+			var clinicRepository = DIProvider.ServiceProvider.GetService<IRepository<HClinic>>();
+
+			List<HDoctor> hDoctorsList = new List<HDoctor>();
+
+			var specialitiesList = await specialitiesRepository.GetAsync();
+
+			foreach (var doctor in doctors.DoctorList) {
+
+				var hDoctor = Mapper.Map<Doctor, HDoctor>(doctor);
+
+
+				hDoctor.Clinics = (await clinicRepository.GetAsync(c => doctor.Clinics.Contains(c.OriginId)))
+
+					.Select(c => new HClinicDoctors() {
+						ClinicId = c.Id
+					}).ToList();
+
+				var specialitiesIDs = doctor.Specialities.Select(c => c.Id).ToList();
+
+				hDoctor.Specialities = specialitiesList.Where(c => specialitiesIDs.Contains(c.OriginId)).Select(c => new HDoctorSpecialities() {
+					SpecialityId = c.Id
+
+				}).ToList();
+
+				hDoctor.CityId = city.Id;
+
+				hDoctorsList.Add(hDoctor);
+
+			}
+
+			var doctorsRepository = DIProvider.ServiceProvider.GetService<IHighloadedRepository<HDoctor>>();
+			await doctorsRepository.BulkUpdateAsync(hDoctorsList);
+			IncrementDictionary(identifier, hDoctorsList.Count, 0);
+		}
 
 		private void AddItemToDictionary(string key) {
 			if (!_saved.ContainsKey(key)) {

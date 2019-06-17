@@ -1,3 +1,4 @@
+using System.Linq;
 using AutoMapper;
 using MedPortal.Data.DTO;
 using MedPortal.Proxy.Data;
@@ -22,9 +23,13 @@ namespace MedPortal.Proxy.Mapping
 	            .ForMember(c => c.Name,
 		            opt => opt.MapFrom(c => c.Title))
 				.ForMember(c => c.Id, opt => opt.Ignore());
-			CreateMap<Doctor, HDoctor>().ForMember(c => c.OriginId, 
-                opt => opt.MapFrom(c => c.Id))
-                .ForMember(c => c.Id, opt => opt.Ignore());
+            CreateMap<Doctor, HDoctor>().ForMember(c => c.OriginId,
+                    opt => opt.MapFrom(c => c.Id))
+                .ForMember(c => c.Id, opt => opt.Ignore())
+                .ForMember(c => c.Specialities, opt => opt.Ignore())
+                .ForMember(c => c.Clinics, opt => opt.Ignore())
+                .ForMember(c => c.Sex, opt => opt.MapFrom(c => c.Sex == 0 ? Sex.Male : Sex.Female));
+			
             CreateMap<Clinic, HClinic>().ForMember(c => c.OriginId, 
                 opt => opt.MapFrom(c => c.Id))
                 .ForMember(c => c.Id, opt => opt.Ignore())
