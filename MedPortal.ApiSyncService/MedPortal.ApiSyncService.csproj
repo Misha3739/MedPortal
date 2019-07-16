@@ -26,12 +26,12 @@
 		  <HintPath>..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.localization\2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Localization.dll</HintPath>
 		</Reference>
 	</ItemGroup>
-	
-	<ItemGroup Condition="'$(IsWindows)'=='false'">
-		<Reference Include="Microsoft.AspNetCore.Localization, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60">
-		  <HintPath>..\..\..\..\.nuget\packages\microsoft.aspnetcore.localization\2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Localization.dll</HintPath>
-		</Reference>
-	</ItemGroup>
+    
+    <ItemGroup Condition="'$(IsOSX)'=='true'">
+        <Reference Include="Microsoft.AspNetCore.Localization, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60">
+            <HintPath>..\..\..\..\..\usr\local\share\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.localization\2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Localization.dll</HintPath>
+        </Reference>
+    </ItemGroup>
 	  
 	<ItemGroup>
 		<Reference Include="Microsoft.IdentityModel.Protocols">
