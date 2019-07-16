@@ -1,21 +1,31 @@
 using System;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
-using MedPortal.Proxy.Data;
+using MedPortal.Data.DTO;
+using MedPortal.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using RestSharp;
 
 namespace MedPortal.Proxy.Controllers
 {
-    public class ClinicController : MedPortalControllerBase
+    public class ClinicController : ControllerBase
     {
-        [HttpGet("api/clinics")]
-        public async Task<IActionResult> GetClinics()
+        private IRepository<HClinic> _clinicsRepository;
+        
+        public ClinicController(IRepository<HClinic> clinicsRepository)
         {
-            var data = await GetDataWithPollingAsync<ClinicListResult>("clinic/list");
-            return Ok(data);
+            _clinicsRepository = clinicsRepository;
+
+
         }
+
+        [HttpGet("api/clinics/{cityId}")]
+        public async Task<IActionResult> GetClinics(long cityId)
+        {
+            var clinics = await _clinicsRepository.GetAsync(c => c.HCityId == cityId);
+            
+            return Ok(clinics);
+        }
+        
+        
+        
     }
 }
