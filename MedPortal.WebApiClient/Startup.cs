@@ -5,6 +5,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using AutoMapper;
+using MedPortal.Data.DTO;
+using MedPortal.Data.Persistence;
+using MedPortal.Data.Repositories;
+using MedPortal.Proxy.Mapping;
+using MedPortal.Proxy.Middleware;
+using MedPortal.Proxy.Utility;
+using Rest;
+using Microsoft.EntityFrameworkCore;
 
 namespace MedPortal.WebApiClient
 {
@@ -20,6 +29,33 @@ namespace MedPortal.WebApiClient
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            services.AddScoped(options => mappingConfig.CreateMapper());
+
+
+            var apiConfiguration = Configuration.GetSection(nameof(ApiConfiguration)).Get<ApiConfiguration>();
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddScoped<IRestClient, RestClient>(/*service => new RestClient()
+            {
+                BaseAddress = apiConfiguration.BaseAddress
+                Authenticator = new HttpBasicAuthenticator(apiConfiguration.Login, apiConfiguration.Password)
+            }*/);
+
+            services.AddDbContext<IDataContext, DataContext>(option => option.UseSqlServer(
+                Configuration.GetConnectionString("MedPortal")
+                ));
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IRepository<Log>, LogRepository>();
+            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+            services.AddTransient(typeof(IHighloadedRepository<>), typeof(HighloadedRepository<>));
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // In production, the Angular files will be served from this directory
@@ -46,6 +82,9 @@ namespace MedPortal.WebApiClient
             //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+
+            app.UseMiddleware<RequestResponseLoggingMiddleware>();
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseMvc(routes =>
             {
