@@ -1,24 +1,64 @@
-<header>
-  <nav class='navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3'>
-    <div class="container">
-      <a class="navbar-brand" [routerLink]='["/"]'>MedPortal.WebApiClient</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-label="Toggle navigation"
-        [attr.aria-expanded]="isExpanded" (click)="toggle()">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse" [ngClass]='{"show": isExpanded}'>
-        <ul class="navbar-nav flex-grow">
-          <li class="nav-item" [routerLinkActive]='["link-active"]' [routerLinkActiveOptions]='{ exact: true }'>
-            <a class="nav-link text-dark" [routerLink]='["/"]'>Home</a>
-          </li>
-          <li class="nav-item" [routerLinkActive]='["link-active"]'>
-            <a class="nav-link text-dark" [routerLink]='["/counter"]'>Counter</a>
-          </li>
-          <li class="nav-item" [routerLinkActive]='["link-active"]'>
-            <a class="nav-link text-dark" [routerLink]='["/fetch-data"]'>Fetch data</a>
-          </li>
-        </ul>
+<header class="header_sticky">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-3 col-6">
+        <div id="logo_home">
+          <h1><a  title="">Мед Портал</a></h1>
+        </div>
       </div>
+      <nav class="col-lg-9 col-6">
+        <div class="main-menu">
+          <ul>
+            <li class="submenu">
+              <a  class="show-submenu">Врачи<i class="icon-down-open-mini"></i></a>
+              <ul>
+                <li><a >Home Default</a></li>
+                <li><a >Home Version 2</a></li>
+                <li><a >Home Version 3</a></li>
+                <li><a >Home Version 4</a></li>
+                <li><a >Home with Map</a></li>
+                <li><a >Revolution Slider</a></li>
+                <li><a >With Cookie Bar (EU law)</a></li>
+              </ul>
+            </li>
+            <li class="submenu">
+              <a  class="show-submenu">Клиники<i class="icon-down-open-mini"></i></a>
+              <ul>
+                <li class="third-level">
+                  <a >List pages</a>
+                  <ul>
+                    <li><a >List page</a></li>
+                    <li><a >List grid page</a></li>
+                    <li><a >List map page</a></li>
+                  </ul>
+                </li>
+                <li class="third-level">
+                  <a >Detail pages</a>
+                  <ul>
+                    <li><a >Detail page 1</a></li>
+                    <li><a >Detail page 2</a></li>
+                    <li><a >Detail page 3</a></li>
+                    <li><a >Detail working booking</a></li>
+                  </ul>
+                </li>
+                <li><a>Submit Review</a></li>
+                <li><a >Blog</a></li>
+                <li><a >Badges</a></li>
+                <li><a >Login</a></li>
+                <li><a >Login 2</a></li>
+                <li><a >Register Doctor</a></li>
+                <li><a >Working doctor register</a></li>
+                <li><a >Register</a></li>
+                <li><a >About Us</a></li>
+                <li><a >Contacts</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <!-- /main-menu -->
+      </nav>
     </div>
-  </nav>
+  </div>
+  <!-- /container -->
 </header>
+<!-- /header -->
