@@ -28,11 +28,27 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\app\data\clinic.ts" />
+    <None Remove="ClientApp\src\app\data\doctor.ts" />
+    <None Remove="ClientApp\src\app\services\clincs-service.ts" />
+    <None Remove="ClientApp\src\app\services\doctors-service.ts" />
+    <None Remove="ClientApp\src\index.d.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MedPortal.Data\MedPortal.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="ClientApp\src\app\search\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\app\data\clinic.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\data\doctor.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\services\clincs-service.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\services\doctors-service.ts" />
+    <TypeScriptCompile Include="ClientApp\src\index.d.ts" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

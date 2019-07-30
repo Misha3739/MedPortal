@@ -10,6 +10,10 @@ import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { SearchMapComponent } from './search/search-map/search-map.component';
+import { DoctorListComponent } from './search/doctor-list/doctor-list.component';
+import { ClinicListComponent } from './search/clinic-list/clinic-list.component';
+import { DoctorsService } from './services/doctors-service';
+import { ClinicsService } from './services/clincs-service';
 
 @NgModule({
   declarations: [
@@ -18,7 +22,9 @@ import { SearchMapComponent } from './search/search-map/search-map.component';
     HomeComponent,
     CounterComponent,
     FetchDataComponent,
-    SearchMapComponent
+    SearchMapComponent,
+    DoctorListComponent,
+    ClinicListComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -26,11 +32,18 @@ import { SearchMapComponent } from './search/search-map/search-map.component';
     FormsModule,
     RouterModule.forRoot([
       { path: '', component: SearchMapComponent, pathMatch: 'full' },
-      { path: 'counter', component: CounterComponent },
-      { path: 'fetch-data', component: FetchDataComponent },
+      { path: ':city', component: SearchMapComponent, children: [
+        { path: 'doctors', component: DoctorListComponent },
+        { path: 'clinics', component: ClinicListComponent },
+      ]
+      }
     ])
   ],
-  providers: [],
+  providers: [
+    DoctorsService,
+    ClinicsService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
