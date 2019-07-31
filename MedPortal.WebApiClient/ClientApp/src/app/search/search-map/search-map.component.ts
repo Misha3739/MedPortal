@@ -15,14 +15,12 @@ import { Select2OptionData } from 'ng-select2';
 })
 export class SearchMapComponent implements OnInit {
   @ViewChild('gmap', { static: true }) gmapElement: any;
-  @ViewChild('select', { static: true }) select: any;
   map: google.maps.Map;
 
   categories: ISearchCategory[];
   displayCategories: Array<Select2OptionData>;
   routeParamsSubscription: Subscription;
   city: string;
-  value: any;
   isSelected = false;
 
   navigateToResource: SearchInfoType;
@@ -70,15 +68,17 @@ export class SearchMapComponent implements OnInit {
     return result;
   }
 
-  onSelectedValueChanged() {
-    if (this.value) {
-      let splitted = this.value.split('_', 2);
+  onSelectedValueChanged(event) {
+    console.log(event);
+    let value = event.value;
+    if (value) {
+      let splitted = value.split('_', 2);
       this.navigateToResource = parseInt(splitted[0]);
       this.navigateToId = parseInt(splitted[1]);
       this.isSelected = true;
       console.log('Will navigate to ' + SearchInfoType[this.navigateToResource] + ' id: ' + this.navigateToId);
     } else {
-      console.error('Selector value is ' + this.value);
+      console.error('Selector value is not defined');
     }
   }
 

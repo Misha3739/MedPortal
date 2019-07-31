@@ -2,8 +2,8 @@
   <div class="col-sm-6 col-md-5 col-lg-4">
     <div class="form-group search-group">
     <label for="search">Введите текст поиска здесь:</label>
-    <ng-select2 #select [data]="displayCategories" width="300" [(ngModel)]="value" (valueChanged)="onSelectedValueChanged()"></ng-select2>
-      <button (click)="onRedirect()">Перейти</button>
+    <ng-select2 [data]="displayCategories" width="300" (valueChanged)="onSelectedValueChanged($event)"></ng-select2>
+      <button (click)="onRedirect()" [disabled]="!isSelected">Перейти</button>
       </div>
   </div>
   <div class="col-sm-6 col-md-5 col-lg-4">
