@@ -1,1 +1,9 @@
-<p>doctor-list works!</p>
+<h3>Врачи:</h3>
+<div *ngFor="let doctor of doctors">
+  <div class="row form-group">
+    <div class="form-control">
+      <label for="surname">ФИО:</label>
+      <label>{{doctor.surname}} {{doctor.name}} {{doctor.patronimic}}</label>
+    </div>
+  </div>
+</div>

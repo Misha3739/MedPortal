@@ -7,10 +7,24 @@ export class DoctorsService {
     let doctors: Doctor[] = [];
     doctors.push({
       id: 1,
-      surname: 'Petrov',
-      name: 'Ivan',
-      patronimic: 'Fedorovich',
+      surname: 'Петров',
+      name: 'Иван',
+      patronimic: 'Федорович',
       clinics : []
+    });
+    doctors.push({
+      id: 1,
+      surname: 'Гривцова',
+      name: 'Ольга',
+      patronimic: 'Александросна',
+      clinics: []
+    });
+    doctors.push({
+      id: 1,
+      surname: 'Салихов',
+      name: 'Роберт',
+      patronimic: 'Иосифович',
+      clinics: []
     });
     return doctors;
   }
