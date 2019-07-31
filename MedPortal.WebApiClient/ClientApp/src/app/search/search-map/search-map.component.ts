@@ -15,12 +15,18 @@ import { Select2OptionData } from 'ng-select2';
 })
 export class SearchMapComponent implements OnInit {
   @ViewChild('gmap', { static: true }) gmapElement: any;
+  @ViewChild('select', { static: true }) select: any;
   map: google.maps.Map;
 
   categories: ISearchCategory[];
   displayCategories: Array<Select2OptionData>;
   routeParamsSubscription: Subscription;
   city: string;
+  value: any;
+  isSelected = false;
+
+  navigateToResource: SearchInfoType;
+  navigateToId?: number;
 
   constructor(private searchInfoService: SearchInfoService, private route: ActivatedRoute, private router: Router) { }
 
@@ -46,22 +52,49 @@ export class SearchMapComponent implements OnInit {
     for (let category of this.categories) {
       let text = this.displayCategory(category.type);
       let item = {
-        id: text,
+        id: category.type.toString(),
         text: text,
-        disabled: true,
         children: []
       };
+
       for (let categoryItem of category.items) {
         item.children.push({
-          id: categoryItem.id.toString(),
+          id: category.type.toString() + '_' + categoryItem.id.toString(),
           text: categoryItem.name
         });
       }
 
       result.push(item);
     }
-    console.log(result);
+
     return result;
+  }
+
+  onSelectedValueChanged() {
+    if (this.value) {
+      let splitted = this.value.split('_', 2);
+      this.navigateToResource = parseInt(splitted[0]);
+      this.navigateToId = parseInt(splitted[1]);
+      this.isSelected = true;
+      console.log('Will navigate to ' + SearchInfoType[this.navigateToResource] + ' id: ' + this.navigateToId);
+    } else {
+      console.error('Selector value is ' + this.value);
+    }
+  }
+
+  onRedirect() {
+    switch (this.navigateToResource) {
+      case SearchInfoType.clinic:
+        this.router.navigate(['clinic/' + this.navigateToId]);
+        break;
+      case SearchInfoType.doctor:
+        this.router.navigate(['doctor/' + this.navigateToId]);
+        break;
+      case SearchInfoType.speciality:
+        this.router.navigate(['speciality/' + this.navigateToId]);
+        break;
+    }
+   
   }
 
   displayCategory(type: SearchInfoType) : string {

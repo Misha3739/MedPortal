@@ -17,6 +17,8 @@ import { ClinicsService } from './services/clincs-service';
 import { SearchInfoService } from './services/search-info-service';
 
 import { NgSelect2Module } from 'ng-select2';
+import { ClinicDetailsComponent } from './clinic-details/clinic-details.component';
+import { DoctorDetailsComponent } from './doctor-details/doctor-details.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import { NgSelect2Module } from 'ng-select2';
     FetchDataComponent,
     SearchMapComponent,
     DoctorListComponent,
-    ClinicListComponent
+    ClinicListComponent,
+    ClinicDetailsComponent,
+    DoctorDetailsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -38,8 +42,9 @@ import { NgSelect2Module } from 'ng-select2';
       { path: ':city', component: SearchMapComponent, children: [
         { path: 'doctors', component: DoctorListComponent },
         { path: 'clinics', component: ClinicListComponent },
-      ]
-      }
+      ] },
+      { path: 'clinic/:id', component: ClinicDetailsComponent },
+      { path: 'doctor/:id', component: DoctorDetailsComponent }
     ]),
     NgSelect2Module
   ],

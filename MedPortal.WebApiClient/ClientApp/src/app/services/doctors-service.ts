@@ -13,14 +13,14 @@ export class DoctorsService {
       clinics : []
     });
     doctors.push({
-      id: 1,
+      id: 2,
       surname: 'Гривцова',
       name: 'Ольга',
       patronimic: 'Александровна',
       clinics: []
     });
     doctors.push({
-      id: 1,
+      id: 3,
       surname: 'Салихов',
       name: 'Роберт',
       patronimic: 'Иосифович',

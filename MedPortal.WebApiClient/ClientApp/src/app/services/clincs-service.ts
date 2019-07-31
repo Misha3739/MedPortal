@@ -29,4 +29,29 @@ export class ClinicsService {
     });
     return clinics;
   }
+
+  getClinic(id: number): IClinic {
+    return {
+      id: 1,
+      name: 'Центр Диетологии',
+      latitude: 76,
+      longtitude: 66,
+      doctors: [
+        {
+          id: 1,
+          surname: 'Петров',
+          name: 'Иван',
+          patronimic: 'Федорович',
+          clinics: []
+        },
+        {
+          id: 2,
+          surname: 'Гривцова',
+          name: 'Ольга',
+          patronimic: 'Александровна',
+          clinics: []
+        }
+      ]
+    }
+  };
 }
