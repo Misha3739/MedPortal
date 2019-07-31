@@ -16,7 +16,7 @@ export class SearchInfoService {
     });
     searchInfo.push({
       type: SearchInfoType.speciality,
-      items: [{ id: 1, name: 'Центр Диетологии' }, { id: 2, name: 'Центр Простатологии' }, { id: 3, name: 'Центр Семейной медицины' }]
+      items: [{ id: 1, name: 'Уролог' }, { id: 2, name: 'Хирург' }, { id: 3, name: 'Гинеколог' }]
     });
 
     return searchInfo;

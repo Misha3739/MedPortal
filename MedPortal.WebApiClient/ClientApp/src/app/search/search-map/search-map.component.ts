@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { ISearchCategory } from '../../data/search-info';
 import { SearchInfoType } from '../../data/search-info-type';
+import { Select2OptionData } from 'ng-select2';
 
 
 @Component({
@@ -17,6 +18,7 @@ export class SearchMapComponent implements OnInit {
   map: google.maps.Map;
 
   categories: ISearchCategory[];
+  displayCategories: Array<Select2OptionData>;
   routeParamsSubscription: Subscription;
   city: string;
 
@@ -35,7 +37,31 @@ export class SearchMapComponent implements OnInit {
       (params: Params) => {
         this.city = params['city'];
         this.categories = this.searchInfoService.getSearchInfo(this.city);
+        this.displayCategories = this.toDisplayData();
       });
+  }
+
+  toDisplayData() : Select2OptionData[] {
+    let result: Array<Select2OptionData> = [];
+    for (let category of this.categories) {
+      let text = this.displayCategory(category.type);
+      let item = {
+        id: text,
+        text: text,
+        disabled: true,
+        children: []
+      };
+      for (let categoryItem of category.items) {
+        item.children.push({
+          id: categoryItem.id.toString(),
+          text: categoryItem.name
+        });
+      }
+
+      result.push(item);
+    }
+    console.log(result);
+    return result;
   }
 
   displayCategory(type: SearchInfoType) : string {

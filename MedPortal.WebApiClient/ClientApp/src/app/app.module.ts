@@ -16,6 +16,8 @@ import { DoctorsService } from './services/doctors-service';
 import { ClinicsService } from './services/clincs-service';
 import { SearchInfoService } from './services/search-info-service';
 
+import { NgSelect2Module } from 'ng-select2';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,7 +40,8 @@ import { SearchInfoService } from './services/search-info-service';
         { path: 'clinics', component: ClinicListComponent },
       ]
       }
-    ])
+    ]),
+    NgSelect2Module
   ],
   providers: [
     DoctorsService,
