@@ -8,6 +8,9 @@ export interface IDoctor {
    clinics: IClinic[];
 }
 
+export interface IDoctorDetails extends IDoctor {
+}
+
 export class Doctor implements IDoctor {
     id: number;
     surname: string;

@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { IDoctor, Doctor } from "../data/doctor";
+import { IDoctor,IDoctorDetails, Doctor } from "../data/doctor";
 
 @Injectable()
 export class DoctorsService {
@@ -28,4 +28,10 @@ export class DoctorsService {
     });
     return doctors;
   }
+
+  getDoctor(id: number): IDoctorDetails {
+    let doctor = this.getDoctors('sbp')[id - 1] as IDoctorDetails;
+
+    return doctor;
+  };
 }

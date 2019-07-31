@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ClinicsService } from '../services/clincs-service';
 import { Route, Router, ActivatedRoute, Params } from '@angular/router';
-import { IClinic } from '../data/clinic';
+import { IClinic, IClinicDetails } from '../data/clinic';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -13,7 +13,7 @@ export class ClinicDetailsComponent implements OnInit {
   private routeParamsSubscription: Subscription;
 
   id: number;
-  clinic: IClinic;
+  clinic: IClinicDetails;
 
   constructor(private clinicsService: ClinicsService,
     private route: ActivatedRoute,

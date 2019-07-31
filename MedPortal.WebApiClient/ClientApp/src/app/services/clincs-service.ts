@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { IDoctor, Doctor } from "../data/doctor";
-import { IClinic, Clinic } from "../data/clinic";
+import { IClinic, Clinic, IClinicDetails } from "../data/clinic";
 
 @Injectable()
 export class ClinicsService {
@@ -30,28 +30,9 @@ export class ClinicsService {
     return clinics;
   }
 
-  getClinic(id: number): IClinic {
-    return {
-      id: 1,
-      name: 'Центр Диетологии',
-      latitude: 76,
-      longtitude: 66,
-      doctors: [
-        {
-          id: 1,
-          surname: 'Петров',
-          name: 'Иван',
-          patronimic: 'Федорович',
-          clinics: []
-        },
-        {
-          id: 2,
-          surname: 'Гривцова',
-          name: 'Ольга',
-          patronimic: 'Александровна',
-          clinics: []
-        }
-      ]
-    }
+  getClinic(id: number): IClinicDetails {
+    let clinic = this.getClinics('sbp')[id-1] as IClinicDetails;
+
+    return clinic;
   };
 }
