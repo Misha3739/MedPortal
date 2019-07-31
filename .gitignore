@@ -13,3 +13,4 @@
 /MedPortal.ApiSyncService/obj
 /MedPortal.ApiSyncService/bin/Debug/netcoreapp2.2
 /.idea
+/MedPortal.WebApiClient/ClientApp/src/app/data
