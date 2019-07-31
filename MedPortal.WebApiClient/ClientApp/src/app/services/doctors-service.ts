@@ -16,7 +16,7 @@ export class DoctorsService {
       id: 1,
       surname: 'Гривцова',
       name: 'Ольга',
-      patronimic: 'Александросна',
+      patronimic: 'Александровна',
       clinics: []
     });
     doctors.push({

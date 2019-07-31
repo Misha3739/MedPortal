@@ -14,6 +14,7 @@ import { DoctorListComponent } from './search/doctor-list/doctor-list.component'
 import { ClinicListComponent } from './search/clinic-list/clinic-list.component';
 import { DoctorsService } from './services/doctors-service';
 import { ClinicsService } from './services/clincs-service';
+import { SearchInfoService } from './services/search-info-service';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { ClinicsService } from './services/clincs-service';
   ],
   providers: [
     DoctorsService,
-    ClinicsService
+    ClinicsService,
+    SearchInfoService
   ],
   bootstrap: [AppComponent]
 })

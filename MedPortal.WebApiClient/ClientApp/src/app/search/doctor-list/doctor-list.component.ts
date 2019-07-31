@@ -19,7 +19,7 @@ export class DoctorListComponent implements OnInit {
 
   constructor(private doctorsService: DoctorsService,
     private route: ActivatedRoute,
-    private router: Router, ) { }
+    private router: Router) { }
 
   ngOnInit() {
     this.routeParamsSubscription = this.route.params.subscribe(
