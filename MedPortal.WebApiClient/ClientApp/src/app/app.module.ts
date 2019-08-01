@@ -16,6 +16,8 @@ import { SearchInfoService } from './services/search-info-service';
 import { NgSelect2Module } from 'ng-select2';
 import { ClinicDetailsComponent } from './clinics/clinic-details/clinic-details.component';
 import { DoctorDetailsComponent } from './doctors/doctor-details/doctor-details.component';
+import { ClinicCardComponent } from './clinics/clinic-card/clinic-card.component';
+import { DoctorCardComponent } from './doctors/doctor-card/doctor-card.component';
 
 @NgModule({
   declarations: [
@@ -23,9 +25,11 @@ import { DoctorDetailsComponent } from './doctors/doctor-details/doctor-details.
     NavMenuComponent,
     SearchMapComponent,
     DoctorListComponent,
+    DoctorCardComponent,
+    DoctorDetailsComponent,
     ClinicListComponent,
-    ClinicDetailsComponent,
-    DoctorDetailsComponent
+    ClinicCardComponent,
+    ClinicDetailsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

@@ -1,9 +1,4 @@
 <h3>Клиники:</h3>
   <div *ngFor="let clinic of clinics">
-    <div class="row form-group">
-      <div class="form-control">
-        <label for="name">Название:</label>
-        <label>{{clinic.name}}</label>
-        </div>
-      </div>
+    <app-clinic-card [clinic]="clinic"></app-clinic-card>
     </div>
