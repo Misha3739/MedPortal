@@ -12,8 +12,8 @@ export class ClinicsService {
       logo: 'https://cdn4.docdoc.pro/clinic/logo/min_14179.png?1562319645',
       alias: 'Center_Dietology',
       address:'Малая Морская 22',
-      latitude: 76,
-      longtitude: 66,
+      latitude: 55.788895,
+      longtitude: 37.614545,
       doctors: []
     });
     clinics.push({
@@ -22,8 +22,8 @@ export class ClinicsService {
       name: 'Центр Простатологии',
       logo: 'https://cdn4.docdoc.pro/clinic/logo/logo_default.gif?1557801558',
       address: 'Большой пр ПС 33',
-      latitude: 76,
-      longtitude: 66,
+      latitude: 55.756082,
+      longtitude: 37.652041,
       doctors: []
     });
     clinics.push({
@@ -32,8 +32,8 @@ export class ClinicsService {
       name: 'Центр Семейной медицины',
       logo: 'https://cdn4.docdoc.pro/clinic/logo/logo_default.gif?1562657624',
       address: 'Московский пр 143',
-      latitude: 76,
-      longtitude: 66,
+      latitude: 55.639425,
+      longtitude: 37.65911,
       doctors: []
     });
     return clinics;

@@ -6,6 +6,7 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 import { ISearchCategory } from '../../data/search-info';
 import { SearchInfoType } from '../../data/search-info-type';
 import { Select2OptionData } from 'ng-select2';
+import { ClinicsService } from '../../services/clincs-service';
 
 
 @Component({
@@ -26,16 +27,10 @@ export class SearchMapComponent implements OnInit {
   navigateToResource: SearchInfoType;
   navigateToAlias: string;
 
-  constructor(private searchInfoService: SearchInfoService, private route: ActivatedRoute, private router: Router) { }
+  constructor(private searchInfoService: SearchInfoService, private clinicsService: ClinicsService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
-    let mapProp = {
-      center: new google.maps.LatLng(18.5793, 73.8143),
-      zoom: 15,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-
-    this.map = new google.maps.Map(this.gmapElement.nativeElement, mapProp);
+    this.initMaps(59.93863, 30.31413);
 
     this.routeParamsSubscription = this.route.params.subscribe(
       (params: Params) => {
@@ -43,6 +38,16 @@ export class SearchMapComponent implements OnInit {
         this.categories = this.searchInfoService.getSearchInfo(this.city);
         this.displayCategories = this.toDisplayData();
       });
+  }
+
+  initMaps(latitude: number, longtitude: number) {
+    let mapProp = {
+      center: new google.maps.LatLng(latitude, longtitude),
+      zoom: 15,
+      mapTypeId: google.maps.MapTypeId.HYBRID
+    };
+
+    this.map = new google.maps.Map(this.gmapElement.nativeElement, mapProp);
   }
 
   toDisplayData() : Select2OptionData[] {
@@ -77,6 +82,13 @@ export class SearchMapComponent implements OnInit {
       this.navigateToAlias = splitted[1];
       this.isSelected = true;
       console.log('Will navigate to ' + SearchInfoType[this.navigateToResource] + ' alias: ' + this.navigateToAlias);
+
+      if (this.navigateToResource === SearchInfoType.clinic) {
+        let clinic = this.clinicsService.getClinic(this.navigateToAlias);
+        console.log("Latitude: " + clinic.latitude + " longtitude: " + clinic.longtitude);
+        this.initMaps(clinic.latitude, clinic.longtitude);
+      }
+
     } else {
       console.error('Selector value is not defined');
     }
