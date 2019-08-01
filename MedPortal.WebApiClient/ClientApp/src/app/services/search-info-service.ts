@@ -8,15 +8,38 @@ export class SearchInfoService {
     let searchInfo: ISearchCategory[] = [];
     searchInfo.push({
       type: SearchInfoType.clinic,
-      items: [{ id: 1, name: 'Центр Диетологии' }, { id: 2, name: 'Центр Простатологии' }, { id: 3, name: 'Центр Семейной медицины' }]
+      items: [
+        {
+          id: 1,
+          name: 'Центр Диетологии',
+          alias: 'Center_Dietology'
+        },
+        {
+          id: 2,
+          alias: 'Center_Prostatology',
+          name: 'Центр Простатологии'
+        },
+        {
+          id: 3,
+          alias: 'Center_FamilyMedicine',
+          name: 'Центр Семейной медицины'
+        }
+      ]
     });
     searchInfo.push({
       type: SearchInfoType.doctor,
-      items: [{ id: 1, name: 'Петров Иван Федорович' }, { id: 2, name: 'Гривцова Ольга Александровна' }, { id: 3, name: 'Салихов Роберт Иосифович' }]
+      items: [
+        { id: 1, alias: 'Petrov_Ivan', name: 'Петров Иван Федорович' },
+        { id: 2, alias: 'Grivtsova_Olga', name: 'Гривцова Ольга Александровна' },
+      { id: 3, alias: 'Salikhov_Robert', name: 'Салихов Роберт Иосифович' }
+      ]
     });
     searchInfo.push({
       type: SearchInfoType.speciality,
-      items: [{ id: 1, name: 'Уролог' }, { id: 2, name: 'Хирург' }, { id: 3, name: 'Гинеколог' }]
+      items: [
+        { id: 1, alias:'urologist', name: 'Уролог' },
+        { id: 2, alias: 'surgeon', name: 'Хирург' },
+        { id: 3, alias: 'ginecologist', name: 'Гинеколог' }]
     });
 
     return searchInfo;

@@ -7,6 +7,7 @@ export class DoctorsService {
     let doctors: IDoctor[] = [];
     doctors.push({
       id: 1,
+      alias: 'Petrov_Ivan',
       surname: 'Петров',
       name: 'Иван',
       patronimic: 'Федорович',
@@ -17,6 +18,7 @@ export class DoctorsService {
     });
     doctors.push({
       id: 2,
+      alias: 'Grivtsova_Olga',
       surname: 'Гривцова',
       name: 'Ольга',
       patronimic: 'Александровна',
@@ -27,6 +29,7 @@ export class DoctorsService {
     });
     doctors.push({
       id: 3,
+      alias: 'Salikhov_Robert',
       surname: 'Салихов',
       name: 'Роберт',
       patronimic: 'Иосифович',
@@ -38,8 +41,8 @@ export class DoctorsService {
     return doctors;
   }
 
-  getDoctor(id: number): IDoctorDetails {
-    let doctor = this.getDoctors('sbp')[id - 1] as IDoctorDetails;
+  getDoctor(alias: string): IDoctorDetails {
+    let doctor = this.getDoctors('sbp').find(d => d.alias === alias) as IDoctorDetails;
 
     return doctor;
   };

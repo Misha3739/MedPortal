@@ -1,27 +1,30 @@
 import { Injectable } from "@angular/core";
 import { IDoctor } from "../data/doctor";
-import { IClinic, Clinic, IClinicDetails } from "../data/clinic";
+import { IClinic, IClinicDetails } from "../data/clinic";
 
 @Injectable()
 export class ClinicsService {
   getClinics(city: string): IClinic[] {
-    let clinics: Clinic[] = [];
+    let clinics: IClinic[] = [];
     clinics.push({
       id: 1,
       name: 'Центр Диетологии',
+      alias: 'Center_Dietology',
       latitude: 76,
       longtitude: 66,
       doctors: []
     });
     clinics.push({
       id: 2,
+      alias: 'Center_Prostatology',
       name: 'Центр Простатологии',
       latitude: 76,
       longtitude: 66,
       doctors: []
     });
     clinics.push({
-      id: 2,
+      id: 3,
+      alias: 'Center_FamilyMedicine',
       name: 'Центр Семейной медицины',
       latitude: 76,
       longtitude: 66,
@@ -30,8 +33,8 @@ export class ClinicsService {
     return clinics;
   }
 
-  getClinic(id: number): IClinicDetails {
-    let clinic = this.getClinics('sbp')[id-1] as IClinicDetails;
+  getClinic(alias: string): IClinicDetails {
+    let clinic = this.getClinics('sbp').find(c => c.alias === alias) as IClinicDetails;
 
     return clinic;
   };

@@ -12,7 +12,7 @@ import { ClinicsService } from '../../services/clincs-service';
 export class ClinicDetailsComponent implements OnInit {
   private routeParamsSubscription: Subscription;
 
-  id: number;
+  alias: string;
   clinic: IClinicDetails;
 
   constructor(private clinicsService: ClinicsService,
@@ -22,8 +22,8 @@ export class ClinicDetailsComponent implements OnInit {
   ngOnInit() {
     this.routeParamsSubscription = this.route.params.subscribe(
       (params: Params) => {
-        this.id = params['id'];
-        this.clinic = this.clinicsService.getClinic(this.id);
+        this.alias = params['id'];
+        this.clinic = this.clinicsService.getClinic(this.alias);
       });
   }
 

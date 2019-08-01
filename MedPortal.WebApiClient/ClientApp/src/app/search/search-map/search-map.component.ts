@@ -24,7 +24,7 @@ export class SearchMapComponent implements OnInit {
   isSelected = false;
 
   navigateToResource: SearchInfoType;
-  navigateToId?: number;
+  navigateToAlias: string;
 
   constructor(private searchInfoService: SearchInfoService, private route: ActivatedRoute, private router: Router) { }
 
@@ -57,7 +57,7 @@ export class SearchMapComponent implements OnInit {
 
       for (let categoryItem of category.items) {
         item.children.push({
-          id: category.type.toString() + '_' + categoryItem.id.toString(),
+          id: category.type.toString() + '@' + categoryItem.alias,
           text: categoryItem.name
         });
       }
@@ -72,11 +72,11 @@ export class SearchMapComponent implements OnInit {
     console.log(event);
     let value = event.value;
     if (value) {
-      let splitted = value.split('_', 2);
+      let splitted = value.split('@', 2);
       this.navigateToResource = parseInt(splitted[0]);
-      this.navigateToId = parseInt(splitted[1]);
+      this.navigateToAlias = splitted[1];
       this.isSelected = true;
-      console.log('Will navigate to ' + SearchInfoType[this.navigateToResource] + ' id: ' + this.navigateToId);
+      console.log('Will navigate to ' + SearchInfoType[this.navigateToResource] + ' alias: ' + this.navigateToAlias);
     } else {
       console.error('Selector value is not defined');
     }
@@ -85,13 +85,13 @@ export class SearchMapComponent implements OnInit {
   onRedirect() {
     switch (this.navigateToResource) {
       case SearchInfoType.clinic:
-        this.router.navigate(['clinic/' + this.navigateToId]);
+        this.router.navigate(['clinic/' + this.navigateToAlias]);
         break;
       case SearchInfoType.doctor:
-        this.router.navigate(['doctor/' + this.navigateToId]);
+        this.router.navigate(['doctor/' + this.navigateToAlias]);
         break;
       case SearchInfoType.speciality:
-        this.router.navigate(['speciality/' + this.navigateToId]);
+        this.router.navigate(['speciality/' + this.navigateToAlias]);
         break;
     }
    

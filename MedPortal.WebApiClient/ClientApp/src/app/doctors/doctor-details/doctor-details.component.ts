@@ -11,7 +11,7 @@ import { DoctorsService } from '../../services/doctors-service';
 })
 export class DoctorDetailsComponent implements OnInit {
 
-  id: number;
+  alias: string;
   doctor: IDoctorDetails;
 
   private routeParamsSubscription: Subscription;
@@ -23,8 +23,8 @@ export class DoctorDetailsComponent implements OnInit {
   ngOnInit() {
     this.routeParamsSubscription = this.route.params.subscribe(
       (params: Params) => {
-        this.id = params['id'];
-        this.doctor = this.doctorService.getDoctor(this.id);
+        this.alias = params['id'];
+        this.doctor = this.doctorService.getDoctor(this.alias);
       });
   }
 

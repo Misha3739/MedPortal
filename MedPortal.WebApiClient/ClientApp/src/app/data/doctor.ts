@@ -3,6 +3,7 @@ import { ISpeciality } from "./speciality";
 
 export interface IDoctor {
    id: number,
+   alias: string,
    surname: string;
    name: string;
    patronimic: string;
