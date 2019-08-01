@@ -1,23 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { Route, Router, ActivatedRoute, Params } from '@angular/router';
-import { IClinic } from '../data/clinic';
 import { Subscription } from 'rxjs';
-import { IDoctorDetails } from '../data/doctor';
-import { DoctorsService } from '../services/doctors-service';
+import { IClinicDetails } from '../../data/clinic';
+import { ClinicsService } from '../../services/clincs-service';
 
 @Component({
-  selector: 'app-doctor-details',
-  templateUrl: './doctor-details.component.html',
-  styleUrls: ['./doctor-details.component.css']
+  selector: 'app-clinic-details',
+  templateUrl: './clinic-details.component.html',
+  styleUrls: ['./clinic-details.component.css']
 })
-export class DoctorDetailsComponent implements OnInit {
-
-  id: number;
-  doctor: IDoctorDetails;
-
+export class ClinicDetailsComponent implements OnInit {
   private routeParamsSubscription: Subscription;
 
-  constructor(private doctorService: DoctorsService,
+  id: number;
+  clinic: IClinicDetails;
+
+  constructor(private clinicsService: ClinicsService,
     private route: ActivatedRoute,
     private router: Router) { }
 
@@ -25,7 +23,7 @@ export class DoctorDetailsComponent implements OnInit {
     this.routeParamsSubscription = this.route.params.subscribe(
       (params: Params) => {
         this.id = params['id'];
-        this.doctor = this.doctorService.getDoctor(this.id);
+        this.clinic = this.clinicsService.getClinic(this.id);
       });
   }
 

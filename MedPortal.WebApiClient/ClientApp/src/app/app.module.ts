@@ -7,15 +7,15 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { SearchMapComponent } from './search/search-map/search-map.component';
-import { DoctorListComponent } from './search/doctor-list/doctor-list.component';
-import { ClinicListComponent } from './search/clinic-list/clinic-list.component';
+import { DoctorListComponent } from './doctors/doctor-list/doctor-list.component';
+import { ClinicListComponent } from './clinics/clinic-list/clinic-list.component';
 import { DoctorsService } from './services/doctors-service';
 import { ClinicsService } from './services/clincs-service';
 import { SearchInfoService } from './services/search-info-service';
 
 import { NgSelect2Module } from 'ng-select2';
-import { ClinicDetailsComponent } from './clinic-details/clinic-details.component';
-import { DoctorDetailsComponent } from './doctor-details/doctor-details.component';
+import { ClinicDetailsComponent } from './clinics/clinic-details/clinic-details.component';
+import { DoctorDetailsComponent } from './doctors/doctor-details/doctor-details.component';
 
 @NgModule({
   declarations: [
