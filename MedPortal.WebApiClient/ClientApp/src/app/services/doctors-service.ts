@@ -13,7 +13,7 @@ export class DoctorsService {
       patronimic: 'Федорович',
       experience: 5,
       photoUrl: 'https://cdn4.docdoc.pro/doctor/105574_20190514115235_small.jpg',
-      specialities: [{id : 1, name : 'Уролог'}],
+      specialities: [{id : 1, alias: 'Urologist', name : 'Уролог'}],
       clinics : []
     });
     doctors.push({
@@ -24,7 +24,7 @@ export class DoctorsService {
       patronimic: 'Александровна',
       experience: 15,
       photoUrl: 'https://cdn4.docdoc.pro/doctor/116024_20190422214452_small.jpg',
-      specialities: [{ id: 2, name: 'Кардиолог' },{ id: 3, name: 'Хирург' }],
+      specialities: [{ id: 2, alias: 'Cardiologist', name: 'Кардиолог' }, { id: 3, alias: 'Surgeon', name: 'Хирург' }],
       clinics: []
     });
     doctors.push({
@@ -35,7 +35,7 @@ export class DoctorsService {
       patronimic: 'Иосифович',
       experience: 25,
       photoUrl: 'https://cdn4.docdoc.pro/doctor/101008_small.jpg',
-      specialities: [{ id: 5, name: 'Гастроэнтеролог' }, { id: 3, name: 'Хирург' }],
+      specialities: [{ id: 5, alias: 'Gastroenterologist', name: 'Гастроэнтеролог' }, { id: 3, alias: 'Surgeon', name: 'Хирург' }],
       clinics: []
     });
     return doctors;

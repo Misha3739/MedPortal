@@ -1,15 +1,22 @@
 <div class="row">
   <div class="col-sm-6 col-md-5 col-lg-4">
     <div class="form-group search-group">
-    <label for="search">Введите текст поиска здесь:</label>
-    <ng-select2 [data]="displayCategories" width="300" (valueChanged)="onSelectedValueChanged($event)"></ng-select2>
+      <label for="search">Введите текст поиска здесь:</label>
+      <ng-select2 [data]="displayCategories" width="300" (valueChanged)="onSelectedValueChanged($event)"></ng-select2>
       <button (click)="onRedirect()" [disabled]="!isSelected">Перейти</button>
-      </div>
+    </div>
   </div>
   <div class="col-sm-6 col-md-5 col-lg-4">
     <div #gmap style="width:100%;height:500px;width:500px"></div>
   </div>
 </div>
+
+<div class="row">
+  <div class="col-sm-4 col-md-3 col-lg-2">
+    <a routerLink="find-clinic"><strong>Поиск по клиникам</strong></a>
+    </div>
+</div>
+
 
 <div class="row">
   <router-outlet></router-outlet>

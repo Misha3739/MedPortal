@@ -18,6 +18,7 @@ import { ClinicDetailsComponent } from './clinics/clinic-details/clinic-details.
 import { DoctorDetailsComponent } from './doctors/doctor-details/doctor-details.component';
 import { ClinicCardComponent } from './clinics/clinic-card/clinic-card.component';
 import { DoctorCardComponent } from './doctors/doctor-card/doctor-card.component';
+import { ClinicSearchComponent } from './clinics/clinic-search/clinic-search.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { DoctorCardComponent } from './doctors/doctor-card/doctor-card.component
     DoctorDetailsComponent,
     ClinicListComponent,
     ClinicCardComponent,
-    ClinicDetailsComponent
+    ClinicDetailsComponent,
+    ClinicSearchComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -40,6 +42,7 @@ import { DoctorCardComponent } from './doctors/doctor-card/doctor-card.component
       { path: ':city', component: SearchMapComponent, children: [
         { path: 'doctors', component: DoctorListComponent },
         { path: 'clinics', component: ClinicListComponent },
+        { path: 'find-clinic', component: ClinicSearchComponent },
       ] },
       { path: 'clinic/:id', component: ClinicDetailsComponent },
       { path: 'doctor/:id', component: DoctorDetailsComponent }

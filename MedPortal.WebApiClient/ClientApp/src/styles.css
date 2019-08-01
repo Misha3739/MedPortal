@@ -4,6 +4,9 @@
 .component-list {
   min-width:900px;
 }
+.inline {
+  display: inline-block;
+}
 
 .main-menu {
   position: relative;

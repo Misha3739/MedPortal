@@ -1,0 +1,15 @@
+<h3>Поиск клиники:</h3>
+<div class="row">
+  <div class="form-control">
+    <label for="specialities">По специальности:</label>
+    <select id="specialities">
+      <option *ngFor="let speciality of specialities" value="{{speciality.alias}}">{{speciality.name}}</option>
+    </select>
+  </div>
+  <div class="form-control">
+    <label for="specialities">По городу:</label>
+    <select id="specialities">
+      <option *ngFor="let city of cities" value="{{city.alias}}">{{city.name}}</option>
+    </select>
+  </div>
+  <app-clinic-list></app-clinic-list>
