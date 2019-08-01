@@ -6,9 +6,6 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { HomeComponent } from './home/home.component';
-import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { SearchMapComponent } from './search/search-map/search-map.component';
 import { DoctorListComponent } from './search/doctor-list/doctor-list.component';
 import { ClinicListComponent } from './search/clinic-list/clinic-list.component';
@@ -24,9 +21,6 @@ import { DoctorDetailsComponent } from './doctor-details/doctor-details.componen
   declarations: [
     AppComponent,
     NavMenuComponent,
-    HomeComponent,
-    CounterComponent,
-    FetchDataComponent,
     SearchMapComponent,
     DoctorListComponent,
     ClinicListComponent,
