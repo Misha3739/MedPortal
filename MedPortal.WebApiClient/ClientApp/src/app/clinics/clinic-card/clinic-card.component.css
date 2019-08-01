@@ -1,0 +1,12 @@
+.inline {
+  display: inline-block;
+}
+
+strong {
+  padding-left: 5px;
+}
+
+.logo {
+  max-width: 100%;
+  max-height: 100%;
+}

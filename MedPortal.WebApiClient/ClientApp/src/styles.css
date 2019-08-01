@@ -1,5 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 /* Menu */
+
+.component-list {
+  min-width:900px;
+}
+
 .main-menu {
   position: relative;
   z-index: 9;

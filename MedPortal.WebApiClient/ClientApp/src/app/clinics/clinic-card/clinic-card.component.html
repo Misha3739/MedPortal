@@ -1,6 +1,15 @@
 <div class="row form-group">
-  <div class="form-control">
-    <label for="name">Название:</label>
-    <label>{{clinic.name}}</label>
+  <div class="col-xs-4 col-sm-3 col-md-2">
+    <img class="logo" src="{{clinic.logo}}" />
+  </div>
+  <div class="col-xs-8 col-sm-6 col-md-5">
+    <div class="row form-control">
+      <label for="surname">Наиенование:</label>
+      <a routerLink="/clinic/{{clinic.alias}}"><strong>{{clinic.name}}</strong></a>
+    </div>
+    <div class="row form-control">
+      <label for="experience">Адрес:</label>
+      <strong>{{clinic.address}}</strong>
+    </div>
   </div>
 </div>
