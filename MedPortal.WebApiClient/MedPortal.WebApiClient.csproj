@@ -31,6 +31,7 @@
     <None Remove="ClientApp\src\app\data\clinic.ts" />
     <None Remove="ClientApp\src\app\data\doctor.ts" />
     <None Remove="ClientApp\src\app\data\search-info.ts" />
+    <None Remove="ClientApp\src\app\data\speciality.ts" />
     <None Remove="ClientApp\src\app\services\clincs-service.ts" />
     <None Remove="ClientApp\src\app\services\doctors-service.ts" />
     <None Remove="ClientApp\src\app\services\search-info-service.ts" />
@@ -45,6 +46,7 @@
     <TypeScriptCompile Include="ClientApp\src\app\data\clinic.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\data\doctor.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\data\search-info.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\data\speciality.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\clincs-service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\doctors-service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\search-info-service.ts" />

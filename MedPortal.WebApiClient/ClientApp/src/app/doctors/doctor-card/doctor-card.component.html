@@ -1,6 +1,21 @@
 <div class="row form-group">
-  <div class="form-control">
-    <label for="surname">ФИО:</label>
-    <label>{{doctor.surname}} {{doctor.name}} {{doctor.patronimic}}</label>
+  <div class="col-xs-4 col-sm-3 col-md-2">
+    <img src="{{doctor.photoUrl}}" />
+  </div>
+  <div class="col-xs-8 col-sm-6 col-md-5">
+    <div class="row form-control">
+      <label for="surname">ФИО:</label>
+      <strong>{{doctor.surname}} {{doctor.name}} {{doctor.patronimic}}</strong>
+    </div>
+    <div class="row form-control">
+      <label for="experience">Опыт работы:</label>
+      <strong>{{doctor.experience}} {{doctor.experience >= 5 ? 'Лет' : 'Года'}} </strong>
+    </div>
+    <div class="row form-control">
+      <label for="specialities">Специальности:</label>
+      <div class="inline" *ngFor="let speciality of doctor.specialities" >
+        <strong>{{speciality.name}}</strong>
+      </div>
+    </div>
   </div>
 </div>

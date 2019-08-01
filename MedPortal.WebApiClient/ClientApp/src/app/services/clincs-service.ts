@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { IDoctor, Doctor } from "../data/doctor";
+import { IDoctor } from "../data/doctor";
 import { IClinic, Clinic, IClinicDetails } from "../data/clinic";
 
 @Injectable()
