@@ -38,14 +38,14 @@ import { ClinicSearchComponent } from './clinics/clinic-search/clinic-search.com
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-      { path: '', component: SearchMapComponent, pathMatch: 'full' },
-      { path: ':city', component: SearchMapComponent, children: [
-        { path: 'doctors', component: DoctorListComponent },
-        { path: 'clinics', component: ClinicListComponent },
-        { path: 'find-clinic', component: ClinicSearchComponent },
-      ] },
+      { path: '', component: SearchMapComponent, pathMatch: 'full' }, 
+      { path: 'doctors', component: DoctorListComponent },
+      { path: 'clinics', component: ClinicListComponent },
+      { path: ':city', component: SearchMapComponent, },
+      { path: ':city/doctors', component: DoctorListComponent },
+      { path: ':city/clinics', component: ClinicListComponent },
       { path: 'clinic/:id', component: ClinicDetailsComponent },
-      { path: 'doctor/:id', component: DoctorDetailsComponent }
+      { path: 'doctor/:id', component: DoctorDetailsComponent },
     ]),
     NgSelect2Module
   ],
