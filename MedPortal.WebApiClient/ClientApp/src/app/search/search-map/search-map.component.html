@@ -4,14 +4,14 @@
       <label for="search">Введите текст поиска здесь:</label>
       <div class="row">
         <ng-select2 [data]="displayCategories" width="300" (valueChanged)="onSelectedValueChanged($event)"></ng-select2>
-        <button (click)="onRedirect()" [disabled]="!isSelected">Поиск</button>
+        <button (click)="onRedirect()">Поиск</button>
       </div>
 
       <div class="row form-control" inline>
         <label class="search-label" for="doctors">Врачи</label>
-        <input id="doctors" type="checkbox" />
+        <input id="doctors" type="checkbox"  [(ngModel)]="doctorsSearchSelected"/>
         <label class="search-label" for="clinics">Клиники</label>
-        <input id="clinics" type="checkbox" />
+        <input id="clinics" type="checkbox"  [(ngModel)]="clinicsSearchSelected" />
       </div>
     </div>
     </div>
