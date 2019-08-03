@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --watch --port 50892 ",
     "build": "ng build",
     "build:ssr": "ng run MedPortal.WebApiClient:server:dev",
     "test": "ng test",
