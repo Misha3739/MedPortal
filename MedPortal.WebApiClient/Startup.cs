@@ -83,7 +83,7 @@ namespace MedPortal.WebApiClient
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
-            app.UseMiddleware<RequestResponseLoggingMiddleware>();
+            //app.UseMiddleware<RequestResponseLoggingMiddleware>();
             app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseMvc(routes =>

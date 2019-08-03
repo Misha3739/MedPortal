@@ -1,6 +1,6 @@
 using AutoMapper;
 using MedPortal.Data.DTO;
-
+using MedPortal.WebApiClient.Models;
 
 namespace MedPortal.Proxy.Mapping
 {
@@ -8,7 +8,7 @@ namespace MedPortal.Proxy.Mapping
     {
         public MappingProfile()
         {
-
+            CreateMap<HCity, CitySearchModel>();
         }
     }
 }
