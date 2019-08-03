@@ -59,7 +59,7 @@ export class SearchInfoService {
     return [
       { id: 1, alias: 'spb', name: 'Санкт-Петербург' },
       { id: 2, alias: 'moscow', name: 'Москва' },
-      { id: 3, alias: 'voronezh', name: 'Воронеж;' },
+      { id: 3, alias: 'voronezh', name: 'Воронеж' },
       { id: 5, alias: 'ufa', name: 'Уфа' }];
   }
 }
