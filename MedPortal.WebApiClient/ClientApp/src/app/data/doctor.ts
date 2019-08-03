@@ -1,5 +1,6 @@
 import { IClinic } from "./clinic";
 import { ISpeciality } from "./speciality";
+import { ICity } from "./ICity";
 
 export interface IDoctor {
    id: number,
@@ -9,6 +10,7 @@ export interface IDoctor {
    patronimic: string;
    photoUrl: string;
    experience: number;
+   city: ICity;
    specialities: ISpeciality[];
    clinics: IClinic[];
 }

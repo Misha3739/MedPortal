@@ -44,8 +44,10 @@ import { ClinicSearchComponent } from './clinics/clinic-search/clinic-search.com
       { path: ':city', component: SearchMapComponent, },
       { path: ':city/doctors', component: DoctorListComponent },
       { path: ':city/clinics', component: ClinicListComponent },
-      { path: 'clinic/:id', component: ClinicDetailsComponent },
-      { path: 'doctor/:id', component: DoctorDetailsComponent },
+      { path: 'clinics/:id', component: ClinicDetailsComponent },
+      { path: 'doctors/:id', component: DoctorDetailsComponent },
+      { path: ':city/clinics/:id', component: ClinicDetailsComponent },
+      { path: ':city/doctors/:id', component: DoctorDetailsComponent },
     ]),
     NgSelect2Module
   ],
