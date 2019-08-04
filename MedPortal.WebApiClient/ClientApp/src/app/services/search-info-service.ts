@@ -1,11 +1,27 @@
-import { Injectable } from "@angular/core";
+import { Injectable, Inject } from "@angular/core";
 import { ISearchCategory } from "../data/search-info";
 import { SearchInfoType } from "../data/search-info-type";
 import { ISpeciality } from "../data/speciality";
 import { ICity } from "../data/ICity";
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Subject } from "rxjs";
 
 @Injectable()
 export class SearchInfoService {
+
+  dataReceived = new Subject();
+
+  cities: ICity[];
+
+  private headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    //'Access-Control-Allow-Origin': '*',
+    //'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, DELETE, PUT',
+  });
+
+  constructor(@Inject('BASE_URL') public baseUrl: string, private httpClient: HttpClient) {
+  }
+
   getSearchInfo(city: string): ISearchCategory[] {
     let searchInfo: ISearchCategory[] = [];
     searchInfo.push({
@@ -55,7 +71,16 @@ export class SearchInfoService {
       { id: 3, alias: 'Surgeon', name: 'Хирург' }];
   }
 
-  getCities(): ICity[] {
+  getCities() {
+    return this.httpClient.get(this.baseUrl + '/api/cities', { headers: this.headers})
+      .subscribe((result: ICity[]) => {
+        console.log('/api/cities: ', result);
+        this.cities = result;
+        this.dataReceived.next('cities');
+      });
+  }
+
+  getCitiesOld(): ICity[] {
     return [
       { id: 1, alias: 'spb', name: 'Санкт-Петербург' },
       { id: 2, alias: 'moscow', name: 'Москва' },

@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
@@ -52,9 +52,11 @@ import { ClinicSearchComponent } from './clinics/clinic-search/clinic-search.com
     NgSelect2Module
   ],
   providers: [
+    HttpClient,
     DoctorsService,
     ClinicsService,
-    SearchInfoService
+    SearchInfoService,
+    { provide: 'BASE_URL', useValue: 'http://localhost:5008' }
   ],
   bootstrap: [AppComponent]
 })

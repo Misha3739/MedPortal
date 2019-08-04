@@ -18,33 +18,37 @@ export class NavMenuComponent {
   city: ICity = this.nullCity;
 
   currentUrl: string = null;
-
+  cityAlias: string;
   routeParamsSubscription: Subscription;
 
   constructor(private searchInfoService: SearchInfoService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
-    this.cities = this.searchInfoService.getCities();
-    this.cities.unshift(this.nullCity);
-    this.router.events.subscribe(val => {
+    this.searchInfoService.getCities();
 
+    this.searchInfoService.dataReceived.subscribe(res => {
+      this.cities = this.searchInfoService.cities;
+      this.cities.unshift(this.nullCity);
+
+      if (this.cityAlias && this.cityAlias !== '') {
+        this.city = this.cities.find(c => c.alias === this.cityAlias);
+        ToDo: //Find by gmaps
+        if (!this.city) {
+          this.city = this.cities.find(c => c.alias === 'spb');
+        }
+      }
+    });
+
+    this.router.events.subscribe(val => {
+     
       /* the router will fire multiple events */
     /* we only want to react if it's the final active route */
       let cityAlias = '';
       if (val instanceof NavigationEnd) {
         this.currentUrl = this.router.url;
         let splitted = this.currentUrl.split("/");
-        cityAlias = splitted.length > 0 ? splitted[1] : null;
+        this.cityAlias = splitted.length > 0 ? splitted[1] : null;
         console.log(this.currentUrl, ' => ', cityAlias);
-      }
-
-
-      if (cityAlias && cityAlias !== '') {
-        this.city = this.cities.find(c => c.alias === cityAlias);
-        ToDo: //Find by gmaps
-        if (!this.city) {
-          this.city = this.cities.find(c => c.alias === 'spb');
-        }
       }
     });
   }
