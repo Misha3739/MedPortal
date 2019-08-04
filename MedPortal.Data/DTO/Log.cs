@@ -2,8 +2,10 @@ using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace MedPortal.Data.DTO {
+    //ToDo: add headers, response-body
 	public class Log : IEntity {
-		[Key] public long Id { get; set; }
+		[Key]
+        public long Id { get; set; }
 
 		public DateTime IncomeTime { get; set; }
 
