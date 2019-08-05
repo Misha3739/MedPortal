@@ -19,7 +19,7 @@ export class ClinicSearchComponent implements OnInit {
 
   ngOnInit() {
     this.specialities = this.searchInfoService.getSpecialities();
-    this.cities = this.searchInfoService.getCities();
+    this.cities = this.searchInfoService.getCitiesOld();
   }
 
 }

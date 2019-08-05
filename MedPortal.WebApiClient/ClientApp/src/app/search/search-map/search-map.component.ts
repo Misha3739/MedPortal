@@ -104,10 +104,10 @@ export class SearchMapComponent implements OnInit {
     if (this.singleItemSelected) {
       switch (this.navigateToResource) {
         case SearchInfoType.clinic:
-          this.router.navigate(['clinic/' + this.navigateToAlias]);
+          this.router.navigate(['clinics/' + this.navigateToAlias]);
           break;
         case SearchInfoType.doctor:
-          this.router.navigate(['doctor/' + this.navigateToAlias]);
+          this.router.navigate(['doctors/' + this.navigateToAlias]);
           break;
       }
     } else {
