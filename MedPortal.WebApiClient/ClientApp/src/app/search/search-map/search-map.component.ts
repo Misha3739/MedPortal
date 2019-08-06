@@ -62,6 +62,10 @@ export class SearchMapComponent implements OnInit {
       let cityObject = this.searchInfoService.cities.find(c => c.alias === this.city);
       this.initMaps(cityObject.latitude, cityObject.longitude);
     }
+    this.clearSelectedValue();
+  }
+
+  private clearSelectedValue() {
     this.navigateToAlias = undefined;
     this.navigateToResource = undefined;
     this.singleItemSelected = false;
@@ -130,7 +134,7 @@ export class SearchMapComponent implements OnInit {
         }
       }
     } else {
-      console.error('Selector value is not defined');
+       this.clearSelectedValue();
     }
   }
 

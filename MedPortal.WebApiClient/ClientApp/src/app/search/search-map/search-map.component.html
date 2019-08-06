@@ -3,8 +3,8 @@
     <div class="form-group search-group">
       <label for="search">Введите текст поиска здесь:</label>
       <div class="row">
-        <ng-select2 [data]="displayCategories" width="300" (valueChanged)="onSelectedValueChanged($event)"></ng-select2>
-        <button (click)="onRedirect()">Поиск</button>
+        <ng-select2 [allowClear]="true" [data]="displayCategories" width="300" (valueChanged)="onSelectedValueChanged($event)"></ng-select2>
+        <button (click)="onRedirect()">{{singleItemSelected ? 'Перейти' : 'Поиск'}}</button>
       </div>
 
       <div class="row form-control" inline [hidden]="singleItemSelected">
