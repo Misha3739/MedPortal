@@ -18,13 +18,13 @@ namespace MedPortal.Data.Repositories {
 			_dbSet = _dataContext.Set<T>();
 		}
 
-		public async Task<List<T>> GetAsync(Expression<Func<T, bool>> predicate = null) {
+		public virtual async Task<List<T>> GetAsync(Expression<Func<T, bool>> predicate = null) {
 			var items = _dbSet.AsNoTracking();
 			var result = predicate != null ? await items.WhereAsync(predicate) : items;
 			return await result.ToListAsync();
 		}
 
-		public async Task<T> FindAsync(Expression<Func<T, bool>> predicate) {
+		public virtual async Task<T> FindAsync(Expression<Func<T, bool>> predicate) {
 			return await _dbSet.FirstOrDefaultAsync(predicate);
 		}
 
