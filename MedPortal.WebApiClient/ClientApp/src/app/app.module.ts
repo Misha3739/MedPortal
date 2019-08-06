@@ -19,6 +19,7 @@ import { DoctorDetailsComponent } from './doctors/doctor-details/doctor-details.
 import { ClinicCardComponent } from './clinics/clinic-card/clinic-card.component';
 import { DoctorCardComponent } from './doctors/doctor-card/doctor-card.component';
 import { ClinicSearchComponent } from './clinics/clinic-search/clinic-search.component';
+import { GeolocationService } from './services/geolocation-service';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { ClinicSearchComponent } from './clinics/clinic-search/clinic-search.com
     DoctorsService,
     ClinicsService,
     SearchInfoService,
+    GeolocationService,
     { provide: 'BASE_URL', useValue: 'http://localhost:5008' }
   ],
   bootstrap: [AppComponent]

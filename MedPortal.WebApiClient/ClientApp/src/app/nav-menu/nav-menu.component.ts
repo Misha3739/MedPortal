@@ -3,6 +3,7 @@ import { SearchInfoService } from '../services/search-info-service';
 import { ICity } from '../data/ICity';
 import { Router, ActivatedRoute, Params, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { GeolocationService } from '../services/geolocation-service';
 
 @Component({
   selector: 'app-nav-menu',
@@ -21,7 +22,11 @@ export class NavMenuComponent {
   cityAlias: string;
   routeParamsSubscription: Subscription;
 
-  constructor(private searchInfoService: SearchInfoService, private route: ActivatedRoute, private router: Router) { }
+  constructor(
+    private searchInfoService: SearchInfoService,
+    private geoService: GeolocationService,
+    private route: ActivatedRoute,
+    private router: Router) { }
 
   ngOnInit() {
     this.searchInfoService.dataReceived.subscribe(res => {
@@ -31,10 +36,22 @@ export class NavMenuComponent {
 
         if (this.cityAlias && this.cityAlias !== '') {
           this.city = this.cities.find(c => c.alias === this.cityAlias);
-          ToDo: //Find by gmaps
-          if (!this.city) {
-            this.city = this.cities.find(c => c.alias === 'spb');
-          }
+        }
+
+        if (!this.city || this.city.alias === 'noCity') {
+          console.log('NavMenuComponent. Start getting location : ', c);
+          this.geoService.getPosition().subscribe(c => {
+            console.log('NavMenuComponent. Location : ', c);
+            this.geoService.getCity(c.coords.latitude, c.coords.longitude).subscribe(
+              city => {
+                console.log('NavMenuComponent. City : ', city);
+                this.city = this.cities.find(c => c.alias === city.alias) || city;
+              },
+              error => {
+                console.log('NavMenuComponent. City error: ', error);
+              }
+            );
+          });
         }
       }
     });

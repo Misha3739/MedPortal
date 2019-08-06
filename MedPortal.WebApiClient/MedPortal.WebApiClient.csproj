@@ -36,6 +36,7 @@
     <None Remove="ClientApp\src\app\data\speciality.ts" />
     <None Remove="ClientApp\src\app\services\clincs-service.ts" />
     <None Remove="ClientApp\src\app\services\doctors-service.ts" />
+    <None Remove="ClientApp\src\app\services\geolocation-service.ts" />
     <None Remove="ClientApp\src\app\services\search-info-service.ts" />
     <None Remove="ClientApp\src\index.d.ts" />
   </ItemGroup>
@@ -52,6 +53,7 @@
     <TypeScriptCompile Include="ClientApp\src\app\data\speciality.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\clincs-service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\doctors-service.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\services\geolocation-service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\search-info-service.ts" />
     <TypeScriptCompile Include="ClientApp\src\index.d.ts" />
   </ItemGroup>

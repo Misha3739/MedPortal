@@ -29,5 +29,30 @@ namespace MedPortal.WebApiClient.Controllers
             var result = _mapper.Map<List<CitySearchModel>>(cities);
             return Ok(result);
         }
+
+        [HttpGet("/api/city")]
+        public async Task<IActionResult> GetCitiy(double latitude, double longitude)
+        {
+            const double fluctuation = 0.01;
+            var city = await _cityRepository.FindAsync(c => 
+                c.Latitude >= latitude - fluctuation &&
+                c.Latitude <= latitude + fluctuation &&
+                c.Longitude >= longitude - fluctuation &&
+                c.Longitude <= longitude + fluctuation);
+            if(city != null)
+            {
+                var result = _mapper.Map<CitySearchModel>(city);
+                return Ok(result);
+            }
+            else
+            {
+                return Ok(new CitySearchModel
+                {
+                    Alias = "noCity",
+                    Id = 0
+                });
+            }
+           
+        }
     }
 }
