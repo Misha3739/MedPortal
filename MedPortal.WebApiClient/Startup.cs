@@ -63,6 +63,7 @@ namespace MedPortal.WebApiClient
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient<IRepository<HDoctor>, DoctorRepository>();
             services.AddTransient<IRepository<HClinic>, ClinicRepository>();
+            services.AddTransient<IClinicRepository, ClinicRepository>();
             services.AddTransient(typeof(IHighloadedRepository<>), typeof(HighloadedRepository<>));
 
             // In production, the Angular files will be served from this directory

@@ -2,7 +2,8 @@ import { Injectable, Inject } from "@angular/core";
 import { IDoctor } from "../data/doctor";
 import { IClinic, IClinicDetails } from "../data/clinic";
 import { Subject } from "rxjs";
-import { HttpHeaders, HttpClient } from "@angular/common/http";
+import { HttpHeaders, HttpClient, HttpParams } from "@angular/common/http";
+import { IClinicSearchParams } from "../data/clinic-search-params";
 
 @Injectable()
 export class ClinicsService {
@@ -72,14 +73,14 @@ export class ClinicsService {
     return clinics;
   }
 
-  getClinics(city: string) {
+  getClinics(params: IClinicSearchParams) {
     let url = '/api/clinics/';
-    if (city) {
-      url += city;
-    }
-    return this.httpClient.get(this.baseUrl + url, { headers: this.headers })
+    let httpParams = new HttpParams()
+      .set('city', params.city)
+      .set('speciality', params.speciality);
+    return this.httpClient.get(this.baseUrl + url, { headers: this.headers, params: httpParams })
       .subscribe((result: IClinic[]) => {
-        console.log('${url}: ', result);
+        console.log(url, params, result);
         this.clinics = result;
         this.dataReceived.next('clinics');
       });
