@@ -13,7 +13,7 @@ import { GeolocationService } from '../services/geolocation-service';
 export class NavMenuComponent {
   isExpanded = false;
 
-  cities: ICity[];
+  cities: ICity[] = [];
 
   nullCity: ICity = { alias: 'noCity', name: 'Не выбран', id: 0 };
   city: ICity = this.nullCity;
@@ -29,47 +29,49 @@ export class NavMenuComponent {
     private router: Router) { }
 
   ngOnInit() {
-    this.searchInfoService.dataReceived.subscribe(res => {
-      if (res === 'cities') {
-        this.cities = this.searchInfoService.cities;
-        this.cities.unshift(this.nullCity);
 
-        if (this.cityAlias && this.cityAlias !== '') {
-          this.city = this.cities.find(c => c.alias === this.cityAlias);
-        }
+    this.cities.push(this.nullCity);
 
-        if (!this.city || this.city.alias === 'noCity') {
-          console.log('NavMenuComponent. Start getting location : ', c);
+    this.router.events.subscribe(val => {
+      if (val instanceof NavigationEnd) {
+        this.currentUrl = this.router.url;
+        let splitted = this.currentUrl.split("/");
+        this.cityAlias = splitted.length > 0 ? splitted[1] : null;
+        console.log('NavMenuComponent', this.currentUrl, ' => ', this.cityAlias);
+
+        if (!this.cityAlias) {
+          console.log('NavMenuComponent. Start getting location for: ', this.cityAlias);
           this.geoService.getPosition().subscribe(c => {
             console.log('NavMenuComponent. Location : ', c);
             this.geoService.getCity(c.coords.latitude, c.coords.longitude).subscribe(
-              city => {
-                console.log('NavMenuComponent. City : ', city);
-                this.city = this.cities.find(c => c.alias === city.alias) || city;
+              cityResult => {
+                console.log('NavMenuComponent. City : ', cityResult);
+                this.cities = cityResult.cities;
+                this.cities.unshift(this.nullCity);
+                this.city = cityResult.current || this.nullCity;
               },
               error => {
                 console.log('NavMenuComponent. City error: ', error);
               }
             );
           });
+        } else {
+          if (!this.cities || this.cities.length <= 1) {
+            this.searchInfoService.dataReceived.subscribe(res => {
+              if (res === 'cities') {
+                this.cities = this.searchInfoService.cities;
+                this.cities.unshift(this.nullCity);
+                this.city = this.cities.find(c => c.alias === this.cityAlias);
+              }
+            });
+            this.searchInfoService.getCities();
+          }
+         
         }
       }
     });
 
-    this.router.events.subscribe(val => {
-     
-      /* the router will fire multiple events */
-    /* we only want to react if it's the final active route */
-      let cityAlias = '';
-      if (val instanceof NavigationEnd) {
-        this.currentUrl = this.router.url;
-        let splitted = this.currentUrl.split("/");
-        this.cityAlias = splitted.length > 0 ? splitted[1] : null;
-        console.log(this.currentUrl, ' => ', cityAlias);
-      }
-    });
-
-    this.searchInfoService.getCities();
+   
   }
 
   onCityChanged() {

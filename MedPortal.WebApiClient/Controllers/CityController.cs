@@ -31,28 +31,21 @@ namespace MedPortal.WebApiClient.Controllers
         }
 
         [HttpGet("/api/city")]
-        public async Task<IActionResult> GetCitiy(double latitude, double longitude)
+        public async Task<IActionResult> GetCity(double latitude, double longitude)
         {
             const double fluctuation = 0.01;
-            var city = await _cityRepository.FindAsync(c => 
+            var cities = await _cityRepository.GetAsync();
+            var foundCity = cities.FirstOrDefault(c => 
                 c.Latitude >= latitude - fluctuation &&
                 c.Latitude <= latitude + fluctuation &&
                 c.Longitude >= longitude - fluctuation &&
                 c.Longitude <= longitude + fluctuation);
-            if(city != null)
+            SearchCityResultModel result = new SearchCityResultModel()
             {
-                var result = _mapper.Map<CitySearchModel>(city);
-                return Ok(result);
-            }
-            else
-            {
-                return Ok(new CitySearchModel
-                {
-                    Alias = "noCity",
-                    Id = 0
-                });
-            }
-           
+                Cities = _mapper.Map<List<CitySearchModel>>(cities),
+                Current = foundCity != null ? _mapper.Map<CitySearchModel>(foundCity) : null
+            };
+            return Ok(result);
         }
     }
 }
