@@ -13,7 +13,7 @@ export class ClinicsService {
       alias: 'Center_Dietology',
       address: 'Малая Морская 22',
       latitude: 55.788895,
-      longtitude: 37.614545,
+      longitude: 37.614545,
       city: { id: 1, alias: 'spb', name: 'Санкт-Петербург' },
       doctors: []
     });
@@ -24,7 +24,7 @@ export class ClinicsService {
       logo: 'https://cdn4.docdoc.pro/clinic/logo/logo_default.gif?1557801558',
       address: 'Большой пр ПС 33',
       latitude: 55.756082,
-      longtitude: 37.652041,
+      longitude: 37.652041,
       city: { id: 1, alias: 'spb', name: 'Санкт-Петербург' },
       doctors: []
     });
@@ -35,7 +35,7 @@ export class ClinicsService {
       logo: 'https://cdn4.docdoc.pro/clinic/logo/logo_default.gif?1562657624',
       address: 'Московский пр 143',
       latitude: 55.639425,
-      longtitude: 37.65911,
+      longitude: 37.65911,
       city: { id: 1, alias: 'spb', name: 'Санкт-Петербург' },
       doctors: []
     });
@@ -46,7 +46,7 @@ export class ClinicsService {
       logo: 'https://cdn4.docdoc.pro/clinic/logo/logo_default.gif?1562657624',
       address: 'Ленина 55',
       latitude: 55.639425,
-      longtitude: 37.65911,
+      longitude: 37.65911,
       city: { id: 5, alias: 'ufa', name: 'Уфа' },
       doctors: []
     });

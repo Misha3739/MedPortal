@@ -7,6 +7,7 @@ import { ISearchCategory } from '../../data/search-info';
 import { SearchInfoType } from '../../data/search-info-type';
 import { Select2OptionData } from 'ng-select2';
 import { ClinicsService } from '../../services/clincs-service';
+import { fail } from 'assert';
 
 
 @Component({
@@ -58,13 +59,16 @@ export class SearchMapComponent implements OnInit {
     console.log('SearchMapComponent. Url changed to : ', this.router.url);
     if (this.city && this.searchInfoService.cities) {
       let cityObject = this.searchInfoService.cities.find(c => c.alias === this.city);
-      this.initMaps(cityObject.latitude, cityObject.longtitude);
+      this.initMaps(cityObject.latitude, cityObject.longitude);
     }
+    this.navigateToAlias = undefined;
+    this.navigateToResource = undefined;
+    this.singleItemSelected = false;
   }
 
-  initMaps(latitude: number, longtitude: number) {
+  initMaps(latitude: number, longitude: number) {
     let mapProp = {
-      center: new google.maps.LatLng(latitude, longtitude),
+      center: new google.maps.LatLng(latitude, longitude),
       zoom: 15,
       mapTypeId: google.maps.MapTypeId.HYBRID
     };
@@ -107,12 +111,12 @@ export class SearchMapComponent implements OnInit {
 
       if (this.navigateToResource === SearchInfoType.clinic) {
         let clinic = this.categories.find(c => c.type === SearchInfoType.clinic).items.find(c => c.alias === this.navigateToAlias);
-        if (clinic.latitude && clinic.longtitude) {
-          console.log("Latitude: " + clinic.latitude + " longtitude: " + clinic.longtitude);
-          this.initMaps(clinic.latitude, clinic.longtitude);
+        if (clinic.latitude && clinic.longitude) {
+          console.log("Latitude: " + clinic.latitude + " longitude: " + clinic.longitude);
+          this.initMaps(clinic.latitude, clinic.longitude);
         } else {
           if (clinic.city) {
-            this.initMaps(clinic.city.latitude, clinic.city.longtitude);
+            this.initMaps(clinic.city.latitude, clinic.city.longitude);
           }
         }
       }

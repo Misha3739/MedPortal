@@ -8,7 +8,7 @@ export interface IClinic {
       logo: string;
       address: string;
       latitude: number;
-      longtitude: number;
+      longitude: number;
       city: ICity;
       doctors: IDoctor[];
 }

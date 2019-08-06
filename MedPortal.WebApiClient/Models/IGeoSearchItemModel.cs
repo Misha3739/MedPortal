@@ -3,6 +3,6 @@
     public interface IGeoSearchItemModel : ISearchItemModel
     {
         double Latitude { get; set; }
-        double Longtitude { get; set; }
+        double Longitude { get; set; }
     }
 }

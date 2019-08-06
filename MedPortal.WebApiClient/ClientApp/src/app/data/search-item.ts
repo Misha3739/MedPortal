@@ -7,5 +7,5 @@ export interface ISearchItem {
 
     city?: ICity;
     latitude?: number;
-    longtitude?: number;
+    longitude?: number;
 }
