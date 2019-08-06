@@ -8,10 +8,12 @@ import { Subject } from "rxjs";
 
 @Injectable()
 export class SearchInfoService {
+  static instance: SearchInfoService;
 
   dataReceived = new Subject();
 
   cities: ICity[];
+  searchInfoItems: ISearchCategory[];
 
   private headers = new HttpHeaders({
     'Content-Type': 'application/json',
@@ -20,9 +22,10 @@ export class SearchInfoService {
   });
 
   constructor(@Inject('BASE_URL') public baseUrl: string, private httpClient: HttpClient) {
+    return SearchInfoService.instance = SearchInfoService.instance || this;
   }
 
-  getSearchInfo(city: string): ISearchCategory[] {
+  getSearchInfoOld(city: string): ISearchCategory[] {
     let searchInfo: ISearchCategory[] = [];
     searchInfo.push({
       type: SearchInfoType.clinic,
@@ -69,6 +72,19 @@ export class SearchInfoService {
       { id: 2, alias: 'Cardiologist', name: 'Кардиолог' },
       { id: 5, alias: 'Gastroenterologist', name: 'Гастроэнтеролог' },
       { id: 3, alias: 'Surgeon', name: 'Хирург' }];
+  }
+
+  getSearchInfo(city: string) {
+    let url = '/api/searchItems/';
+    if (city) {
+      url += city;
+    }
+    return this.httpClient.get(this.baseUrl + url, { headers: this.headers })
+      .subscribe((result: ISearchCategory[]) => {
+        console.log('${url}: ', result);
+        this.searchInfoItems = result;
+        this.dataReceived.next('searchItems');
+      });
   }
 
   getCities() {

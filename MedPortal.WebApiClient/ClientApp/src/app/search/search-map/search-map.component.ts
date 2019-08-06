@@ -35,15 +35,31 @@ export class SearchMapComponent implements OnInit {
   constructor(private searchInfoService: SearchInfoService, private clinicsService: ClinicsService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
-    this.initMaps(59.93863, 30.31413);
-
+    this.initMaps(0, 0);
     this.routeParamsSubscription = this.route.params.subscribe(
       (params: Params) => {
         this.currentUrl = this.router.url;
         this.city = params['city'];
-        this.categories = this.searchInfoService.getSearchInfo(this.city);
-        this.displayCategories = this.toDisplayData();
+        this.onCityChanged();
+        this.searchInfoService.getSearchInfo(this.city);
       });
+
+    this.searchInfoService.dataReceived.subscribe(res => {
+      if (res === 'searchItems') {
+        this.categories = this.searchInfoService.searchInfoItems;
+        this.displayCategories = this.toDisplayData();
+      } else if (res === 'cities') {
+        this.onCityChanged();
+      }
+    });
+  }
+
+  private onCityChanged() {
+    console.log('SearchMapComponent. Url changed to : ', this.router.url);
+    if (this.city && this.searchInfoService.cities) {
+      let cityObject = this.searchInfoService.cities.find(c => c.alias === this.city);
+      this.initMaps(cityObject.latitude, cityObject.longtitude);
+    }
   }
 
   initMaps(latitude: number, longtitude: number) {
@@ -90,11 +106,16 @@ export class SearchMapComponent implements OnInit {
       console.log('Will navigate to ' + SearchInfoType[this.navigateToResource] + ' alias: ' + this.navigateToAlias);
 
       if (this.navigateToResource === SearchInfoType.clinic) {
-        let clinic = this.clinicsService.getClinic(this.navigateToAlias);
-        console.log("Latitude: " + clinic.latitude + " longtitude: " + clinic.longtitude);
-        this.initMaps(clinic.latitude, clinic.longtitude);
+        let clinic = this.categories.find(c => c.type === SearchInfoType.clinic).items.find(c => c.alias === this.navigateToAlias);
+        if (clinic.latitude && clinic.longtitude) {
+          console.log("Latitude: " + clinic.latitude + " longtitude: " + clinic.longtitude);
+          this.initMaps(clinic.latitude, clinic.longtitude);
+        } else {
+          if (clinic.city) {
+            this.initMaps(clinic.city.latitude, clinic.city.longtitude);
+          }
+        }
       }
-
     } else {
       console.error('Selector value is not defined');
     }
