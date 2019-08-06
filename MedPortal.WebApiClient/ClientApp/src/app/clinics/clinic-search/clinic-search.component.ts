@@ -3,6 +3,9 @@ import { SearchInfoService } from '../../services/search-info-service';
 import { ClinicsService } from '../../services/clincs-service';
 import { ISpeciality } from '../../data/speciality';
 import { ICity } from '../../data/ICity';
+import { Subscription } from 'rxjs';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+import { IClinic } from '../../data/clinic';
 
 @Component({
   selector: 'app-clinic-search',
@@ -11,15 +14,33 @@ import { ICity } from '../../data/ICity';
 })
 export class ClinicSearchComponent implements OnInit {
 
-  constructor(private searchInfoService: SearchInfoService, private clinicsService: ClinicsService) { }
+  constructor(
+    private searchInfoService: SearchInfoService,
+    private clinicsService: ClinicsService,
+    private route: ActivatedRoute,
+    private router: Router) { }
+
+  private routeParamsSubscription: Subscription;
+
+  city: string;
 
   specialities: ISpeciality[];
 
-  cities: ICity[];
-
   ngOnInit() {
+    this.routeParamsSubscription = this.route.params.subscribe(
+      (params: Params) => {
+        this.city = params['city'];
+        console.log('ClinicSearchComponent. Start getting clinics for ', this.city);
+        this.clinicsService.getClinics(this.city );
+      });
+
     this.specialities = this.searchInfoService.getSpecialities();
-    this.cities = this.searchInfoService.getCitiesOld();
+  }
+
+  ngOnDestroy() {
+    if (this.routeParamsSubscription) {
+      this.routeParamsSubscription.unsubscribe();
+    }
   }
 
 }

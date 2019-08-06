@@ -1,9 +1,28 @@
-import { Injectable } from "@angular/core";
+import { Injectable, Inject } from "@angular/core";
 import { IDoctor } from "../data/doctor";
 import { IClinic, IClinicDetails } from "../data/clinic";
+import { Subject } from "rxjs";
+import { HttpHeaders, HttpClient } from "@angular/common/http";
 
 @Injectable()
 export class ClinicsService {
+
+  static instance: ClinicsService;
+
+  dataReceived = new Subject();
+
+  clinics: IClinic[];
+
+  private headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    //'Access-Control-Allow-Origin': '*',
+    //'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, DELETE, PUT',
+  });
+
+  constructor(@Inject('BASE_URL') public baseUrl: string, private httpClient: HttpClient) {
+    return ClinicsService.instance = ClinicsService.instance || this;
+  }
+
   private getAllClinics() {
     let clinics: IClinic[] = [];
     clinics.push({
@@ -53,10 +72,19 @@ export class ClinicsService {
     return clinics;
   }
 
-  getClinics(city: string): IClinic[] {
-    let clinics = this.getAllClinics();
-    return clinics.filter(c => c.city && c.city.alias === city);
+  getClinics(city: string) {
+    let url = '/api/clinics/';
+    if (city) {
+      url += city;
+    }
+    return this.httpClient.get(this.baseUrl + url, { headers: this.headers })
+      .subscribe((result: IClinic[]) => {
+        console.log('${url}: ', result);
+        this.clinics = result;
+        this.dataReceived.next('clinics');
+      });
   }
+
 
   getClinic(alias: string): IClinicDetails {
     let clinic = this.getAllClinics().find(c => c.alias === alias) as IClinicDetails;

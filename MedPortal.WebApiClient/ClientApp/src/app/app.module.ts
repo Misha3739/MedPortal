@@ -41,10 +41,10 @@ import { GeolocationService } from './services/geolocation-service';
     RouterModule.forRoot([
       { path: '', component: SearchMapComponent, pathMatch: 'full' }, 
       { path: 'doctors', component: DoctorListComponent },
-      { path: 'clinics', component: ClinicListComponent },
+      { path: 'clinics', component: ClinicSearchComponent },
       { path: ':city', component: SearchMapComponent, },
       { path: ':city/doctors', component: DoctorListComponent },
-      { path: ':city/clinics', component: ClinicListComponent },
+      { path: ':city/clinics', component: ClinicSearchComponent },
       { path: 'clinics/:id', component: ClinicDetailsComponent },
       { path: 'doctors/:id', component: DoctorDetailsComponent },
       { path: ':city/clinics/:id', component: ClinicDetailsComponent },
