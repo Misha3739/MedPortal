@@ -2,8 +2,10 @@
 <div class="row">
   <div class="form-control">
     <label for="specialities">По специальности:</label>
-    <select id="specialities">
-      <option *ngFor="let speciality of specialities" value="{{speciality.alias}}">{{speciality.name}}</option>
+    <select id="specialities"  (change)="onSpecialityChanged()" [(ngModel)]="selectedSpeciality">
+      <option *ngFor="let speciality of specialities" [ngValue]="speciality">
+      {{speciality.name}}
+      </option>
     </select>
   </div>
   <!--<div class="form-control">

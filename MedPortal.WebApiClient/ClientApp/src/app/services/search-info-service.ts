@@ -14,6 +14,7 @@ export class SearchInfoService {
 
   cities: ICity[];
   searchInfoItems: ISearchCategory[];
+  specialities: ISpeciality[];
 
   private headers = new HttpHeaders({
     'Content-Type': 'application/json',
@@ -66,7 +67,16 @@ export class SearchInfoService {
     return searchInfo;
   }
 
-  getSpecialities(): ISpeciality[] {
+  getSpecialities() {
+    return this.httpClient.get(this.baseUrl + '/api/specialities', { headers: this.headers })
+      .subscribe((result: ISpeciality[]) => {
+        console.log('/api/specialities: ', result);
+        this.specialities = result;
+        this.dataReceived.next('specialities');
+      });
+  }
+
+  getSpecialitiesOld(): ISpeciality[] {
     return [
       { id: 1, alias: 'Urologist', name: 'Уролог' },
       { id: 2, alias: 'Cardiologist', name: 'Кардиолог' },

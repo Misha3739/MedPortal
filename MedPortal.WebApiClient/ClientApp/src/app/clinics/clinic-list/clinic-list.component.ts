@@ -26,7 +26,7 @@ export class ClinicListComponent implements OnInit {
 
   ngOnInit() {
     this.clinicsService.dataReceived.subscribe(clinics => {
-      console.log('ClinicListComponent. Clinics received: ', this.clinicsService.clinics);
+      console.log('ClinicListComponent. Clinics received: ');
       this.clinics = this.clinicsService.clinics;
     });
 

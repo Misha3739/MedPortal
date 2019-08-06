@@ -68,6 +68,13 @@ namespace MedPortal.WebApiClient.Controllers
             }
         }
 
+        [HttpGet("/api/specialities")]
+        public async Task<IActionResult> GetSpecialities()
+        {
+            var specialities = await GetSpecialitySearchItems();
+            return Ok(specialities);
+        }
+
         private List<SearchCategoryModel> InitSearchCategories()
         {
             return new List<SearchCategoryModel>()
