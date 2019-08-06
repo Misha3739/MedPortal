@@ -8,6 +8,7 @@ import { SearchInfoType } from '../../data/search-info-type';
 import { Select2OptionData } from 'ng-select2';
 import { ClinicsService } from '../../services/clincs-service';
 import { fail } from 'assert';
+import { ISearchItem } from '../../data/search-item';
 
 
 @Component({
@@ -99,6 +100,14 @@ export class SearchMapComponent implements OnInit {
     return result;
   }
 
+  private getClinic(alias: string): ISearchItem {
+    return this.categories.find(c => c.type === SearchInfoType.clinic).items.find(c => c.alias === this.navigateToAlias);
+  }
+
+  private getDoctor(alias: string): ISearchItem  {
+    return this.categories.find(c => c.type === SearchInfoType.doctor).items.find(c => c.alias === this.navigateToAlias);
+  }
+
   onSelectedValueChanged(event) {
     console.log(event);
     let value = event.value;
@@ -110,7 +119,7 @@ export class SearchMapComponent implements OnInit {
       console.log('Will navigate to ' + SearchInfoType[this.navigateToResource] + ' alias: ' + this.navigateToAlias);
 
       if (this.navigateToResource === SearchInfoType.clinic) {
-        let clinic = this.categories.find(c => c.type === SearchInfoType.clinic).items.find(c => c.alias === this.navigateToAlias);
+        const clinic = this.getClinic(this.navigateToAlias);
         if (clinic.latitude && clinic.longitude) {
           console.log("Latitude: " + clinic.latitude + " longitude: " + clinic.longitude);
           this.initMaps(clinic.latitude, clinic.longitude);
@@ -129,10 +138,12 @@ export class SearchMapComponent implements OnInit {
     if (this.singleItemSelected) {
       switch (this.navigateToResource) {
         case SearchInfoType.clinic:
-          this.router.navigate(['clinics/' + this.navigateToAlias]);
+          const clinic = this.getClinic(this.navigateToAlias);
+          this.router.navigate([clinic.city.alias + '/clinics/' + this.navigateToAlias]);
           break;
         case SearchInfoType.doctor:
-          this.router.navigate(['doctors/' + this.navigateToAlias]);
+          const doctor = this.getDoctor(this.navigateToAlias);
+          this.router.navigate([doctor.city.alias  + '/doctors/' + this.navigateToAlias]);
           break;
       }
     } else {

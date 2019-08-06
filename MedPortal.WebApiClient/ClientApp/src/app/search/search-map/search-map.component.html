@@ -7,7 +7,7 @@
         <button (click)="onRedirect()">Поиск</button>
       </div>
 
-      <div class="row form-control" inline>
+      <div class="row form-control" inline [hidden]="singleItemSelected">
         <label class="search-label" for="doctors">Врачи</label>
         <input id="doctors" type="checkbox"  [(ngModel)]="doctorsSearchSelected"/>
         <label class="search-label" for="clinics">Клиники</label>
