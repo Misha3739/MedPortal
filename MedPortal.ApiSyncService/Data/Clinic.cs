@@ -25,12 +25,14 @@ namespace MedPortal.Proxy.Data
         public IList<long> BranchesId { get; set; }
         public bool OnlineRecordDoctor { get; set; }
         public bool IsActive { get; set; }
+        public IList<Speciality> Specialities { get; set; }
 
         public Clinic()
         {
             Doctors = new List<Doctor>();
             BranchesId = new List<long>();
             Stations = new List<StationInfo>();
+            Specialities = new List<Speciality>();
         }
 
     }

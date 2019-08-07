@@ -35,14 +35,14 @@ namespace MedPortal.ApiSyncService.Engine
 
 		public async Task SyncAll() {
 			try {
-				await SyncCitiesInternalAsync();
-				await SyncDistrictsInternalAsync();
-				await SyncStreetsInternalAsync();
-				await SyncStationsInternalAsync();
-				await SyncSpecialitiesInternalAsync();
-				await SyncClinicDataInternalAsync();
-				await SyncDoctorsAsync();
-			} finally {
+                await SyncCitiesInternalAsync();
+                await SyncDistrictsInternalAsync();
+                await SyncStreetsInternalAsync();
+                await SyncStationsInternalAsync();
+                await SyncSpecialitiesInternalAsync();
+                await SyncClinicDataInternalAsync();
+                await SyncDoctorsAsync();
+            } finally {
 				foreach (var key in _saved.Keys) {
 					LogLevel level = _saved[key].Total == _saved[key].Saved ? LogLevel.Information : LogLevel.Critical;
 					Logger.Log(level, $"{key}  Total: {_saved[key].Total}, Saved: {_saved[key].Saved}");
@@ -119,13 +119,16 @@ namespace MedPortal.ApiSyncService.Engine
 			var clinicsRepository = DIProvider.ServiceProvider.GetService<IHighloadedRepository<HClinic>>();
 			var streetsRepository = DIProvider.ServiceProvider.GetService<IHighloadedRepository<HStreet>>();
 			var stationsRepository = DIProvider.ServiceProvider.GetService<IRepository<HStation>>();
+            var specialitiesRepository = DIProvider.ServiceProvider.GetService<IRepository<HSpeciality>>();
 
-			var stations = await stationsRepository.GetAsync();
+            var stations = await stationsRepository.GetAsync();
 
 			var districts = await districtsRepository.GetAsync(d => d.CityId == city.Id);
 			var streets = await streetsRepository.GetAsync(d => d.CityId == city.Id);
 
-			var noneDistrict = districtsRepository.FindAsync(d => d.Name == "NONE");
+            var specialities = await specialitiesRepository.GetAsync();
+
+            var noneDistrict = districtsRepository.FindAsync(d => d.Name == "NONE");
 			var noneStreet = streetsRepository.FindAsync(d => d.Name == "NONE");
 
 			ClinicListResult clinics = new ClinicListResult();
@@ -150,7 +153,15 @@ namespace MedPortal.ApiSyncService.Engine
 							StationId = s.Id,
 							Clinic = hClinic
 						}).ToList();
-						hClinic.ParentId =
+
+                        var specialityIds = clinic.Specialities.Select(s => s.Id).ToList();
+                        hClinic.Specialities = specialities.Where(s => specialityIds.Contains(s.OriginId)).Select(s => new HClinicSpecialities()
+                        {
+                            SpecialityId = s.Id,
+                            Clinic = hClinic
+                        }).ToList();
+
+                        hClinic.ParentId =
 							(await clinicsRepository.FindAsync(s => s.OriginId == clinic.ParentId))
 							?.Id;
 						bulkList.Add(hClinic);

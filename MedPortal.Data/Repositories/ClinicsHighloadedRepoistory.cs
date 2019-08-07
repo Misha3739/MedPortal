@@ -37,6 +37,30 @@ namespace MedPortal.Data.Repositories {
 					transaction.Rollback();
 				}
 			}
-		}
+
+            using (var transaction = _dataContext.BeginTransaction()) {
+                var clinicSpecialities = items.SelectMany(clinic => clinic.Specialities).ToList();
+                foreach (var clinic in items) {
+                    foreach (var speciality in clinic.Specialities) {
+                        speciality.ClinicId = clinic.Id;
+                    }
+                }
+
+                var clinicIds = items.Select(c => c.Id).ToList();
+                var existedClinicSpecialities =
+                    _dataContext.ClinicSpecialities.Where(c => clinicIds.Contains(c.ClinicId)).ToList();
+                try
+                {
+                    await _dataContext.BulkDeleteAsync(existedClinicSpecialities);
+                    await _dataContext.BulkInsertAsync(clinicSpecialities);
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                }
+            }
+        }
 	}
 }
