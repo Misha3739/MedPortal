@@ -1,6 +1,6 @@
 ﻿namespace MedPortal.WebApiClient.Models
 {
-    public class SpecialitySearchModel : ISearchItemModel
+    public class ClinicSpecialitySearchModel : ISearchItemModel
     {
         public long Id { get; set; }
 

@@ -4,6 +4,7 @@
     {
         Clinic = 1,
         Doctor = 2,
-        Speciality = 3
+        ClinicSpeciality = 3,
+        DoctorSpeciality = 4
     }
 }

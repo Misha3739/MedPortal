@@ -44,8 +44,10 @@ namespace MedPortal.WebApiClient.Controllers
             result.First(c => c.Type == SearchCategoryEnum.Clinic).Items.AddRange(clinics);
             var doctors = await GetDoctorSearchItems();
             result.First(c => c.Type == SearchCategoryEnum.Doctor).Items.AddRange(doctors);
-            var specialities = await GetSpecialitySearchItems();
-            result.First(c => c.Type == SearchCategoryEnum.Speciality).Items.AddRange(specialities);
+            var clinicSpecialities = await GetClinicSpecialitySearchItems();
+            result.First(c => c.Type == SearchCategoryEnum.ClinicSpeciality).Items.AddRange(clinicSpecialities);
+            var doctorSpecialities = await GetDoctorSpecialitySearchItems();
+            result.First(c => c.Type == SearchCategoryEnum.DoctorSpeciality).Items.AddRange(doctorSpecialities);
             return Ok(result);
         }
 
@@ -62,16 +64,25 @@ namespace MedPortal.WebApiClient.Controllers
                 result.First(c => c.Type == SearchCategoryEnum.Clinic).Items.AddRange(clinics);
                 var doctors = await GetDoctorSearchItems(hCity);
                 result.First(c => c.Type == SearchCategoryEnum.Doctor).Items.AddRange(doctors);
-                var specialities = await GetSpecialitySearchItems();
-                result.First(c => c.Type == SearchCategoryEnum.Speciality).Items.AddRange(specialities);
+                var clinicSpecialities = await GetClinicSpecialitySearchItems();
+                result.First(c => c.Type == SearchCategoryEnum.ClinicSpeciality).Items.AddRange(clinicSpecialities);
+                var doctorSpecialities = await GetDoctorSpecialitySearchItems();
+                result.First(c => c.Type == SearchCategoryEnum.DoctorSpeciality).Items.AddRange(doctorSpecialities);
                 return Ok(result);
             }
         }
 
-        [HttpGet("/api/specialities")]
-        public async Task<IActionResult> GetSpecialities()
+        [HttpGet("/api/clinicspecialities")]
+        public async Task<IActionResult> GetClinicSpecialities()
         {
-            var specialities = await GetSpecialitySearchItems();
+            var specialities = await GetClinicSpecialitySearchItems();
+            return Ok(specialities);
+        }
+
+        [HttpGet("/api/doctorspecialities")]
+        public async Task<IActionResult> GetDoctorSpecialities()
+        {
+            var specialities = await GetDoctorSpecialities();
             return Ok(specialities);
         }
 
@@ -81,7 +92,8 @@ namespace MedPortal.WebApiClient.Controllers
             {
                 new SearchCategoryModel(SearchCategoryEnum.Clinic),
                 new SearchCategoryModel(SearchCategoryEnum.Doctor),
-                new SearchCategoryModel(SearchCategoryEnum.Speciality)
+                new SearchCategoryModel(SearchCategoryEnum.ClinicSpeciality),
+                new SearchCategoryModel(SearchCategoryEnum.DoctorSpeciality)
             };
         }
 
@@ -97,10 +109,16 @@ namespace MedPortal.WebApiClient.Controllers
             return _mapper.Map<List<DoctorSearchModel>>(doctors);
         }
 
-        private async Task<List<SpecialitySearchModel>> GetSpecialitySearchItems()
+        private async Task<List<DoctorSpecialitySearchModel>> GetDoctorSpecialitySearchItems()
         {
             var specialities = await _specialityRepository.GetAsync();
-            return _mapper.Map<List<SpecialitySearchModel>>(specialities);
+            return _mapper.Map<List<DoctorSpecialitySearchModel>>(specialities);
+        }
+
+        private async Task<List<ClinicSpecialitySearchModel>> GetClinicSpecialitySearchItems()
+        {
+            var specialities = await _specialityRepository.GetAsync();
+            return _mapper.Map<List<ClinicSpecialitySearchModel>>(specialities);
         }
     }
 }

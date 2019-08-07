@@ -18,9 +18,8 @@ namespace MedPortal.Data.Repositories
         public async Task<List<HClinic>> FilterClinicsAsync(string city, string speciality)
         {
             var result = from clinic in _dbSet
-                         join clinicDoctors in _dataContext.ClinicDoctors on clinic.Id equals clinicDoctors.ClinicId
-                         join doctorsSpecialitis in _dataContext.DoctorSpecialities on clinicDoctors.DoctorId equals doctorsSpecialitis.DoctorId
-                         join hspec in _dataContext.Specialities on doctorsSpecialitis.SpecialityId equals hspec.Id
+                         join clinicSpecs in _dataContext.ClinicSpecialities on clinic.Id equals clinicSpecs.ClinicId
+                         join hspec in _dataContext.Specialities on clinicSpecs.SpecialityId equals hspec.Id
                          join hcity in _dataContext.Cities on clinic.HCityId equals hcity.Id
                          select new { Clinic = clinic, City = hcity, Speciality = hspec };
             if(!string.IsNullOrEmpty(city))
@@ -29,7 +28,7 @@ namespace MedPortal.Data.Repositories
             }
             if (!string.IsNullOrEmpty(speciality))
             {
-                result = result.Where(c => c.Speciality.Alias == speciality);
+                result = result.Where(c => c.Speciality.BranchAlias == speciality);
             }
             return await result.Select(c => c.Clinic).Include(c => c.HCity).ToListAsync();
         }

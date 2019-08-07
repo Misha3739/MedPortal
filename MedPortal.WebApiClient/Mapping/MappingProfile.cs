@@ -17,7 +17,10 @@ namespace MedPortal.Proxy.Mapping
                 .ForMember(c => c.Alias, c => c.MapFrom(hc => hc.RewriteName));
             CreateMap<HDoctor, DoctorSearchModel>()
                 .ForMember(c => c.City, c => c.MapFrom(hc => hc.City));
-            CreateMap<HSpeciality, SpecialitySearchModel>();
+            CreateMap<HSpeciality, ClinicSpecialitySearchModel>()
+                .ForMember(c => c.Alias, c => c.MapFrom(hc => hc.BranchAlias))
+                .ForMember(c => c.Name, c => c.MapFrom(hc => hc.BranchName));
+            CreateMap<HSpeciality, DoctorSpecialitySearchModel>();
         }
     }
 }
