@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MedPortal.Data.DTO;
+using MedPortal.Data.Logging;
 using MedPortal.Data.Persistence;
 
 namespace MedPortal.Data.Repositories {
 	public class DoctorsHighloadedRepoistory : HighloadedRepository<HDoctor> {
 
-		public DoctorsHighloadedRepoistory(IDataContext dataContext) : base(dataContext) {
+		public DoctorsHighloadedRepoistory(IDataContext dataContext, ILogger logger) : base(dataContext, logger) {
 		}
 
 		protected override async Task BulkUpdateInternalAsync(IList<HDoctor> items, bool assignIds) {
@@ -49,8 +50,9 @@ namespace MedPortal.Data.Repositories {
 					await _dataContext.BulkInsertAsync(doctorsSpecialities);
 
 					transaction.Commit();
-				} catch (Exception) {
-					transaction.Rollback();
+				} catch (Exception e) {
+                    _logger.LogError($"DoctorsHighloadedRepoistory. BulkUpdateInternalAsync: ", e);
+                    transaction.Rollback();
 				}
 			}
 		}

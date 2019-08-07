@@ -44,8 +44,7 @@ namespace MedPortal.ApiSyncService.Engine
                 await SyncDoctorsAsync();
             } finally {
 				foreach (var key in _saved.Keys) {
-					LogLevel level = _saved[key].Total == _saved[key].Saved ? LogLevel.Information : LogLevel.Critical;
-					Logger.Log(level, $"{key}  Total: {_saved[key].Total}, Saved: {_saved[key].Saved}");
+					Logger.LogInfo($"{key}  Total: {_saved[key].Total}, Saved: {_saved[key].Saved}");
 				}
 			}
 		}
@@ -56,7 +55,8 @@ namespace MedPortal.ApiSyncService.Engine
 
 		private async Task SyncCitiesInternalAsync() {
 			CityListResult cities = await GetDataWithPollingAsync<CityListResult>("city");
-			var hCities = cities.CityList.Select(c => Mapper.Map<City, HCity>(c)).ToList();
+            Logger.LogInfo($"SyncEngine. Received cities : {cities.CityList.Count}");
+            var hCities = cities.CityList.Select(c => Mapper.Map<City, HCity>(c)).ToList();
 			await _cityRepository.BulkUpdateAsync(hCities);
 		}
 
@@ -74,7 +74,8 @@ namespace MedPortal.ApiSyncService.Engine
 
 		private async Task SyncSpecialitiesInternalAsync() {
 			SpecialityListResult specialities = await GetDataWithPollingAsync<SpecialityListResult>("speciality");
-			var hSpecialities = specialities.SpecList.Select(c => Mapper.Map<Speciality, HSpeciality>(c)).ToList();
+            Logger.LogInfo($"SyncEngine. Received specialitiws : {specialities.SpecList.Count}");
+            var hSpecialities = specialities.SpecList.Select(c => Mapper.Map<Speciality, HSpeciality>(c)).ToList();
 			await _specialitiesRepository.BulkUpdateAsync(hSpecialities);
 		}
 
@@ -85,7 +86,8 @@ namespace MedPortal.ApiSyncService.Engine
 		private async Task SyncDistrictsPerCityAsync(HCity city, string identifier) {
 			DistrictListResult districts =
 				await GetDataWithPollingAsync<DistrictListResult>($"district?city={city.OriginId}");
-			IncrementDictionary(identifier, 0, districts.DistrictList.Count);
+            Logger.LogInfo($"SyncEngine. Received districts per {city.Name} : {districts.DistrictList.Count}");
+            IncrementDictionary(identifier, 0, districts.DistrictList.Count);
 			var hDistrics = districts.DistrictList.Select(c => Mapper.Map<District, HDistrict>(c)).ToList();
 			hDistrics.ForEach(d => d.CityId = city.Id);
 			var districtsRepository = DIProvider.ServiceProvider.GetService<IHighloadedRepository<HDistrict>>();
@@ -96,7 +98,8 @@ namespace MedPortal.ApiSyncService.Engine
 		private async Task SyncStreetsPerCityAsync(HCity city, string identifier) {
 			StreetListResult streets =
 				await GetDataWithPollingAsync<StreetListResult>($"street?city={city.OriginId}");
-			IncrementDictionary(identifier, 0, streets.StreetList.Count);
+            Logger.LogInfo($"SyncEngine. Received streets per {city.Name} : {streets.StreetList.Count}");
+            IncrementDictionary(identifier, 0, streets.StreetList.Count);
 			var hStreets = streets.StreetList.Select(c => Mapper.Map<Street, HStreet>(c)).ToList();
 			hStreets.ForEach(s => s.CityId = city.Id);
 			var streetsRepository = DIProvider.ServiceProvider.GetService<IHighloadedRepository<HStreet>>();
@@ -106,7 +109,8 @@ namespace MedPortal.ApiSyncService.Engine
 
 		private async Task SyncStationsPerCityAsync(HCity city, string identifier) {
 			var stations = await GetDataWithPollingAsync<StationsListResult>($"metro/city/{city.OriginId}");
-			IncrementDictionary(identifier, 0, stations.MetroList.Count);
+            Logger.LogInfo($"SyncEngine. Received stations per {city.Name} : {stations.MetroList.Count}");
+            IncrementDictionary(identifier, 0, stations.MetroList.Count);
 			var hStations = stations.MetroList.Select(s => Mapper.Map<Station, HStation>(s)).ToList();
 			hStations.ForEach(s => s.CityId = city.Id);
 			var stationsRepository = DIProvider.ServiceProvider.GetService<IHighloadedRepository<HStation>>();
@@ -170,7 +174,7 @@ namespace MedPortal.ApiSyncService.Engine
 					await clinicsRepository.BulkUpdateAsync(bulkList);
 					IncrementDictionary(identifier, bulkList.Count);
 				} catch (Exception e) {
-					Logger.Log(LogLevel.Error, $"Error on saving Clinics for city: {city.Name}:{e}. Position: {i * bulkSize}");
+					Logger.LogError($"Error on saving Clinics for city: {city.Name}. Position: {i * bulkSize}", e);
 				}
 
 				bulkList.Clear();
@@ -187,7 +191,7 @@ namespace MedPortal.ApiSyncService.Engine
 					try {
 						await action(city, identifier);
 					} catch (Exception e) {
-						Logger.Log(LogLevel.Error, $"Error on saving {identifier} for city: {city.Name}:{e}");
+						Logger.LogError($"Error on saving {identifier} for city: {city.Name}", e);
 					}
 				}));
 			}
@@ -197,7 +201,7 @@ namespace MedPortal.ApiSyncService.Engine
 
 		private async Task SyncDoctorsPerCityAsync(HCity city, string identifier) {
 			var doctors = await GetDataWithPollingAsync<DoctorListResult>($"doctor/list?city={city.OriginId}");
-
+            Logger.LogInfo($"SyncEngine. Received doctors per {city.Name} : {doctors.Total}");
 			IncrementDictionary(identifier, 0, doctors.DoctorList.Count);
 
 			var specialitiesRepository = DIProvider.ServiceProvider.GetService<IRepository<HSpeciality>>();
@@ -223,7 +227,6 @@ namespace MedPortal.ApiSyncService.Engine
 
 				hDoctor.Specialities = specialitiesList.Where(c => specialitiesIDs.Contains(c.OriginId)).Select(c => new HDoctorSpecialities() {
 					SpecialityId = c.Id
-
 				}).ToList();
 
 				hDoctor.CityId = city.Id;

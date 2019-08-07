@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MedPortal.Data.Persistence;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using MedPortal.Data.Logging;
 using Newtonsoft.Json;
 using RestSharp;
 
@@ -15,7 +15,7 @@ namespace MedPortal.ApiSyncService.Engine {
 	public class EngineBase {
 		private IRestClient _restClient;
 
-		private ILogger<EngineBase> _logger;
+		private ILogger _logger;
 
 		private IUnitOfWork _unitOfWork;
 
@@ -31,8 +31,8 @@ namespace MedPortal.ApiSyncService.Engine {
 			set => _restClient = value;
 		}
 
-		public ILogger<EngineBase> Logger {
-			get => _logger ?? (_logger = DIProvider.ServiceProvider.GetService<ILogger<EngineBase>>());
+		public ILogger Logger {
+			get => _logger ?? (_logger = DIProvider.ServiceProvider.GetService<ILogger>());
 			set => _logger = value;
 		}
 
@@ -57,7 +57,7 @@ namespace MedPortal.ApiSyncService.Engine {
 				_restClientSlim.Release();
 			}
 
-			Logger.LogInformation(
+			Logger.LogInfo(
 				$"Requested to: {request.Resource}, Method: {request.Method}, Response code: {result.StatusCode}");
 
 			if (result.StatusCode != HttpStatusCode.OK) {
@@ -103,7 +103,7 @@ namespace MedPortal.ApiSyncService.Engine {
 			} catch (OperationCanceledException) {
 			}
 
-			Logger.LogInformation(
+            Logger.LogInfo (
 				$"Requested to: {request.Resource}, Method: {request.Method}, Response code: {result.StatusCode}");
 
 			if (result.StatusCode != HttpStatusCode.OK) {

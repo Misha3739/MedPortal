@@ -12,6 +12,8 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="5.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.2.0" />
+    <PackageReference Include="NLog" Version="4.6.6" />
+    <PackageReference Include="NLog.Config" Version="4.6.6" />
     <PackageReference Include="RestSharp" Version="105.2.3" />
     <PackageReference Include="ServiceLocator" Version="1.0.3" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
@@ -41,6 +43,9 @@
 
   <ItemGroup>
     <None Update="App.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="C:\Users\Mihai\.nuget\packages\nlog.config\4.6.6\contentFiles\any\any\NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

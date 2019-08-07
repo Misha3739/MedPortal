@@ -18,6 +18,8 @@ using MedPortal.ApiSyncService.Engine;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Logging;
+using MedPortal.ApiSyncService.Logging;
+using ILogger = MedPortal.Data.Logging.ILogger;
 
 namespace MedPortal.ApiSyncService
 {
@@ -80,7 +82,7 @@ namespace MedPortal.ApiSyncService
 			
 			services.AddTransient<IHighloadedRepository<HDoctor>, DoctorsHighloadedRepoistory>();
 
-			services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
+			services.AddSingleton<ILogger, NLogger>();
 
 			services.AddTransient<SyncEngine>();
 

@@ -3,15 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MedPortal.Data.DTO;
+using MedPortal.Data.Logging;
 using MedPortal.Data.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedPortal.Data.Repositories {
 	public class HighloadedRepository<T> : Repository<T>, IHighloadedRepository<T> where T : class, IHEntity {
-		public HighloadedRepository(IDataContext dataContext) : base(dataContext) {
+        protected readonly ILogger _logger;
+
+        public HighloadedRepository(IDataContext dataContext, ILogger logger) : base(dataContext) {
+            _logger = logger;
 		}
 
-		public async Task<T> FindByOriginIdAsync(long originId) {
+        public async Task<T> FindByOriginIdAsync(long originId) {
 			return await _dbSet.FirstOrDefaultAsync(c => c.OriginId == originId);
 		}
 
@@ -46,9 +50,9 @@ namespace MedPortal.Data.Repositories {
                     }
 					transaction.Commit();
 				} catch (Exception e) {
+                    _logger.LogError($"HighloadedRepository<{typeof(T).Name}>.BulkUpdateInternalAsync: ", e);
 					transaction.Rollback();
 				}
-				
 			}
 
 			if (assignIds) {
@@ -60,8 +64,7 @@ namespace MedPortal.Data.Repositories {
             var originIds = items.Select(c => c.OriginId).ToList();
             Dictionary<long, long> ids = _dbSet.Where(c => originIds.Contains(c.OriginId))
                 .Select(c => new { c.OriginId, c.Id }).ToDictionary(x => x.OriginId, x => x.Id);
-            foreach (var item in items)
-            {
+            foreach (var item in items) {
                 item.Id = ids[item.OriginId];
             }
         }
