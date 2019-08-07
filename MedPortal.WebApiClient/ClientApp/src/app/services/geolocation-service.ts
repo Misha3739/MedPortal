@@ -36,16 +36,9 @@ export class GeolocationService {
   }
 
   getCity(latitude: number, longitude: number): Observable<any> {
-    let params = new HttpParams();
-    params.append("latitude", latitude.toString());
-    params.append("longitude", longitude.toString());
+    let params = new HttpParams()
+      .set("latitude", latitude.toString())
+      .set("longitude", longitude.toString());
     return this.httpClient.get(this.baseUrl + '/api/city', { headers: this.headers, params: params });
   }
-
-
-    //return this.httpClient.get(this.baseUrl + '/api/city', { headers: this.headers, params: params })
-    //  .subscribe((result: ICity) => {
-    //    console.log('/api/city: ', result);
-    //    this.city = result;
-    //  });
 }
