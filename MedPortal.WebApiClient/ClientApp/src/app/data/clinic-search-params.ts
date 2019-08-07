@@ -3,3 +3,4 @@ export interface IClinicSearchParams {
   metro?: string;
   speciality: string;
 }
+

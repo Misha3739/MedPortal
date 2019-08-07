@@ -20,6 +20,7 @@ import { ClinicCardComponent } from './clinics/clinic-card/clinic-card.component
 import { DoctorCardComponent } from './doctors/doctor-card/doctor-card.component';
 import { ClinicSearchComponent } from './clinics/clinic-search/clinic-search.component';
 import { GeolocationService } from './services/geolocation-service';
+import { DoctorSearchComponent } from './doctors/doctor-search/doctor-search.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { GeolocationService } from './services/geolocation-service';
     DoctorListComponent,
     DoctorCardComponent,
     DoctorDetailsComponent,
+    DoctorSearchComponent,
     ClinicListComponent,
     ClinicCardComponent,
     ClinicDetailsComponent,
@@ -40,10 +42,10 @@ import { GeolocationService } from './services/geolocation-service';
     FormsModule,
     RouterModule.forRoot([
       { path: '', component: SearchMapComponent, pathMatch: 'full' }, 
-      { path: 'doctors', component: DoctorListComponent },
+      { path: 'doctors', component: DoctorSearchComponent },
       { path: 'clinics', component: ClinicSearchComponent },
       { path: ':city', component: SearchMapComponent, },
-      { path: ':city/doctors', component: DoctorListComponent },
+      { path: ':city/doctors', component: DoctorSearchComponent },
       { path: ':city/clinics', component: ClinicSearchComponent },
       { path: 'clinics/:id', component: ClinicDetailsComponent },
       { path: 'doctors/:id', component: DoctorDetailsComponent },

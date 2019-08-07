@@ -1,8 +1,27 @@
-import { Injectable } from "@angular/core";
-import { IDoctor,IDoctorDetails } from "../data/doctor";
+import { IDoctor, IDoctorDetails } from "../data/doctor";
+import { Injectable, Inject } from "@angular/core";
+import { Subject } from "rxjs";
+import { HttpHeaders, HttpClient, HttpParams } from "@angular/common/http";
+import { IDoctorSearchParams } from "../data/doctor-search-params";
 
 @Injectable()
 export class DoctorsService {
+  static instance: DoctorsService;
+
+  dataReceived = new Subject();
+
+  doctors: IDoctor[];
+
+  private headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    //'Access-Control-Allow-Origin': '*',
+    //'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, DELETE, PUT',
+  });
+
+  constructor(@Inject('BASE_URL') public baseUrl: string, private httpClient: HttpClient) {
+    return DoctorsService.instance = DoctorsService.instance || this;
+  }
+
   private getAllDoctors() {
     let doctors: IDoctor[] = [];
     doctors.push({
@@ -44,7 +63,24 @@ export class DoctorsService {
     return doctors;
   }
 
-  getDoctors(city: string): IDoctor[] {
+  getDoctors(params: IDoctorSearchParams) {
+    let url = '/api/doctors/';
+    let httpParams = new HttpParams();
+    if (params.city) {
+      httpParams = httpParams.set('city', params.city);
+    }
+    if (params.speciality) {
+      httpParams = httpParams.set('speciality', params.speciality);
+    }
+    return this.httpClient.get(this.baseUrl + url, { headers: this.headers, params: httpParams })
+      .subscribe((result: IDoctor[]) => {
+        console.log(url, params, result);
+        this.doctors = result;
+        this.dataReceived.next('doctors');
+      });
+  }
+
+  getDoctorsOld(city: string): IDoctor[] {
     let doctors = this.getAllDoctors();
     return doctors.filter(d => d.city && d.city.alias === city);
   }
