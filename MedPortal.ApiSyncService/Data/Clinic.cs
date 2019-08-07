@@ -19,8 +19,8 @@ namespace MedPortal.Proxy.Data
         public long DistrictId { get; set; }
         public IList<Doctor> Doctors { get; set; }
         public IList<StationInfo> Stations { get; set; }
-        public double Longitude { get; set; }
-        public double Latitude { get; set; }
+        public double? Longitude { get; set; }
+        public double? Latitude { get; set; }
         public long ParentId { get; set; }
         public IList<long> BranchesId { get; set; }
         public bool OnlineRecordDoctor { get; set; }
