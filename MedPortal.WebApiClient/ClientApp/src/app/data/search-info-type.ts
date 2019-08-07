@@ -1,5 +1,6 @@
 export enum SearchInfoType {
     clinic = 1,
     doctor = 2,
-    speciality = 3
+    clinicSpeciality = 3,
+    doctorSpeciality = 4
 }

@@ -48,13 +48,13 @@ export class ClinicSearchComponent implements OnInit {
 
     this.searchInfoService.dataReceived.subscribe(event => {
       if (event === 'specialities') {
-        this.specialities = this.searchInfoService.specialities;
+        this.specialities = this.searchInfoService.clinicSpecialities;
         this.specialities.unshift(this.nullSpeciality);
         this.setCurrentSpeciality();
       }
     });
 
-    this.searchInfoService.getSpecialities();
+    this.searchInfoService.getClinicSpecialities();
   }
 
   setCurrentSpeciality() {

@@ -29,8 +29,8 @@ export class SearchMapComponent implements OnInit {
   navigateToResource: SearchInfoType;
   navigateToAlias: string;
 
-  clinicsSearchSelected = false;
-  doctorsSearchSelected = false;
+  clinicsSearchSelected = true;
+  doctorsSearchSelected = true;
 
   currentUrl: string;
 
@@ -49,7 +49,7 @@ export class SearchMapComponent implements OnInit {
     this.searchInfoService.dataReceived.subscribe(res => {
       if (res === 'searchItems') {
         this.categories = this.searchInfoService.searchInfoItems;
-        this.displayCategories = this.toDisplayData();
+        this.displayCategories = this.toDisplayData(this.clinicsSearchSelected, this.doctorsSearchSelected);
       } else if (res === 'cities') {
         this.onCityChanged();
       }
@@ -81,9 +81,15 @@ export class SearchMapComponent implements OnInit {
     this.map = new google.maps.Map(this.gmapElement.nativeElement, mapProp);
   }
 
-  toDisplayData() : Select2OptionData[] {
+  toDisplayData(includeClinics: boolean, includeDoctors: boolean): Select2OptionData[] {
     let result: Array<Select2OptionData> = [];
     for (let category of this.categories) {
+      if (!includeClinics && (category.type == SearchInfoType.clinic || category.type == SearchInfoType.clinicSpeciality)) {
+        continue;
+      }
+      if (!includeDoctors && (category.type == SearchInfoType.doctor || category.type == SearchInfoType.doctorSpeciality)) {
+        continue;
+      }
       let text = this.displayCategory(category.type);
       let item = {
         id: category.type.toString(),
@@ -151,14 +157,28 @@ export class SearchMapComponent implements OnInit {
           break;
       }
     } else {
-      if (this.clinicsSearchSelected && this.doctorsSearchSelected) {
+      let queryParams = {
+        speciality: this.navigateToAlias
+      };
 
-      } else if (this.clinicsSearchSelected && !this.doctorsSearchSelected) {
+      if (this.navigateToResource === SearchInfoType.clinicSpeciality) {
+        this.router.navigate([this.currentUrl + '/clinics'], { queryParams: queryParams, queryParamsHandling: null });
+      } else if (this.navigateToResource === SearchInfoType.doctorSpeciality) {
+        this.router.navigate([this.currentUrl + '/doctors'], { queryParams: queryParams, queryParamsHandling: null });
+      } else if (this.clinicsSearchSelected) {
         this.router.navigate([this.currentUrl + '/clinics']);
-      } else if (!this.clinicsSearchSelected && this.doctorsSearchSelected) {
+      } else if (this.doctorsSearchSelected) {
         this.router.navigate([this.currentUrl + '/doctors']);
       }
     }
+  }
+
+  onDoctorCheckChanged() {
+    this.displayCategories = this.toDisplayData(this.clinicsSearchSelected, this.doctorsSearchSelected);
+  }
+
+  onClinicCheckChanged() {
+    this.displayCategories = this.toDisplayData(this.clinicsSearchSelected, this.doctorsSearchSelected);
   }
 
   displayCategory(type: SearchInfoType) : string {
@@ -167,8 +187,10 @@ export class SearchMapComponent implements OnInit {
         return 'Клиники';
       case SearchInfoType.doctor:
         return 'Врачи';
-      case SearchInfoType.speciality:
+      case SearchInfoType.doctorSpeciality:
         return 'Специальности';
+      case SearchInfoType.clinicSpeciality:
+        return 'Специализации';
     }
   }
 

@@ -9,9 +9,9 @@
 
       <div class="row form-control" inline [hidden]="singleItemSelected">
         <label class="search-label" for="doctors">Врачи</label>
-        <input id="doctors" type="checkbox"  [(ngModel)]="doctorsSearchSelected"/>
+        <input id="doctors" type="checkbox"  [(ngModel)]="doctorsSearchSelected" (change)="onDoctorCheckChanged()" [disabled]="!clinicsSearchSelected"/>
         <label class="search-label" for="clinics">Клиники</label>
-        <input id="clinics" type="checkbox"  [(ngModel)]="clinicsSearchSelected" />
+        <input id="clinics" type="checkbox"  [(ngModel)]="clinicsSearchSelected" (change)="onClinicCheckChanged()" [disabled]="!doctorsSearchSelected" />
       </div>
     </div>
     </div>
