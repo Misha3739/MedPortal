@@ -40,24 +40,30 @@ namespace MedPortal.Data.Repositories {
 					if (itemsToInsert.Any()) {
 						await _dataContext.BulkInsertAsync(itemsToInsert);
 					}
-
-					await _dataContext.BulkUpdateAsync(itemsToUpdate);
+                    if (itemsToUpdate.Any()) {
+                        AssignIds(items);
+                        await _dataContext.BulkUpdateAsync(itemsToUpdate);
+                    }
 					transaction.Commit();
-				} catch (Exception) {
+				} catch (Exception e) {
 					transaction.Rollback();
 				}
 				
 			}
 
 			if (assignIds) {
-				var originIds = items.Select(c => c.OriginId).ToList();
-				Dictionary<long, long> ids = _dbSet.Where(c => originIds.Contains(c.OriginId))
-					.Select(c => new { c.OriginId, c.Id }).ToDictionary(x => x.OriginId, x => x.Id);
-				foreach (var item in items) {
-					item.Id = ids[item.OriginId];
-				}
-
+                AssignIds(items);
 			}
 		}
+
+        private void AssignIds(IList<T> items) {
+            var originIds = items.Select(c => c.OriginId).ToList();
+            Dictionary<long, long> ids = _dbSet.Where(c => originIds.Contains(c.OriginId))
+                .Select(c => new { c.OriginId, c.Id }).ToDictionary(x => x.OriginId, x => x.Id);
+            foreach (var item in items)
+            {
+                item.Id = ids[item.OriginId];
+            }
+        }
 	}
 }

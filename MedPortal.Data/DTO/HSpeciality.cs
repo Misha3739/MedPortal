@@ -15,5 +15,17 @@ namespace MedPortal.Data.DTO
         public string Alias { get; set; }
         
         public long OriginId { get; set; }
+
+        public string NameGenitive { get; set; }
+
+        public string NamePlural { get; set; }
+
+        public string NamePluralGenitive { get; set; }
+
+        public bool IsSimpe { get; set; }
+
+        public string BranchName { get; set; }
+
+        public string BranchAlias { get; set; }
     }
 }

@@ -50,5 +50,7 @@ namespace MedPortal.Data.DTO
         public long OriginId { get; set; }
 
 		public virtual ICollection<HClinicStations> Stations { get; set; }
+
+        public virtual ICollection<HClinicSpecialities> Specialities { get; set; }
     }
 }

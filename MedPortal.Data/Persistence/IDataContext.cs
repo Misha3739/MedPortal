@@ -24,9 +24,8 @@ namespace MedPortal.Data.Persistence
 		DbSet<HClinicStations> ClinicStations { get; set; }
 		DbSet<HDistrictStations> DistrictStations { get; set; }
 		DbSet<HDoctorSpecialities> DoctorSpecialities { get; set; }
-
-
-		IDbContextTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
+        DbSet<HClinicSpecialities> ClinicSpecialities { get; set; }
+        IDbContextTransaction BeginTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
 
         Task<int> SaveChangesAsync();
 
