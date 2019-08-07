@@ -48,7 +48,10 @@ export class NavMenuComponent {
                 console.log('NavMenuComponent. City : ', cityResult);
                 this.cities = cityResult.cities;
                 this.cities.unshift(this.nullCity);
-                this.city = cityResult.current || this.nullCity;
+                if (cityResult.current) {
+                  this.city = this.cities.find(c => c.alias === cityResult.current.alias);
+                  this.router.navigate([this.city.alias]);
+                }
               },
               error => {
                 console.log('NavMenuComponent. City error: ', error);

@@ -33,7 +33,7 @@ namespace MedPortal.WebApiClient.Controllers
         [HttpGet("/api/city")]
         public async Task<IActionResult> GetCity(double latitude, double longitude)
         {
-            const double fluctuation = 0.01;
+            const double fluctuation = 0.20;
             var cities = await _cityRepository.GetAsync();
             var foundCity = cities.FirstOrDefault(c => 
                 c.Latitude >= latitude - fluctuation &&
