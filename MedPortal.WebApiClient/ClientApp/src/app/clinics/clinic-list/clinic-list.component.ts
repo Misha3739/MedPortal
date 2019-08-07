@@ -37,6 +37,7 @@ export class ClinicListComponent implements OnInit {
       (params: Params) => {
         this.searchParams.city = params['city'];
         console.log('ClinicListComponent. Start getting clinics for ', this.searchParams);
+        this.clinicsService.getClinics(this.searchParams);
       });
 
     this.queryParamsSubscription = this.route.queryParamMap.subscribe(params => {

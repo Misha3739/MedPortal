@@ -22,8 +22,16 @@ namespace MedPortal.Data.Repositories
                          join doctorsSpecialitis in _dataContext.DoctorSpecialities on clinicDoctors.DoctorId equals doctorsSpecialitis.DoctorId
                          join hspec in _dataContext.Specialities on doctorsSpecialitis.SpecialityId equals hspec.Id
                          join hcity in _dataContext.Cities on clinic.HCityId equals hcity.Id
-                         where hspec.Alias == speciality && hcity.Alias == city select clinic;
-            return await result.Include(c => c.HCity).ToListAsync();
+                         select new { Clinic = clinic, City = hcity, Speciality = hspec };
+            if(!string.IsNullOrEmpty(city))
+            {
+                result = result.Where(c => c.City.Alias == city);
+            }
+            if (!string.IsNullOrEmpty(speciality))
+            {
+                result = result.Where(c => c.Speciality.Alias == speciality);
+            }
+            return await result.Select(c => c.Clinic).Include(c => c.HCity).ToListAsync();
         }
 
         public override Task<List<HClinic>> GetAsync(Expression<Func<HClinic, bool>> predicate = null)

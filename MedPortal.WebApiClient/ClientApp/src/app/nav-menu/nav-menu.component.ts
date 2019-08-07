@@ -84,7 +84,7 @@ export class NavMenuComponent {
       let splitted = this.currentUrl.split("/");
       splitted[1] = this.city.alias;
       let url = splitted.join('/');
-      this.router.navigate([url]);
+      this.router.navigateByUrl(url);
     }
   }
 

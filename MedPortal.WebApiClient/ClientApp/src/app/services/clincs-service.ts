@@ -75,9 +75,13 @@ export class ClinicsService {
 
   getClinics(params: IClinicSearchParams) {
     let url = '/api/clinics/';
-    let httpParams = new HttpParams()
-      .set('city', params.city)
-      .set('speciality', params.speciality);
+    let httpParams = new HttpParams();
+    if (params.city) {
+      httpParams = httpParams.set('city', params.city);
+    }
+    if (params.speciality) {
+      httpParams = httpParams.set('speciality', params.speciality);
+    }
     return this.httpClient.get(this.baseUrl + url, { headers: this.headers, params: httpParams })
       .subscribe((result: IClinic[]) => {
         console.log(url, params, result);
