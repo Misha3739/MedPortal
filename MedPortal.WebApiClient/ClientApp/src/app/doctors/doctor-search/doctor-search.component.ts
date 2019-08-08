@@ -47,14 +47,14 @@ export class DoctorSearchComponent implements OnInit {
     });
 
     this.searchInfoService.dataReceived.subscribe(event => {
-      if (event === 'specialities') {
-        this.specialities = this.searchInfoService.clinicSpecialities;
+      if (event === 'doctorSpecialities') {
+        this.specialities = this.searchInfoService.doctorSpecialities;
         this.specialities.unshift(this.nullSpeciality);
         this.setCurrentSpeciality();
       }
     });
 
-    this.searchInfoService.getClinicSpecialities();
+    this.searchInfoService.getDoctorSpecialities();
   }
 
   setCurrentSpeciality() {
@@ -65,7 +65,7 @@ export class DoctorSearchComponent implements OnInit {
 
   onSpecialityChanged() {
     console.log('DoctorSearchComponent. Speciality changed to: ', this.selectedSpeciality.alias);
-    this.searchParams.speciality = this.selectedSpeciality.alias;
+    this.searchParams.speciality = this.selectedSpeciality !== this.nullSpeciality ? this.selectedSpeciality.alias : undefined;
 
     let url = '';
     if (this.searchParams.city && this.searchParams.city !== '') {

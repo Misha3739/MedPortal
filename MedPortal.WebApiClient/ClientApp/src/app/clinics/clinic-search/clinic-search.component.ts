@@ -17,7 +17,6 @@ export class ClinicSearchComponent implements OnInit {
 
   constructor(
     private searchInfoService: SearchInfoService,
-    private clinicsService: ClinicsService,
     private route: ActivatedRoute,
     private router: Router) { }
 
@@ -47,7 +46,7 @@ export class ClinicSearchComponent implements OnInit {
     });
 
     this.searchInfoService.dataReceived.subscribe(event => {
-      if (event === 'specialities') {
+      if (event === 'clinicSpecialities') {
         this.specialities = this.searchInfoService.clinicSpecialities;
         this.specialities.unshift(this.nullSpeciality);
         this.setCurrentSpeciality();
@@ -65,7 +64,7 @@ export class ClinicSearchComponent implements OnInit {
 
   onSpecialityChanged() {
     console.log('ClinicSearchComponent. Speciality changed to: ', this.selectedSpeciality.alias);
-    this.searchParams.speciality = this.selectedSpeciality.alias;
+    this.searchParams.speciality = this.selectedSpeciality !== this.nullSpeciality ? this.selectedSpeciality.alias : undefined;
 
     let url = '';
     if (this.searchParams.city && this.searchParams.city !== '') {

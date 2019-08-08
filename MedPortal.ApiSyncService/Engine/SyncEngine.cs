@@ -35,13 +35,13 @@ namespace MedPortal.ApiSyncService.Engine
 
 		public async Task SyncAll() {
 			try {
-                await SyncCitiesInternalAsync();
-                await SyncDistrictsInternalAsync();
-                await SyncStreetsInternalAsync();
-                await SyncStationsInternalAsync();
-                await SyncSpecialitiesInternalAsync();
-                await SyncClinicDataInternalAsync();
-                await SyncDoctorsAsync();
+                //await SyncCitiesInternalAsync();
+                //await SyncDistrictsInternalAsync();
+                //await SyncStreetsInternalAsync();
+                //await SyncStationsInternalAsync();
+                //await SyncSpecialitiesInternalAsync();
+                //await SyncClinicDataInternalAsync();
+                await SyncDoctorsInternalAsync();
             } finally {
 				foreach (var key in _saved.Keys) {
 					Logger.LogInfo($"{key}  Total: {_saved[key].Total}, Saved: {_saved[key].Saved}");
@@ -49,7 +49,7 @@ namespace MedPortal.ApiSyncService.Engine
 			}
 		}
 
-		private async Task SyncDoctorsAsync() {
+		private async Task SyncDoctorsInternalAsync() {
 			await SplitQueriesInParallelAsync(SyncDoctorsPerCityAsync, "Doctors");
 		}
 
@@ -199,46 +199,54 @@ namespace MedPortal.ApiSyncService.Engine
 			await Task.WhenAll(tasks);
 		}
 
-		private async Task SyncDoctorsPerCityAsync(HCity city, string identifier) {
-			var doctors = await GetDataWithPollingAsync<DoctorListResult>($"doctor/list?city={city.OriginId}");
-            Logger.LogInfo($"SyncEngine. Received doctors per {city.Name} : {doctors.Total}");
-			IncrementDictionary(identifier, 0, doctors.DoctorList.Count);
+        private async Task SyncDoctorsPerCityAsync(HCity city, string identifier) {
+            var specialitiesRepository = DIProvider.ServiceProvider.GetService<IRepository<HSpeciality>>();
+            var doctorsRepository = DIProvider.ServiceProvider.GetService<IHighloadedRepository<HDoctor>>();
+            var clinicRepository = DIProvider.ServiceProvider.GetService<IRepository<HClinic>>();
+            var specialitiesList = await specialitiesRepository.GetAsync();
 
-			var specialitiesRepository = DIProvider.ServiceProvider.GetService<IRepository<HSpeciality>>();
+            int bulkSize = 100;
+            var bulkList = new List<HDoctor>();
+            int i = 0;
+            DoctorListResult doctors = new DoctorListResult();
+            List<HDoctor> hDoctorsList = new List<HDoctor>();
 
-			var clinicRepository = DIProvider.ServiceProvider.GetService<IRepository<HClinic>>();
+            while (doctors.DoctorList == null || doctors.DoctorList.Any()) {
+                try {
+                    doctors = await GetDataWithPollingAsync<DoctorListResult>($"doctor/list?city={city.OriginId}&start={i * bulkSize}&count={bulkSize}");
+                    Logger.LogInfo($"SyncEngine. Received doctors per {city.Name} : {doctors.DoctorList.Count}");
+                    IncrementDictionary(identifier, 0, doctors.DoctorList.Count);
 
-			List<HDoctor> hDoctorsList = new List<HDoctor>();
+                    foreach (var doctor in doctors.DoctorList) {
+                        var hDoctor = Mapper.Map<Doctor, HDoctor>(doctor);
+                        hDoctor.Clinics = (await clinicRepository.GetAsync(c => doctor.Clinics.Contains(c.OriginId)))
+                            .Select(c => new HClinicDoctors()
+                            {
+                                ClinicId = c.Id
+                            }).ToList();
 
-			var specialitiesList = await specialitiesRepository.GetAsync();
+                        var specialitiesIDs = doctor.Specialities.Select(c => c.Id).ToList();
+                        hDoctor.Specialities = specialitiesList.Where(c => specialitiesIDs.Contains(c.OriginId)).Select(c => new HDoctorSpecialities()
+                        {
+                            SpecialityId = c.Id
+                        }).ToList();
 
-			foreach (var doctor in doctors.DoctorList) {
+                        hDoctor.CityId = city.Id;
+                        bulkList.Add(hDoctor);
+                    }
 
-				var hDoctor = Mapper.Map<Doctor, HDoctor>(doctor);
+                    await doctorsRepository.BulkUpdateAsync(bulkList);
+                    Logger.LogInfo($"SyncEngine. Saved doctors per {city.Name} : {doctors.DoctorList.Count}");
+                    IncrementDictionary(identifier, bulkList.Count, 0);
 
-
-				hDoctor.Clinics = (await clinicRepository.GetAsync(c => doctor.Clinics.Contains(c.OriginId)))
-
-					.Select(c => new HClinicDoctors() {
-						ClinicId = c.Id
-					}).ToList();
-
-				var specialitiesIDs = doctor.Specialities.Select(c => c.Id).ToList();
-
-				hDoctor.Specialities = specialitiesList.Where(c => specialitiesIDs.Contains(c.OriginId)).Select(c => new HDoctorSpecialities() {
-					SpecialityId = c.Id
-				}).ToList();
-
-				hDoctor.CityId = city.Id;
-
-				hDoctorsList.Add(hDoctor);
-
-			}
-
-			var doctorsRepository = DIProvider.ServiceProvider.GetService<IHighloadedRepository<HDoctor>>();
-			await doctorsRepository.BulkUpdateAsync(hDoctorsList);
-			IncrementDictionary(identifier, hDoctorsList.Count, 0);
-		}
+                    bulkList.Clear();
+                    i++;
+                }
+                catch (Exception e) {
+                    Logger.LogError($"Error on saving Doctors for city: {city.Name}. Position: {i * bulkSize}", e);
+                }
+            }
+        }
 
 		private void AddItemToDictionary(string key) {
 			if (!_saved.ContainsKey(key)) {

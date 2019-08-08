@@ -82,7 +82,7 @@ namespace MedPortal.WebApiClient.Controllers
         [HttpGet("/api/doctorspecialities")]
         public async Task<IActionResult> GetDoctorSpecialities()
         {
-            var specialities = await GetDoctorSpecialities();
+            var specialities = await GetDoctorSpecialitySearchItems();
             return Ok(specialities);
         }
 
