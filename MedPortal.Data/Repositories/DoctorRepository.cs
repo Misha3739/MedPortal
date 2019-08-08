@@ -1,6 +1,7 @@
 ﻿using MedPortal.Data.DTO;
 using MedPortal.Data.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,13 @@ namespace MedPortal.Data.Repositories
             {
                 result = result.Where(c => c.Speciality != null && c.Speciality.Alias == speciality);
             }
-            return await result.Select(c => c.Doctor).Distinct().Include(c => c.City).Include(c => c.Specialities).ToListAsync();
+            return await result
+                .Select(d => d.Doctor)
+                .Distinct()
+                .Include(d => d.City)
+                .Include(d => d.Specialities)
+                .ThenInclude(s => s.Speciality)
+                .ToListAsync();
         }
 
         public override Task<List<HDoctor>> GetAsync(Expression<Func<HDoctor, bool>> predicate = null)

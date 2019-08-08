@@ -9,6 +9,7 @@ namespace MedPortal.WebApiClient.Models
         //Original field is Img
         public string PhotoUrl { get; set; }
 
+        public int Experience { get; set; }
         public List<DoctorSpecialitySearchModel> Specialities { get; set; }
     }
 }
