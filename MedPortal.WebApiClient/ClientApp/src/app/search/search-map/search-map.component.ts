@@ -62,8 +62,8 @@ export class SearchMapComponent implements OnInit, AfterViewInit {
 
     this.searchInfoService.dataReceived.subscribe(res => {
       if (res === 'searchItems') {
-        //this.categories = this.searchInfoService.searchInfoItems;
-        //this.displayCategories = this.toDisplayData(this.clinicsSearchSelected, this.doctorsSearchSelected);
+        this.categories = this.searchInfoService.searchInfoItems;
+        this.displayCategories = this.toDisplayData(this.clinicsSearchSelected, this.doctorsSearchSelected);
       } else if (res === 'cities') {
         this.onCityChanged();
       }

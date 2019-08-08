@@ -40,10 +40,10 @@ namespace MedPortal.WebApiClient.Controllers
         public async Task<IActionResult> GetSearchItems()
         {
             List<SearchCategoryModel> result = InitSearchCategories(); 
-            var clinics = await GetClinicSearchItems();
-            result.First(c => c.Type == SearchCategoryEnum.Clinic).Items.AddRange(clinics);
-            var doctors = await GetDoctorSearchItems();
-            result.First(c => c.Type == SearchCategoryEnum.Doctor).Items.AddRange(doctors);
+            //var clinics = await GetClinicSearchItems();
+            //result.First(c => c.Type == SearchCategoryEnum.Clinic).Items.AddRange(clinics);
+            //var doctors = await GetDoctorSearchItems();
+            //result.First(c => c.Type == SearchCategoryEnum.Doctor).Items.AddRange(doctors);
             var clinicSpecialities = await GetClinicSpecialitySearchItems();
             result.First(c => c.Type == SearchCategoryEnum.ClinicSpeciality).Items.AddRange(clinicSpecialities);
             var doctorSpecialities = await GetDoctorSpecialitySearchItems();
@@ -60,10 +60,10 @@ namespace MedPortal.WebApiClient.Controllers
             } else
             {
                 List<SearchCategoryModel> result = InitSearchCategories();
-                var clinics = await GetClinicSearchItems(hCity);
-                result.First(c => c.Type == SearchCategoryEnum.Clinic).Items.AddRange(clinics);
-                var doctors = await GetDoctorSearchItems(hCity);
-                result.First(c => c.Type == SearchCategoryEnum.Doctor).Items.AddRange(doctors);
+                //var clinics = await GetClinicSearchItems(hCity);
+                //result.First(c => c.Type == SearchCategoryEnum.Clinic).Items.AddRange(clinics);
+                //var doctors = await GetDoctorSearchItems(hCity);
+                //result.First(c => c.Type == SearchCategoryEnum.Doctor).Items.AddRange(doctors);
                 var clinicSpecialities = await GetClinicSpecialitySearchItems();
                 result.First(c => c.Type == SearchCategoryEnum.ClinicSpeciality).Items.AddRange(clinicSpecialities);
                 var doctorSpecialities = await GetDoctorSpecialitySearchItems();
@@ -159,13 +159,13 @@ namespace MedPortal.WebApiClient.Controllers
 
         private async Task<List<DoctorSpecialitySearchModel>> GetDoctorSpecialitySearchItems(string filter = null)
         {
-            var specialities = await _specialityRepository.GetAsync();
+            var specialities = filter == null ? await _specialityRepository.GetAsync() : await _specialityRepository.GetAsync(c => c.Name.ToUpper().StartsWith(filter.ToUpper()));
             return _mapper.Map<List<DoctorSpecialitySearchModel>>(specialities);
         }
 
         private async Task<List<ClinicSpecialitySearchModel>> GetClinicSpecialitySearchItems(string filter = null)
         {
-            var specialities = await _specialityRepository.GetAsync();
+            var specialities = filter == null ? await _specialityRepository.GetAsync() : await _specialityRepository.GetAsync(c => c.Name.ToUpper().StartsWith(filter.ToUpper()));
             return _mapper.Map<List<ClinicSpecialitySearchModel>>(specialities);
         }
     }
