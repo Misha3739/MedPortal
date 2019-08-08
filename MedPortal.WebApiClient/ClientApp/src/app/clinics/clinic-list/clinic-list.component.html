@@ -1,4 +1,4 @@
-<h3>Клиники:</h3>
+<h3 *ngIf="clinics">Клиники({{clinics.length}}):</h3>
   <div class="component-list" *ngFor="let clinic of clinics">
     <app-clinic-card [clinic]="clinic"></app-clinic-card>
     </div>
