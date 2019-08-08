@@ -31,9 +31,9 @@ namespace MedPortal.Data.Repositories
             }
             if (!string.IsNullOrEmpty(speciality))
             {
-                result = result.Where(c => c.Speciality.BranchAlias == speciality || c.Speciality.Alias == speciality);
+                result = result.Where(c => c.Speciality != null && c.Speciality.Alias == speciality);
             }
-            return await result.Select(c => c.Doctor).Include(c => c.City).Include(c => c.Specialities).ToListAsync();
+            return await result.Select(c => c.Doctor).Distinct().Include(c => c.City).Include(c => c.Specialities).ToListAsync();
         }
 
         public override Task<List<HDoctor>> GetAsync(Expression<Func<HDoctor, bool>> predicate = null)
