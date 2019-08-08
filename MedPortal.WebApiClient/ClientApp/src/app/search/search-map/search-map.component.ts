@@ -1,22 +1,21 @@
-import { Component, OnInit, ViewChild, Directive, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, Directive, ViewEncapsulation, AfterViewInit } from '@angular/core';
 import { } from 'googlemaps';
 import { SearchInfoService } from '../../services/search-info-service';
-import { Subscription } from 'rxjs';
+import { Subscription, Subject } from 'rxjs';
 import { ActivatedRoute, Router, Params, NavigationEnd } from '@angular/router';
 import { ISearchCategory } from '../../data/search-info';
 import { SearchInfoType } from '../../data/search-info-type';
 import { Select2OptionData } from 'ng-select2';
-import { ClinicsService } from '../../services/clincs-service';
-import { fail } from 'assert';
 import { ISearchItem } from '../../data/search-item';
-
+import * as $ from 'jquery';
+import { IQuerySearchParams } from '../../data/query-search-params';
 
 @Component({
   selector: 'app-search-map',
   templateUrl: './search-map.component.html',
   styleUrls: ['./search-map.component.css']
 })
-export class SearchMapComponent implements OnInit {
+export class SearchMapComponent implements OnInit, AfterViewInit {
   @ViewChild('gmap', { static: true }) gmapElement: any;
   map: google.maps.Map;
 
@@ -34,7 +33,22 @@ export class SearchMapComponent implements OnInit {
 
   currentUrl: string;
 
-  constructor(private searchInfoService: SearchInfoService, private clinicsService: ClinicsService, private route: ActivatedRoute, private router: Router) { }
+  suggestion: string = '';
+  searchTerm: Subject<IQuerySearchParams>;
+
+  constructor(
+    private searchInfoService: SearchInfoService,
+    private route: ActivatedRoute,
+    private router: Router) {
+    this.searchTerm = new Subject<IQuerySearchParams>();
+      this.searchInfoService.search(this.searchTerm)
+        .subscribe((results: ISearchCategory[]) => {
+          console.log('SearchMapComponent. Completed search result:', results);
+          this.categories = results;
+          this.displayCategories = this.toDisplayData(this.clinicsSearchSelected, this.doctorsSearchSelected);
+          this.initSelectEvents();
+        });
+  }
 
   ngOnInit() {
     this.initMaps(0, 0);
@@ -48,11 +62,36 @@ export class SearchMapComponent implements OnInit {
 
     this.searchInfoService.dataReceived.subscribe(res => {
       if (res === 'searchItems') {
-        this.categories = this.searchInfoService.searchInfoItems;
-        this.displayCategories = this.toDisplayData(this.clinicsSearchSelected, this.doctorsSearchSelected);
+        //this.categories = this.searchInfoService.searchInfoItems;
+        //this.displayCategories = this.toDisplayData(this.clinicsSearchSelected, this.doctorsSearchSelected);
       } else if (res === 'cities') {
         this.onCityChanged();
       }
+      this.initSelectEvents();
+    });
+  }
+
+  ngAfterViewInit() {
+    this.initSelectEvents();
+  }
+
+  initSelectEvents() {
+    let self = this;
+    
+    $(document).ready(function () {
+      $('.select2-selection__arrow').on('click', function () {
+        $('.select2-search__field').on('keyup', function (control) {
+          console.log('Select.Jquery. keyup: ', control.key);
+          if (control.key) {
+            self.suggestion = $('.select2-search__field').val();
+            if (self.suggestion.length >= 2) {
+              let params = { city: self.city, query: self.suggestion};
+              self.searchTerm.next(params);
+            }
+          }
+        });
+      });
+      
     });
   }
 
@@ -142,6 +181,10 @@ export class SearchMapComponent implements OnInit {
     } else {
        this.clearSelectedValue();
     }
+  }
+
+  onSelectKeydownEvent(event) {
+    console.log('Select. Keydown: ', event);
   }
 
   onRedirect() {

@@ -86,6 +86,22 @@ namespace MedPortal.WebApiClient.Controllers
             return Ok(specialities);
         }
 
+        [HttpGet("/api/search")]
+        public async Task<IActionResult> Search(string city, string query)
+        {
+            var hCity = await _cityRepository.FindAsync(c => c.Alias == city);
+            List<SearchCategoryModel> result = InitSearchCategories();
+            var clinics = await GetClinicSearchItems(hCity, query);
+            result.First(c => c.Type == SearchCategoryEnum.Clinic).Items.AddRange(clinics);
+            var doctors = await GetDoctorSearchItems(hCity, query);
+            result.First(c => c.Type == SearchCategoryEnum.Doctor).Items.AddRange(doctors);
+            var clinicSpecialities = await GetClinicSpecialitySearchItems(query);
+            result.First(c => c.Type == SearchCategoryEnum.ClinicSpeciality).Items.AddRange(clinicSpecialities);
+            var doctorSpecialities = await GetDoctorSpecialitySearchItems(query);
+            result.First(c => c.Type == SearchCategoryEnum.DoctorSpeciality).Items.AddRange(doctorSpecialities);
+            return Ok(result);
+        }
+
         private List<SearchCategoryModel> InitSearchCategories()
         {
             return new List<SearchCategoryModel>()
@@ -97,25 +113,57 @@ namespace MedPortal.WebApiClient.Controllers
             };
         }
 
-        private async Task<List<ClinicSearchModel>> GetClinicSearchItems(HCity city = null)
+        private async Task<List<ClinicSearchModel>> GetClinicSearchItems(HCity city = null, string filter = null)
         {
-            var clinics = city == null ? await _clinicRepository.GetAsync() : await _clinicRepository.GetAsync(c => c.HCityId == city.Id);
-            return _mapper.Map<List<ClinicSearchModel>>(clinics);
+            List<HClinic> foundClinics = new List<HClinic>();
+            if(city == null && filter == null)
+            {
+                foundClinics = await _clinicRepository.GetAsync();
+            }
+            else if(city != null && filter == null)
+            {
+                foundClinics = await _clinicRepository.GetAsync(c => c.HCityId == city.Id);
+            }
+            else if (city == null && filter != null)
+            {
+                foundClinics = await _clinicRepository.GetAsync(c => c.Name.ToUpper().StartsWith(filter.ToUpper()));
+            }
+            else if (city != null && filter != null)
+            {
+                foundClinics = await _clinicRepository.GetAsync(c => c.HCityId == city.Id && c.Name.ToUpper().StartsWith(filter.ToUpper()));
+            }
+            return _mapper.Map<List<ClinicSearchModel>>(foundClinics);
         }
 
-        private async Task<List<DoctorSearchModel>> GetDoctorSearchItems(HCity city = null)
+        private async Task<List<DoctorSearchModel>> GetDoctorSearchItems(HCity city = null, string filter = null)
         {
-            var doctors = city == null ? await _doctorRepository.GetAsync() : await _doctorRepository.GetAsync(c => c.CityId == city.Id);
-            return _mapper.Map<List<DoctorSearchModel>>(doctors);
+            List<HDoctor> foundDoctors = new List<HDoctor>();
+            if (city == null && filter == null)
+            {
+                foundDoctors = await _doctorRepository.GetAsync();
+            }
+            else if (city != null && filter == null)
+            {
+                foundDoctors = await _doctorRepository.GetAsync(c => c.CityId == city.Id);
+            }
+            else if (city == null && filter != null)
+            {
+                foundDoctors = await _doctorRepository.GetAsync(c => c.Name.ToUpper().StartsWith(filter.ToUpper()));
+            }
+            else if (city != null && filter != null)
+            {
+                foundDoctors = await _doctorRepository.GetAsync(c => c.CityId == city.Id && c.Name.ToUpper().StartsWith(filter.ToUpper()));
+            }
+            return _mapper.Map<List<DoctorSearchModel>>(foundDoctors);
         }
 
-        private async Task<List<DoctorSpecialitySearchModel>> GetDoctorSpecialitySearchItems()
+        private async Task<List<DoctorSpecialitySearchModel>> GetDoctorSpecialitySearchItems(string filter = null)
         {
             var specialities = await _specialityRepository.GetAsync();
             return _mapper.Map<List<DoctorSpecialitySearchModel>>(specialities);
         }
 
-        private async Task<List<ClinicSpecialitySearchModel>> GetClinicSpecialitySearchItems()
+        private async Task<List<ClinicSpecialitySearchModel>> GetClinicSpecialitySearchItems(string filter = null)
         {
             var specialities = await _specialityRepository.GetAsync();
             return _mapper.Map<List<ClinicSpecialitySearchModel>>(specialities);
