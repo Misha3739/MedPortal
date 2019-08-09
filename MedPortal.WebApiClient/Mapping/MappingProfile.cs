@@ -9,6 +9,13 @@ namespace MedPortal.Proxy.Mapping
         public MappingProfile()
         {
             CreateMap<HCity, CitySearchModel>();
+            CreateMap<HStreet, GeoSearchModel>()
+                .ForMember(s => s.Type, s => s.MapFrom(t => GeoCategoryEnum.Street));
+            CreateMap<HStation, GeoSearchModel>()
+                .ForMember(s => s.Type, s => s.MapFrom(t => GeoCategoryEnum.MetroStation));
+            CreateMap<HDistrict, GeoSearchModel>()
+                .ForMember(s => s.Type, s => s.MapFrom(t => GeoCategoryEnum.District));
+
             CreateMap<HClinic, ClinicSearchModel>()
                 .ForMember(c => c.City, c=> c.MapFrom(hc => hc.HCity))
                 .ForMember(c => c.Alias, c => c.MapFrom(hc => hc.RewriteName));
