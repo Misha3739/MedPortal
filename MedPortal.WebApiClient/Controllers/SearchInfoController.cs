@@ -126,11 +126,11 @@ namespace MedPortal.WebApiClient.Controllers
             }
             else if (city == null && filter != null)
             {
-                foundClinics = await _clinicRepository.GetAsync(c => c.Name.ToUpper().StartsWith(filter.ToUpper()));
+                foundClinics = await _clinicRepository.GetAsync(c => c.Name.ToUpper().Contains(filter.ToUpper()));
             }
             else if (city != null && filter != null)
             {
-                foundClinics = await _clinicRepository.GetAsync(c => c.HCityId == city.Id && c.Name.ToUpper().StartsWith(filter.ToUpper()));
+                foundClinics = await _clinicRepository.GetAsync(c => c.HCityId == city.Id && c.Name.ToUpper().Contains(filter.ToUpper()));
             }
             return _mapper.Map<List<ClinicSearchModel>>(foundClinics);
         }
@@ -148,11 +148,11 @@ namespace MedPortal.WebApiClient.Controllers
             }
             else if (city == null && filter != null)
             {
-                foundDoctors = await _doctorRepository.GetAsync(c => c.Name.ToUpper().StartsWith(filter.ToUpper()));
+                foundDoctors = await _doctorRepository.GetAsync(c => c.Name.ToUpper().Contains(filter.ToUpper()));
             }
             else if (city != null && filter != null)
             {
-                foundDoctors = await _doctorRepository.GetAsync(c => c.CityId == city.Id && c.Name.ToUpper().StartsWith(filter.ToUpper()));
+                foundDoctors = await _doctorRepository.GetAsync(c => c.CityId == city.Id && c.Name.ToUpper().Contains(filter.ToUpper()));
             }
             return _mapper.Map<List<DoctorSearchModel>>(foundDoctors);
         }

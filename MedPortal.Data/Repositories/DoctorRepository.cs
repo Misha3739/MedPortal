@@ -20,27 +20,20 @@ namespace MedPortal.Data.Repositories
 
         public async Task<List<HDoctor>> FilterDoctorsAsync(string city, string speciality)
         {
-            var result = from doctor in _dbSet
-                         join doctorSpecs in _dataContext.DoctorSpecialities on doctor.Id equals doctorSpecs.DoctorId
-                         join hspec in _dataContext.Specialities on doctorSpecs.SpecialityId equals hspec.Id
-                         join hcity in _dataContext.Cities on doctor.CityId equals hcity.Id
-                         select new { Doctor = doctor, City = hcity, Speciality = hspec };
-
+            var query = _dbSet
+               .Include(c => c.City)
+               .Include(c => c.Specialities)
+               .ThenInclude(c => c.Speciality)
+               .AsQueryable();
             if (!string.IsNullOrEmpty(city))
             {
-                result = result.Where(c => c.City.Alias == city);
+                query = query.Where(c => c.City.Alias == city);
             }
             if (!string.IsNullOrEmpty(speciality))
             {
-                result = result.Where(c => c.Speciality != null && c.Speciality.Alias == speciality);
+                query = query.Where(c => c.Specialities.Any(s => s.Speciality.Alias == speciality));
             }
-            return await result
-                .Select(d => d.Doctor)
-                .Distinct()
-                .Include(d => d.City)
-                .Include(d => d.Specialities)
-                .ThenInclude(s => s.Speciality)
-                .ToListAsync();
+            return await query.ToListAsync();
         }
 
         public override Task<List<HDoctor>> GetAsync(Expression<Func<HDoctor, bool>> predicate = null)

@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using MedPortal.Data.DTO;
 using MedPortal.WebApiClient.Models;
 
@@ -14,7 +14,8 @@ namespace MedPortal.Proxy.Mapping
                 .ForMember(c => c.Alias, c => c.MapFrom(hc => hc.RewriteName));
             CreateMap<HClinic, ClinicModel>()
                 .ForMember(c => c.City, c => c.MapFrom(hc => hc.HCity))
-                .ForMember(c => c.Alias, c => c.MapFrom(hc => hc.RewriteName));
+                .ForMember(c => c.Alias, c => c.MapFrom(hc => hc.RewriteName))
+                .ForMember(c => c.Address, c => c.MapFrom(hc => $"{hc.HStreet.Name}, {hc.House}"));
             CreateMap<HDoctor, DoctorSearchModel>()
                 .ForMember(c => c.City, c => c.MapFrom(hc => hc.City));
             CreateMap<HDoctor, DoctorModel>()

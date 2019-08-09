@@ -1,6 +1,7 @@
 ﻿using MedPortal.Data.DTO;
 using MedPortal.Data.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,20 +18,23 @@ namespace MedPortal.Data.Repositories
 
         public async Task<List<HClinic>> FilterClinicsAsync(string city, string speciality)
         {
-            var result = from clinic in _dbSet
-                         join clinicSpecs in _dataContext.ClinicSpecialities.DefaultIfEmpty() on clinic.Id equals clinicSpecs.ClinicId
-                         join hspec in _dataContext.Specialities.DefaultIfEmpty() on clinicSpecs.SpecialityId equals hspec.Id
-                         join hcity in _dataContext.Cities on clinic.HCityId equals hcity.Id
-                         select new { Clinic = clinic, City = hcity, Speciality = hspec };
-            if(!string.IsNullOrEmpty(city))
+            var query = _dbSet
+                .Include(c => c.HCity)
+                .Include(c => c.HStreet)
+                .Include(c => c.Stations)
+                .ThenInclude(c => c.Station)
+                .Include(c => c.Specialities)
+                .ThenInclude(c => c.Speciality)
+                .AsQueryable();
+            if (!string.IsNullOrEmpty(city))
             {
-                result = result.Where(c => c.City.Alias == city);
+                query = query.Where(c => c.HCity.Alias == city);
             }
             if (!string.IsNullOrEmpty(speciality))
             {
-                result = result.Where(c => c.Speciality != null && c.Speciality.BranchAlias == speciality);
+                query = query.Where(c=> c.Specialities.Any(s => s.Speciality.BranchAlias == speciality));
             }
-            return await result.Select(c => c.Clinic).Distinct().Include(c => c.HCity).ToListAsync();
+            return await query.ToListAsync();
         }
 
         public override Task<List<HClinic>> GetAsync(Expression<Func<HClinic, bool>> predicate = null)
