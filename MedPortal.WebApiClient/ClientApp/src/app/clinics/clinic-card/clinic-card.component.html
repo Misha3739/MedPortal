@@ -12,4 +12,8 @@
       <strong>{{clinic.address}}</strong>
     </div>
   </div>
+  <div>
+    <button class="btn btn-primary" (click)="showMap()"> {{!isMapShown ? 'Показать на карте' : 'Спрятать'}}</button>
+    <div #gmap style="width:100%;height:200px;width:200px" [hidden]="!isMapShown"></div>
 </div>
+  </div>
