@@ -3,14 +3,24 @@
     <div class="form-group search-group">
       <label for="search">Введите текст поиска здесь:</label>
       <div class="row">
-        <ng-select2
-                    #select
-                    [allowClear]="true"
-                    [data]="displayCategories"
-                    width="300"
-                    (valueChanged)="onSelectedValueChanged($event)">
 
-        </ng-select2>
+        <input
+               class="search-input"
+               type="text"
+               placeholder="Введите ФИО врача, клинику или специальность"
+               aria-label="Number"
+               matInput
+               [matAutocomplete]="auto"
+               [(ngModel)]="suggestion"
+               (keyup)="onSearchInputValueChanged()">
+
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectedValueChanged($event.option.value)">
+          <mat-optgroup *ngFor="let category of categories" [label]="displayCategory(category.type)">
+            <mat-option *ngFor="let item of category.items" [value]="makeOptionUniqueValue(category, item)">
+              {{item.name}}
+            </mat-option>
+          </mat-optgroup>
+        </mat-autocomplete>
 
         <button (click)="onRedirect()">{{singleItemSelected ? 'Перейти' : 'Поиск'}}</button>
       </div>
@@ -28,5 +38,3 @@
       <div #gmap style="width:100%;height:500px;width:500px"></div>
     </div>
   </div>
-
-

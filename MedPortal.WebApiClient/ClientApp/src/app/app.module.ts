@@ -21,6 +21,8 @@ import { DoctorCardComponent } from './doctors/doctor-card/doctor-card.component
 import { ClinicSearchComponent } from './clinics/clinic-search/clinic-search.component';
 import { GeolocationService } from './services/geolocation-service';
 import { DoctorSearchComponent } from './doctors/doctor-search/doctor-search.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [
@@ -52,7 +54,9 @@ import { DoctorSearchComponent } from './doctors/doctor-search/doctor-search.com
       { path: ':city/clinics/:id', component: ClinicDetailsComponent },
       { path: ':city/doctors/:id', component: DoctorDetailsComponent },
     ]),
-    NgSelect2Module
+    NgSelect2Module,
+    MatAutocompleteModule,
+    MatFormFieldModule
   ],
   providers: [
     HttpClient,

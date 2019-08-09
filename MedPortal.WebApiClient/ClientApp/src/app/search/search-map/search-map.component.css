@@ -5,3 +5,7 @@
 .search-label {
   margin-left: 10px;
 }
+
+.search-input {
+  min-width:500px;
+}
