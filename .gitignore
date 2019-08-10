@@ -15,3 +15,8 @@
 /.idea
 /MedPortal.WebApiClient/ClientApp/src/app/data/*.js
 /MedPortal.WebApiClient/ClientApp/src/app/data/*.js.map
+/MedPortal.WebApiClient/ClientApp/src/app/data/location/location-type.js.map
+/MedPortal.WebApiClient/ClientApp/src/app/data/location/location-type.js
+/MedPortal.WebApiClient/ClientApp/src/app/data/location/location-category.js.map
+/MedPortal.WebApiClient/ClientApp/src/app/data/location/location-category.js
+/MedPortal.WebApiClient/ClientApp/src/app/data/location

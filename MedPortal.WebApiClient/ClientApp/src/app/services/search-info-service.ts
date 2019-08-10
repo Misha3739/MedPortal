@@ -8,6 +8,7 @@ import { Subject, Observable } from "rxjs";
 
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { IQuerySearchParams } from "../data/query-search-params";
+import { ILocationCategory } from "../data/location/location-category";
 
 @Injectable()
 export class SearchInfoService {
@@ -19,6 +20,8 @@ export class SearchInfoService {
   searchInfoItems: ISearchCategory[];
   clinicSpecialities: ISpeciality[];
   doctorSpecialities: ISpeciality[];
+
+  locationCategories: ILocationCategory[];
 
   private headers = new HttpHeaders({
     'Content-Type': 'application/json',
@@ -68,6 +71,15 @@ export class SearchInfoService {
         this.cities = result;
         this.dataReceived.next('cities');
       });
+  }
+
+  getLocations(city: string) {
+    return this.httpClient.get(this.baseUrl + '/api/locations/' + city, { headers: this.headers })
+      .subscribe((result: ILocationCategory[]) => {
+        console.log('/api/locations: ', result);
+        this.locationCategories = result;
+        this.dataReceived.next('locations');
+      });;
   }
 
   search(terms: Observable<IQuerySearchParams>) {

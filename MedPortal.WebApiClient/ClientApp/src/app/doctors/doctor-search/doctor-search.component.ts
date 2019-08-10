@@ -8,6 +8,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { IClinic } from '../../data/clinic';
 import { IClinicSearchParams } from '../../data/clinic-search-params';
 import { DoctorsService } from '../../services/doctors-service';
+import { IDoctorSearchParams } from '../../data/doctor-search-params';
 
 @Component({
   selector: 'app-doctor-search',
@@ -24,7 +25,7 @@ export class DoctorSearchComponent implements OnInit {
   private routeParamsSubscription: Subscription;
   private queryParamsSubscription: Subscription;
 
-  private searchParams: IClinicSearchParams = { city: '', speciality: 'noSpeciality' };
+  private searchParams: IDoctorSearchParams = { city: '', speciality: 'noSpeciality' };
 
   specialities: ISpeciality[] = [];
 

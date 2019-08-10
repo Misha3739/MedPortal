@@ -5,6 +5,7 @@ import { IClinic } from '../../data/clinic';
 import { Subscription } from 'rxjs';
 import { SearchInfoService } from '../../services/search-info-service';
 import { IClinicSearchParams } from '../../data/clinic-search-params';
+import { LocationType } from '../../data/location/location-type';
 
 @Component({
   selector: 'app-clinic-list',
@@ -23,7 +24,11 @@ export class ClinicListComponent implements OnInit {
   private routeParamsSubscription: Subscription;
   private queryParamsSubscription: Subscription;
 
-  private searchParams: IClinicSearchParams = { city: '', speciality: '' };
+  private searchParams: IClinicSearchParams = {
+    city: '', speciality: '', location: {
+      type: LocationType.none,
+      alias: ''
+    } };
 
   clinics: IClinic[];
 
@@ -42,6 +47,9 @@ export class ClinicListComponent implements OnInit {
 
     this.queryParamsSubscription = this.route.queryParamMap.subscribe(params => {
       this.searchParams.speciality = params.get('speciality');
+      this.searchParams.location.type = +params.get('locationType');
+      this.searchParams.location.alias = params.get('location');
+      console.log('ClinicListComponent. Search params: ', this.searchParams);
       this.clinicsService.getClinics(this.searchParams);
     });
   }

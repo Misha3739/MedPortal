@@ -4,6 +4,7 @@ import { IClinic, IClinicDetails } from "../data/clinic";
 import { Subject } from "rxjs";
 import { HttpHeaders, HttpClient, HttpParams } from "@angular/common/http";
 import { IClinicSearchParams } from "../data/clinic-search-params";
+import { LocationType } from "../data/location/location-type";
 
 @Injectable()
 export class ClinicsService {
@@ -82,6 +83,12 @@ export class ClinicsService {
     if (params.speciality) {
       httpParams = httpParams.set('speciality', params.speciality);
     }
+
+    if (params.location.type !== LocationType.none) {
+      httpParams = httpParams.set('locationType', params.location.type.toString());
+      httpParams = httpParams.set('location', params.location.alias);
+    }
+    
     return this.httpClient.get(this.baseUrl + url, { headers: this.headers, params: httpParams })
       .subscribe((result: IClinic[]) => {
         console.log(url, params, result);

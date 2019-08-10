@@ -21,8 +21,11 @@ import { DoctorCardComponent } from './doctors/doctor-card/doctor-card.component
 import { ClinicSearchComponent } from './clinics/clinic-search/clinic-search.component';
 import { GeolocationService } from './services/geolocation-service';
 import { DoctorSearchComponent } from './doctors/doctor-search/doctor-search.component';
+
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -56,7 +59,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     ]),
     NgSelect2Module,
     MatAutocompleteModule,
-    MatFormFieldModule
+    BrowserAnimationsModule,
+    MatFormFieldModule,
+    MatSelectModule
   ],
   providers: [
     HttpClient,
