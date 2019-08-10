@@ -1,46 +1,56 @@
 <h3>Поиск клиники:</h3>
 <div class="row">
   <div class="col">
-  <div class="form-control">
-    <label for="specialities">По специальности:</label>
-    <select id="specialities" (change)="onSpecialityChanged()" [(ngModel)]="selectedSpeciality">
-      <option *ngFor="let speciality of specialities" [ngValue]="speciality">
-        {{speciality.name}}
-      </option>
-    </select>
-  </div>
-  <div class="form-control">
-    <mat-label matInput>По местоположению:</mat-label>
-    <mat-form-field class="location-selector">
-      <mat-select (selectionChange)="onLocationChanged($event)" [(ngModel)]="selectedLocation">
-        <mat-optgroup *ngFor="let category of locationCategories" [label]="displayCategory(category.type)">
-          <mat-option *ngFor="let item of category.items" [value]="item" >
-            {{item.name}}
-          </mat-option>
-        </mat-optgroup>
-      </mat-select>
+    <div class="form-control">
+      <label for="specialities">По специальности:</label>
+      <select id="specialities" (change)="onSpecialityChanged()" [(ngModel)]="selectedSpeciality">
+        <option *ngFor="let speciality of specialities" [ngValue]="speciality">
+          {{speciality.name}}
+        </option>
+      </select>
+    </div>
+    <div class="form-control">
+      <mat-label matInput>По местоположению:</mat-label>
+      <mat-form-field class="location-selector">
+        <mat-select (selectionChange)="onLocationChanged($event)" [(ngModel)]="selectedLocation">
+          <mat-optgroup *ngFor="let category of locationCategories" [label]="displayCategory(category.type)">
+            <mat-option *ngFor="let item of category.items" [value]="item">
+              {{item.name}}
+            </mat-option>
+          </mat-optgroup>
+        </mat-select>
       </mat-form-field>
     </div>
+    <div class="form-control">
+      <mat-label matInput>Рядом со мной:</mat-label>
+      <mat-form-field class="location-selector">
+        <mat-select (selectionChange)="onRangeChanged($event)" [(ngModel)]="currentRange">
+          <mat-option *ngFor="let item of ranges" [value]="item">
+            {{item.name}}
+          </mat-option>
+        </mat-select>
+        </mat-form-field>
     </div>
-  <div class="col">
-    <agm-map [latitude]="this.geoService.currentPosition.latitude"
-             [longitude]="this.geoService.currentPosition.longitude"
-             [disableDefaultUI]="false"
-             [zoom]="12"
-             [zoomControl]="true">
+    </div>
+    <div class="col">
+      <agm-map [latitude]="center.latitude"
+               [longitude]="center.longitude"
+               [disableDefaultUI]="false"
+               [zoom]="12"
+               [zoomControl]="true">
 
-      <agm-marker *ngFor="let clinic of clinics"
-                  [latitude]="clinic.latitude !== 0 ? clinic.latitude : clinic.city.latitude"
-                  [longitude]="clinic.longitude  !== 0 ? clinic.longitude : clinic.city.longitude">
-      </agm-marker>
-    </agm-map>
-  </div>
-  <!--<div class="form-control">
+        <agm-marker *ngFor="let clinic of clinics"
+                    [latitude]="clinic.latitude !== 0 ? clinic.latitude : clinic.city.latitude"
+                    [longitude]="clinic.longitude  !== 0 ? clinic.longitude : clinic.city.longitude">
+        </agm-marker>
+      </agm-map>
+    </div>
+    <!--<div class="form-control">
     <label for="specialities">По городу:</label>
     <select id="specialities">
       <option *ngFor="let city of cities" value="{{city.alias}}">{{city.name}}</option>
     </select>
   </div>-->
-  <!--<app-clinic-list></app-clinic-list>-->
-</div>
+    <!--<app-clinic-list></app-clinic-list>-->
+  </div>
 <app-clinic-list></app-clinic-list>

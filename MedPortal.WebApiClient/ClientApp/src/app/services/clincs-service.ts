@@ -88,10 +88,16 @@ export class ClinicsService {
       httpParams = httpParams.set('locationType', params.location.type.toString());
       httpParams = httpParams.set('location', params.location.alias);
     }
+
+    if (params.inRange.value > 0 && params.inRange.coordinates) {
+      httpParams = httpParams.set('inrange', params.inRange.value.toString());
+      httpParams = httpParams.set('latitude', params.inRange.coordinates.latitude.toString());
+      httpParams = httpParams.set('longitude', params.inRange.coordinates.longitude.toString());
+    }
     
     return this.httpClient.get(this.baseUrl + url, { headers: this.headers, params: httpParams })
       .subscribe((result: IClinic[]) => {
-        console.log(url, params, result);
+        console.log('Clinic service request completed : ', url, ' Params: ', params, ' Result: ', result);
         this.clinics = result;
         this.dataReceived.next('clinics');
       });

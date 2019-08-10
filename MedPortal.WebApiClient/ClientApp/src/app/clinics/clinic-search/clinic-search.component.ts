@@ -10,6 +10,8 @@ import { LocationType } from '../../data/location/location-type';
 import { ClinicsService } from '../../services/clincs-service';
 import { IClinic } from '../../data/clinic';
 import { GeolocationService } from '../../services/geolocation-service';
+import { IRange } from '../../data/location/range';
+import { ICoordinates } from '../../data/location/coordinates';
 
 @Component({
   selector: 'app-clinic-search',
@@ -29,9 +31,12 @@ export class ClinicSearchComponent implements OnInit {
   private queryParamsSubscription: Subscription;
 
   private searchParams: IClinicSearchParams = {
-    city: '', speciality: 'noSpeciality', location: {
+    city: '', speciality: 'noSpeciality',
+    location: {
       type: LocationType.none,
-      alias : ''
+      alias: ''
+    }, inRange: {
+      value: 0
     }
   };
 
@@ -39,6 +44,8 @@ export class ClinicSearchComponent implements OnInit {
 
   specialities: ISpeciality[] = [];
   locationCategories: ILocationCategory[];
+  ranges:IRange [] = [];
+  currentRange: IRange;
 
   nullSpeciality: ISpeciality = { id: 0, alias: 'noSpeciality', name: 'Не выбрано' };
   nullLocation: ILocationCategory = {
@@ -50,10 +57,14 @@ export class ClinicSearchComponent implements OnInit {
   selectedSpeciality: ISpeciality;
   selectedLocation: ILocationObject;
 
+  center: ICoordinates;
+
   ngOnInit() {
+    this.initRanges();
+    this.initPosition();
     this.specialities.push(this.nullSpeciality);
     this.selectedSpeciality = this.nullSpeciality;
-    
+   
 
     this.routeParamsSubscription = this.route.params.subscribe(
       (params: Params) => {
@@ -66,8 +77,8 @@ export class ClinicSearchComponent implements OnInit {
       this.searchParams.speciality = params.get('speciality');
       this.searchParams.location.type = +params.get('locationType') || LocationType.none;
       this.searchParams.location.alias = params.get('location') || '';
-      this.setCurrentSpeciality();
-      this.setCurrentLocation();
+      this.searchParams.inRange.value = +params.get('inrangekm');
+      this.setCurrentValues();
     });
 
     this.clinicService.dataReceived.subscribe(event => {
@@ -79,29 +90,49 @@ export class ClinicSearchComponent implements OnInit {
         case 'clinicSpecialities':
           this.specialities = this.searchInfoService.clinicSpecialities;
           this.specialities.unshift(this.nullSpeciality);
-          this.setCurrentSpeciality();
+          this.setCurrentValues();
           break;
         case 'locations':
           this.locationCategories = this.searchInfoService.locationCategories;
           this.locationCategories.unshift(this.nullLocation);
-          this.setCurrentLocation();
+          this.setCurrentValues();
           break;
-      } 
+      }
+    });
+
+    this.geoService.currentPositionChanged.subscribe(pos => {
+      this.initPosition();
     });
 
     this.searchInfoService.getClinicSpecialities();
     
   }
 
-  setCurrentSpeciality() {
-    if (this.searchParams && this.searchParams.speciality && this.searchParams.speciality !== '' && this.specialities) {
-      this.selectedSpeciality = this.specialities.find(s => s.alias === this.searchParams.speciality);
-    }
+  private initPosition() {
+    this.center = this.geoService.currentPosition;
+    this.searchParams.inRange.coordinates = this.center;
   }
 
-  setCurrentLocation() {
-    if (this.searchParams && this.searchParams.location && this.searchParams.location.type !== LocationType.none && this.locationCategories) {
-      this.selectedLocation = this.locationCategories.find(l => l.type === this.searchParams.location.type).items.find(l => l.alias == this.searchParams.location.alias);
+  private initRanges() {
+    this.ranges.push({ name: 'Все клиники', id: 0 });
+    for (let i = 1; i < 15; i++) {
+      this.ranges.push({ id: i, name: i.toString() + ' km' });
+    }
+    this.currentRange = this.ranges[0];
+  }
+
+  setCurrentValues() {
+    if (this.searchParams) {
+      if (this.searchParams.speciality && this.searchParams.speciality !== '' && this.specialities) {
+        this.selectedSpeciality = this.specialities.find(s => s.alias === this.searchParams.speciality);
+      }
+      if (this.searchParams.location && this.searchParams.location.type !== LocationType.none && this.locationCategories) {
+        this.selectedLocation = this.locationCategories.find(l => l.type === this.searchParams.location.type).items.find(l => l.alias == this.searchParams.location.alias);
+      }
+
+      if (this.searchParams.inRange) {
+        this.currentRange = this.ranges.find(l => l.id == this.searchParams.inRange.value);
+      }
     }
   }
 
@@ -115,6 +146,12 @@ export class ClinicSearchComponent implements OnInit {
     console.log('ClinicSearchComponent. Location changed to: ', this.selectedLocation);
     this.searchParams.location.type = this.selectedLocation.type;
     this.searchParams.location.alias = this.selectedLocation.alias;
+    this.navigate();
+  }
+
+  onRangeChanged(event) {
+    console.log('ClinicSearchComponent. Range changed to: ', this.currentRange);
+    this.searchParams.inRange.value = this.currentRange.id;
     this.navigate();
   }
 
@@ -132,6 +169,9 @@ export class ClinicSearchComponent implements OnInit {
     if (this.searchParams.location && this.searchParams.location.type != LocationType.none) {
       queryParams.locationType = this.searchParams.location.type;
       queryParams.location = this.searchParams.location.alias;
+    }
+    if (this.searchParams.inRange.value > 0) {
+      queryParams.inrangekm = this.searchParams.inRange.value;
     }
 
     this.router.navigate([url], {

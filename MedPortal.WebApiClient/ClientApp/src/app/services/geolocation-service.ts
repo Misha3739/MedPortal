@@ -4,7 +4,7 @@ import { SearchInfoType } from "../data/search-info-type";
 import { ISpeciality } from "../data/speciality";
 import { ICity } from "../data/ICity";
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Subject, Observable } from "rxjs";
+import { Subject, Observable, Subscription } from "rxjs";
 import { ICoordinates } from "../data/location/coordinates";
 
 @Injectable()
@@ -22,16 +22,19 @@ export class GeolocationService {
 
   city: ICity;
   currentPosition: ICoordinates = { latitude: 0, longitude: 0 };
+  currentPositionChanged = new Subject();
 
   getPosition(): Observable<Position> {
     return Observable.create(
       (observer) => {
         navigator.geolocation.watchPosition((pos: Position) => {
+          console.log('GeolocationService. Position received: ', pos);
           this.currentPosition = {
             latitude: pos.coords.latitude,
             longitude: pos.coords.longitude
           };
           observer.next(pos);
+          this.currentPositionChanged.next();
         }),
           () => {
             console.log('Position is not available');
