@@ -34,12 +34,18 @@ namespace MedPortal.Proxy.Controllers
             string city,
             string speciality, 
             LocationTypeEnum? locationType = null, 
-            string location = null)
+            string location = null,
+            int? inrange = null,
+            double? latitude = null,
+            double? longitude = null)
         {
             var locationSearchParameters = new LocationSearchParameters(city)
             {
                 LocationType = locationType,
-                Location = location
+                Location = location,
+                InRange = inrange,
+                Latitude = latitude,
+                Longitude = longitude
             };
             var clinics = await _clinicsRepository.FilterClinicsAsync(locationSearchParameters, speciality);
             var result = _mapper.Map<List<ClinicModel>>(clinics);

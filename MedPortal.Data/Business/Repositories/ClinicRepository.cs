@@ -51,6 +51,14 @@ namespace MedPortal.Data.Repositories
                 }
                 
             }
+            if (locationSearchParameters.InRange.HasValue && locationSearchParameters.Latitude.HasValue && locationSearchParameters.Longitude.HasValue) {
+                const double oneKilometer = 0.015060;
+                query = query.Where(c => 
+                    c.Latitude >= locationSearchParameters.Latitude.Value - oneKilometer * locationSearchParameters.InRange.Value
+                    && c.Latitude <= locationSearchParameters.Latitude.Value + oneKilometer * locationSearchParameters.InRange.Value
+                    && c.Longitude >= locationSearchParameters.Longitude.Value - oneKilometer * locationSearchParameters.InRange.Value
+                    && c.Longitude >= locationSearchParameters.Longitude.Value + oneKilometer * locationSearchParameters.InRange.Value);
+            }
             return await query.ToListAsync();
         }
 
