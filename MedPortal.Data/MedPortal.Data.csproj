@@ -6,6 +6,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="Business\NewFolder\**" />
+      <EmbeddedResource Remove="Business\NewFolder\**" />
+      <None Remove="Business\NewFolder\**" />
+    </ItemGroup>
+
+    <ItemGroup>
       <PackageReference Include="Des.EntityFrameworkCore.Extensions" Version="1.0.2" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.2" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.2" />

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using MedPortal.Data.Business.SearchParameters;
 using MedPortal.Data.DTO;
 using MedPortal.Data.Repositories;
 using MedPortal.WebApiClient.Models;
@@ -29,9 +30,18 @@ namespace MedPortal.Proxy.Controllers
         }
 
         [HttpGet("api/clinics")]
-        public async Task<IActionResult> GetClinics(string city, string speciality)
+        public async Task<IActionResult> GetClinics(
+            string city,
+            string speciality, 
+            LocationTypeEnum? locationType = null, 
+            string location = null)
         {
-            var clinics = await _clinicsRepository.FilterClinicsAsync(city, speciality);
+            var locationSearchParameters = new LocationSearchParameters(city)
+            {
+                LocationType = locationType,
+                Location = location
+            };
+            var clinics = await _clinicsRepository.FilterClinicsAsync(locationSearchParameters, speciality);
             var result = _mapper.Map<List<ClinicModel>>(clinics);
             return Ok(result);
         }

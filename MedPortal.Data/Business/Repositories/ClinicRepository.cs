@@ -1,4 +1,5 @@
-﻿using MedPortal.Data.DTO;
+﻿using MedPortal.Data.Business.SearchParameters;
+using MedPortal.Data.DTO;
 using MedPortal.Data.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Extensions;
@@ -16,7 +17,7 @@ namespace MedPortal.Data.Repositories
         {
         }
 
-        public async Task<List<HClinic>> FilterClinicsAsync(string city, string speciality)
+        public async Task<List<HClinic>> FilterClinicsAsync(LocationSearchParameters locationSearchParameters, string speciality)
         {
             var query = _dbSet
                 .Include(c => c.HCity)
@@ -26,13 +27,29 @@ namespace MedPortal.Data.Repositories
                 .Include(c => c.Specialities)
                 .ThenInclude(c => c.Speciality)
                 .AsQueryable();
-            if (!string.IsNullOrEmpty(city))
+            if (!string.IsNullOrEmpty(locationSearchParameters.City))
             {
-                query = query.Where(c => c.HCity.Alias == city);
+                query = query.Where(c => c.HCity.Alias == locationSearchParameters.City);
             }
             if (!string.IsNullOrEmpty(speciality))
             {
                 query = query.Where(c=> c.Specialities.Any(s => s.Speciality.BranchAlias == speciality));
+            }
+            if (locationSearchParameters.LocationType.HasValue && !string.IsNullOrEmpty(locationSearchParameters.Location))
+            {
+                switch(locationSearchParameters.LocationType.Value)
+                {
+                    case LocationTypeEnum.District:
+                        query = query.Where(c => c.HDistrict.Alias == locationSearchParameters.Location);
+                        break;
+                    case LocationTypeEnum.Street:
+                        query = query.Where(c => c.HStreet.Alias == locationSearchParameters.Location);
+                        break;
+                    case LocationTypeEnum.MetroStation:
+                        query = query.Where(c => c.Stations.Any(s => s.Station.Alias  == locationSearchParameters.Location));
+                        break;
+                }
+                
             }
             return await query.ToListAsync();
         }
