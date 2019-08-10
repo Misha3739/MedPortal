@@ -5,9 +5,11 @@ import { ISpeciality } from "../data/speciality";
 import { ICity } from "../data/ICity";
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Subject, Observable } from "rxjs";
+import { ICoordinates } from "../data/location/coordinates";
 
 @Injectable()
 export class GeolocationService {
+  static instance: GeolocationService;
   private headers = new HttpHeaders({
     'Content-Type': 'application/json',
     //'Access-Control-Allow-Origin': '*',
@@ -15,15 +17,20 @@ export class GeolocationService {
   });
 
   constructor(@Inject('BASE_URL') public baseUrl: string, private httpClient: HttpClient) {
-    
+    return GeolocationService.instance = GeolocationService.instance || this;
   }
 
   city: ICity;
+  currentPosition: ICoordinates = { latitude: 0, longitude: 0 };
 
   getPosition(): Observable<Position> {
     return Observable.create(
       (observer) => {
         navigator.geolocation.watchPosition((pos: Position) => {
+          this.currentPosition = {
+            latitude: pos.coords.latitude,
+            longitude: pos.coords.longitude
+          };
           observer.next(pos);
         }),
           () => {

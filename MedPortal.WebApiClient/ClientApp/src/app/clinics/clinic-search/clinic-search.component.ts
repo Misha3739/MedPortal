@@ -7,6 +7,9 @@ import { IClinicSearchParams } from '../../data/clinic-search-params';
 import { ILocationCategory } from '../../data/location/location-category';
 import { ILocationObject } from '../../data/location/location-object';
 import { LocationType } from '../../data/location/location-type';
+import { ClinicsService } from '../../services/clincs-service';
+import { IClinic } from '../../data/clinic';
+import { GeolocationService } from '../../services/geolocation-service';
 
 @Component({
   selector: 'app-clinic-search',
@@ -17,6 +20,8 @@ export class ClinicSearchComponent implements OnInit {
 
   constructor(
     private searchInfoService: SearchInfoService,
+    private geoService: GeolocationService,
+    private clinicService: ClinicsService,
     private route: ActivatedRoute,
     private router: Router) { }
 
@@ -29,6 +34,8 @@ export class ClinicSearchComponent implements OnInit {
       alias : ''
     }
   };
+
+  clinics: IClinic[];
 
   specialities: ISpeciality[] = [];
   locationCategories: ILocationCategory[];
@@ -63,6 +70,10 @@ export class ClinicSearchComponent implements OnInit {
       this.setCurrentLocation();
     });
 
+    this.clinicService.dataReceived.subscribe(event => {
+      this.clinics = this.clinicService.clinics;
+    });
+    
     this.searchInfoService.dataReceived.subscribe(event => {
       switch (event) {
         case 'clinicSpecialities':

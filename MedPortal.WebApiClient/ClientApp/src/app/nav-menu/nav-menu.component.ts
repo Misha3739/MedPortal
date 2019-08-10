@@ -39,38 +39,26 @@ export class NavMenuComponent {
         this.cityAlias = splitted.length > 0 ? splitted[1] : null;
         console.log('NavMenuComponent', this.currentUrl, ' => ', this.cityAlias);
 
-        if (!this.cityAlias) {
-          console.log('NavMenuComponent. Start getting location for: ', this.cityAlias);
-          this.geoService.getPosition().subscribe(c => {
-            console.log('NavMenuComponent. Location : ', c);
-            this.geoService.getCity(c.coords.latitude, c.coords.longitude).subscribe(
-              cityResult => {
-                console.log('NavMenuComponent. City : ', cityResult);
-                this.cities = cityResult.cities;
-                this.cities.unshift(this.nullCity);
-                if (cityResult.current) {
-                  this.city = this.cities.find(c => c.alias === cityResult.current.alias);
-                  this.router.navigate([this.city.alias]);
-                }
-              },
-              error => {
-                console.log('NavMenuComponent. City error: ', error);
-              }
-            );
-          });
-        } else {
-          if (!this.cities || this.cities.length <= 1) {
-            this.searchInfoService.dataReceived.subscribe(res => {
-              if (res === 'cities') {
-                this.cities = this.searchInfoService.cities;
-                this.cities.unshift(this.nullCity);
+        this.geoService.getPosition().subscribe(c => {
+          console.log('NavMenuComponent. Location : ', c);
+          this.geoService.getCity(c.coords.latitude, c.coords.longitude).subscribe(
+            cityResult => {
+              console.log('NavMenuComponent. City : ', cityResult);
+              this.cities = cityResult.cities;
+              this.cities.unshift(this.nullCity);
+              if (this.cityAlias) {
                 this.city = this.cities.find(c => c.alias === this.cityAlias);
-              }
-            });
-            this.searchInfoService.getCities();
-          }
-         
-        }
+              } else if (!this.cityAlias && cityResult.current) {
+                this.city = this.cities.find(c => c.alias === cityResult.current.alias);
+                this.router.navigate([this.city.alias]);
+              } 
+            },
+            error => {
+              console.log('NavMenuComponent. City error: ', error);
+            }
+          );
+        });
+
       }
     });
 

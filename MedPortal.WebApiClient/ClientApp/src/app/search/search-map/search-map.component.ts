@@ -153,6 +153,11 @@ export class SearchMapComponent implements OnInit {
         speciality: this.navigateToAlias
       };
 
+      if (!this.city) {
+        alert('Пожалуйста выберите город прежде чем начать поиск!');
+        return;
+      }
+
       if (this.navigateToResource === SearchInfoType.clinicSpeciality) {
         this.router.navigate([this.currentUrl + '/clinics'], { queryParams: queryParams, queryParamsHandling: null });
       } else if (this.navigateToResource === SearchInfoType.doctorSpeciality) {

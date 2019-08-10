@@ -27,6 +27,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { AgmCoreModule } from '@agm/core';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -61,7 +63,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatAutocompleteModule,
     BrowserAnimationsModule,
     MatFormFieldModule,
-    MatSelectModule
+    MatSelectModule,
+    AgmCoreModule.forRoot({
+      // please get your own API key here:
+      // https://developers.google.com/maps/documentation/javascript/get-api-key?hl=en
+      apiKey: 'AIzaSyCI5n732JUuTrk5uFpnZ14R_h6A0Xsf1XE'
+    })
   ],
   providers: [
     HttpClient,
