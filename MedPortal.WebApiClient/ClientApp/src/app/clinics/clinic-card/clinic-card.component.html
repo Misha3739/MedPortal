@@ -11,6 +11,9 @@
       <label for="experience">Адрес:</label>
       <strong>{{clinic.address}}</strong>
     </div>
+    <div class="row form-control">
+      <a href="{{clinic.url}}" target="_blank"><strong>Перейти на сайт</strong></a>
+    </div>
   </div>
   <div>
     <button class="btn btn-primary" (click)="showMap()"> {{!isMapShown ? 'Показать на карте' : 'Спрятать'}}</button>

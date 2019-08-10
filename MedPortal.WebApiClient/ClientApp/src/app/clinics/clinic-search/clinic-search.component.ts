@@ -46,11 +46,12 @@ export class ClinicSearchComponent implements OnInit {
   ngOnInit() {
     this.specialities.push(this.nullSpeciality);
     this.selectedSpeciality = this.nullSpeciality;
-    this.selectedLocation = this.nullLocation.items[0];
+    
 
     this.routeParamsSubscription = this.route.params.subscribe(
       (params: Params) => {
         this.searchParams.city = params['city'];
+        this.selectedLocation = this.nullLocation.items[0];
         this.searchInfoService.getLocations(this.searchParams.city);
       });
 
