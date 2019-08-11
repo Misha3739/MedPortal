@@ -4,6 +4,7 @@ import { ICity } from '../data/ICity';
 import { Router, ActivatedRoute, Params, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { GeolocationService } from '../services/geolocation-service';
+import { UrlQueryParameters } from '../data/constants/url-query-parameters';
 
 @Component({
   selector: 'app-nav-menu',
@@ -20,7 +21,11 @@ export class NavMenuComponent {
 
   currentUrl: string = null;
   cityAlias: string;
+
   routeParamsSubscription: Subscription;
+  private queryParamsSubscription: Subscription;
+
+  queryParameters: any = {};
 
   constructor(
     private searchInfoService: SearchInfoService,
@@ -62,6 +67,13 @@ export class NavMenuComponent {
       }
     });
 
+    this.queryParamsSubscription = this.route.queryParamMap.subscribe(params => {
+      this.queryParameters[UrlQueryParameters.SPECIALITY] = params.get(UrlQueryParameters.SPECIALITY);
+      this.queryParameters[UrlQueryParameters.LOCATIONTYPE] = +params.get(UrlQueryParameters.LOCATIONTYPE);
+      this.queryParameters[UrlQueryParameters.LOCATION] = params.get(UrlQueryParameters.LOCATION);
+      this.queryParameters[UrlQueryParameters.INRANGE] = +params.get(UrlQueryParameters.INRANGE);
+    });
+
    
   }
 
@@ -74,8 +86,22 @@ export class NavMenuComponent {
     } else {
       let splitted = this.currentUrl.split("/");
       splitted[1] = this.city.alias;
+      //Replace query parameters
+      let last = splitted[splitted.length - 1];
+      last = last.substring(0, last.indexOf('?'));
+      splitted[splitted.length - 1] = last;
       let url = splitted.join('/');
-      this.router.navigateByUrl(url);
+
+      let queryParams: any = {};
+      Object.keys(this.queryParameters).forEach(key => {
+        if (key !== UrlQueryParameters.LOCATIONTYPE && key !== UrlQueryParameters.LOCATION) {
+          if (this.queryParameters[key]) {
+            queryParams[key] = this.queryParameters[key];
+          }
+        }
+      });
+
+      this.router.navigate([url], {queryParams: queryParams, queryParamsHandling: null });
     }
   }
 
@@ -90,6 +116,9 @@ export class NavMenuComponent {
   ngOnDestroy() {
     if (this.routeParamsSubscription) {
       this.routeParamsSubscription.unsubscribe();
+    }
+    if (this.queryParamsSubscription) {
+      this.queryParamsSubscription.unsubscribe();
     }
   }
 }
