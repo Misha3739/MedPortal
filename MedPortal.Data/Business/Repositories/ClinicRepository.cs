@@ -57,7 +57,7 @@ namespace MedPortal.Data.Repositories
                     c.Latitude >= locationSearchParameters.Latitude.Value - oneKilometer * locationSearchParameters.InRange.Value
                     && c.Latitude <= locationSearchParameters.Latitude.Value + oneKilometer * locationSearchParameters.InRange.Value
                     && c.Longitude >= locationSearchParameters.Longitude.Value - oneKilometer * locationSearchParameters.InRange.Value
-                    && c.Longitude >= locationSearchParameters.Longitude.Value + oneKilometer * locationSearchParameters.InRange.Value);
+                    && c.Longitude <= locationSearchParameters.Longitude.Value + oneKilometer * locationSearchParameters.InRange.Value);
             }
             return await query.ToListAsync();
         }
