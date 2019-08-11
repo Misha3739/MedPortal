@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { APP_BASE_HREF } from '@angular/common';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -83,7 +84,8 @@ import { DoctorSlotsService } from './services/slots-service';
     GeolocationService,
     DoctorSlotsService,
     { provide: 'BASE_URL', useValue: 'http://localhost:5008' },
-    { provide: 'DOCDOC_BASE_URL', useValue: 'https://api.docdoc.ru/public/rest/1.0.12' }
+    { provide: 'DOCDOC_BASE_URL', useValue: 'https://api.docdoc.ru/public/rest/1.0.12' },
+    { provide: APP_BASE_HREF, useValue: '/' }
   ],
   bootstrap: [AppComponent]
 })

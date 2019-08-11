@@ -26,7 +26,12 @@
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/select2/dist/css/select2.min.css",
-              "src/styles.css"
+              "src/styles.css",
+              "src/assets/css/style.css",
+              "src/assets/css/menu.css",
+              "src/assets/css/vendors.css",
+              "src/assets/css/custom.css",
+              "src/assets/css/icon_fonts/css/all_icons_min.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.js",
