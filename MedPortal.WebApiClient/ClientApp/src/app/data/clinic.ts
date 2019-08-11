@@ -3,6 +3,7 @@ import { ICity } from "./ICity";
 
 export interface IClinic {
       id: number;
+      originId: number;
       alias: string;
       name: string;
       logo: string;

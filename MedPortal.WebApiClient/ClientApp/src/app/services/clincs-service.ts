@@ -29,6 +29,7 @@ export class ClinicsService {
     let clinics: IClinic[] = [];
     clinics.push({
       id: 1,
+      originId: 1,
       name: 'Центр Диетологии',
       logo: 'https://cdn4.docdoc.pro/clinic/logo/min_14179.png?1562319645',
       alias: 'Center_Dietology',
@@ -40,6 +41,7 @@ export class ClinicsService {
     });
     clinics.push({
       id: 2,
+      originId: 2,
       alias: 'Center_Prostatology',
       name: 'Центр Простатологии',
       logo: 'https://cdn4.docdoc.pro/clinic/logo/logo_default.gif?1557801558',
@@ -51,6 +53,7 @@ export class ClinicsService {
     });
     clinics.push({
       id: 3,
+      originId: 3,
       alias: 'Center_FamilyMedicine',
       name: 'Центр Семейной медицины',
       logo: 'https://cdn4.docdoc.pro/clinic/logo/logo_default.gif?1562657624',
@@ -62,6 +65,7 @@ export class ClinicsService {
     });
     clinics.push({
       id: 3,
+      originId: 3,
       alias: 'Morg',
       name: 'Городской Морг',
       logo: 'https://cdn4.docdoc.pro/clinic/logo/logo_default.gif?1562657624',

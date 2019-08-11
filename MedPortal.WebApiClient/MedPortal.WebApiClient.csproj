@@ -35,11 +35,13 @@
     <None Remove="ClientApp\src\app\data\location\location-type.ts" />
     <None Remove="ClientApp\src\app\data\query-search-params.ts" />
     <None Remove="ClientApp\src\app\data\search-info.ts" />
+    <None Remove="ClientApp\src\app\data\slots\doctor-slot.ts" />
     <None Remove="ClientApp\src\app\data\speciality.ts" />
     <None Remove="ClientApp\src\app\services\clincs-service.ts" />
     <None Remove="ClientApp\src\app\services\doctors-service.ts" />
     <None Remove="ClientApp\src\app\services\geolocation-service.ts" />
     <None Remove="ClientApp\src\app\services\search-info-service.ts" />
+    <None Remove="ClientApp\src\app\services\slots-service.ts" />
     <None Remove="ClientApp\src\index.d.ts" />
   </ItemGroup>
 
@@ -54,7 +56,11 @@
     <TypeScriptCompile Include="ClientApp\src\app\data\location\location-type.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\data\query-search-params.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\data\search-info.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\data\slots\doctor-slot.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\data\speciality.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\services\slots-service.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="ClientApp\src\app\services\clincs-service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\doctors-service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\geolocation-service.ts" />

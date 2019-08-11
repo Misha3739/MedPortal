@@ -28,6 +28,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AgmCoreModule } from '@agm/core';
+import { DoctorSlotsService } from './services/slots-service';
 
 @NgModule({
   declarations: [
@@ -76,7 +77,9 @@ import { AgmCoreModule } from '@agm/core';
     ClinicsService,
     SearchInfoService,
     GeolocationService,
-    { provide: 'BASE_URL', useValue: 'http://localhost:5008' }
+    DoctorSlotsService,
+    { provide: 'BASE_URL', useValue: 'http://localhost:5008' },
+    { provide: 'DOCDOC_BASE_URL', useValue: 'https://api.docdoc.ru/public/rest/1.0.12' }
   ],
   bootstrap: [AppComponent]
 })

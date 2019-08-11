@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { IDoctor } from '../../data/doctor';
+import { DoctorSlotsService } from '../../services/slots-service';
 
 @Component({
   selector: 'app-doctor-card',
@@ -8,9 +9,13 @@ import { IDoctor } from '../../data/doctor';
 })
 export class DoctorCardComponent implements OnInit {
   @Input() doctor: IDoctor;
-  constructor() { }
+  constructor(private slotsService: DoctorSlotsService) { }
 
   ngOnInit() {
+    if (false && this.doctor.originId > 0 && this.doctor.clinics && this.doctor.clinics.length > 0) {
+      this.slotsService.getTimeSlots(this.doctor.originId, this.doctor.clinics[0].originId).subscribe((slots) => {
+      });
+    }
   }
 
 }

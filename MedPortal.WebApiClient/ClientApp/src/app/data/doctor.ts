@@ -4,6 +4,7 @@ import { ICity } from "./ICity";
 
 export interface IDoctor {
    id: number,
+   originId: number,
    alias: string,
    surname: string;
    name: string;

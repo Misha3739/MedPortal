@@ -26,6 +26,7 @@ export class DoctorsService {
     let doctors: IDoctor[] = [];
     doctors.push({
       id: 1,
+      originId: 1,
       alias: 'Petrov_Ivan',
       surname: 'Петров',
       name: 'Иван',
@@ -38,6 +39,7 @@ export class DoctorsService {
     });
     doctors.push({
       id: 2,
+      originId: 2,
       alias: 'Grivtsova_Olga',
       surname: 'Гривцова',
       name: 'Ольга',
@@ -50,6 +52,7 @@ export class DoctorsService {
     });
     doctors.push({
       id: 3,
+      originId: 3,
       alias: 'Salikhov_Robert',
       surname: 'Салихов',
       name: 'Роберт',
