@@ -35,6 +35,8 @@ namespace MedPortal.Proxy.Controllers
                 var doctorModel = _mapper.Map<DoctorModel>(doctor);
                 var doctorSpecialities = doctor.Specialities.Select(s => s.Speciality).ToList();
                 doctorModel.Specialities = _mapper.Map<List<DoctorSpecialitySearchModel>>(doctorSpecialities);
+                var doctorClinics = doctor.Clinics.Select(s => s.Clinic).ToList();
+                doctorModel.Clinics = _mapper.Map<List<ClinicModel>>(doctorClinics);
                 result.Add(doctorModel);
             }
             return Ok(result);

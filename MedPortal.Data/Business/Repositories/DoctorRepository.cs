@@ -22,6 +22,8 @@ namespace MedPortal.Data.Repositories
         {
             var query = _dbSet
                .Include(c => c.City)
+               .Include(c => c.Clinics)
+               .ThenInclude(c => c.Clinic)
                .Include(c => c.Specialities)
                .ThenInclude(c => c.Speciality)
                .AsQueryable();

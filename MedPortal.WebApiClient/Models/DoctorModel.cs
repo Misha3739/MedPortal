@@ -4,6 +4,7 @@ namespace MedPortal.WebApiClient.Models
 {
     public class DoctorModel : DoctorSearchModel
     {
+        public long OriginId { get; set; }
         public string Name { get; set; }
 
         //Original field is Img
@@ -11,5 +12,7 @@ namespace MedPortal.WebApiClient.Models
 
         public int Experience { get; set; }
         public List<DoctorSpecialitySearchModel> Specialities { get; set; }
+
+        public List<ClinicModel> Clinics { get; set; }
     }
 }

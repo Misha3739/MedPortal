@@ -7,6 +7,7 @@ namespace MedPortal.WebApiClient.Models
 {
     public class ClinicModel : ClinicSearchModel
     {
+        public long OriginId { get; set; }
         public string Logo { get; set; }
 
         public string Address { get; set; }
