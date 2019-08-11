@@ -33,22 +33,29 @@ export class DoctorListComponent implements OnInit, AfterViewInit {
 
   pagination: Pagination = new Pagination();
 
+  firstLoadingCompleted: boolean = false;
+
   ngOnInit() {
     this.doctorsService.dataReceived.subscribe(data => {
       console.log('DoctorListComponent. Doctors received ');
       this.dataSource.data = this.doctorsService.doctors;
       this.paginate(0, this.pagination.pageSize);
+      this.firstLoadingCompleted = true;
     });
 
     this.routeParamsSubscription = this.route.params.subscribe(
       (params: Params) => {
         this.searchParams.city = params['city'];
-        console.log('DoctorListComponent. Start getting doctors for ', this.searchParams);
-        this.doctorsService.getDoctors(this.searchParams);
+        console.log('DoctorListComponent. Getting path parameters... ', this.searchParams);
+        //We need to detect only city path changed but not the first loading
+        if (this.firstLoadingCompleted) {
+          this.doctorsService.getDoctors(this.searchParams);
+        }
       });
 
     this.queryParamsSubscription = this.route.queryParamMap.subscribe(params => {
       this.searchParams.speciality = params.get('speciality');
+      console.log('DoctorListComponent. Getting query parameters... ', this.searchParams);
       this.doctorsService.getDoctors(this.searchParams);
     });
   }

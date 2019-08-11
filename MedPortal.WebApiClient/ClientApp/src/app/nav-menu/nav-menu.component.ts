@@ -84,11 +84,15 @@ export class NavMenuComponent {
     } else if (!this.currentUrl || this.currentUrl === '' || this.currentUrl === '/') {
       this.router.navigate([this.city.alias]);
     } else {
-      let splitted = this.currentUrl.split("/");
+      let splitted = this.currentUrl.split('/');
       splitted[1] = this.city.alias;
       //Replace query parameters
       let last = splitted[splitted.length - 1];
-      last = last.substring(0, last.indexOf('?'));
+      const questionIndex = last.indexOf('?');
+      if (questionIndex && questionIndex !== -1) {
+        last = last.substring(0, questionIndex);
+      }
+      
       splitted[splitted.length - 1] = last;
       let url = splitted.join('/');
 

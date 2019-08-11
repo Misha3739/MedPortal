@@ -38,6 +38,7 @@ export class ClinicListComponent implements OnInit {
   };
 
   clinics: IClinic[];
+  firstLoadingCompleted: boolean = false;
 
   ngOnInit() {
     this.initPosition();
@@ -45,13 +46,17 @@ export class ClinicListComponent implements OnInit {
     this.clinicsService.dataReceived.subscribe(data => {
       console.log('ClinicListComponent. Clinics received ');
       this.clinics = this.clinicsService.clinics;
+      this.firstLoadingCompleted = true;
     });
 
     this.routeParamsSubscription = this.route.params.subscribe(
       (params: Params) => {
         this.searchParams.city = params['city'];
         console.log('ClinicListComponent. Start getting clinics for ', this.searchParams);
-        this.clinicsService.getClinics(this.searchParams);
+        //We need to detect only city path changed but not the first loading
+        if (this.firstLoadingCompleted) {
+          this.clinicsService.getClinics(this.searchParams);
+        }
       });
 
     this.queryParamsSubscription = this.route.queryParamMap.subscribe(params => {
@@ -59,7 +64,6 @@ export class ClinicListComponent implements OnInit {
       this.searchParams.location.type = +params.get(UrlQueryParameters.LOCATIONTYPE) || LocationType.none;
       this.searchParams.location.alias = params.get(UrlQueryParameters.LOCATION) || '';
       this.searchParams.inRange.value = +params.get(UrlQueryParameters.INRANGE);
-      console.log('ClinicListComponent. Search params: ', this.searchParams);
       this.clinicsService.getClinics(this.searchParams);
     });
 
