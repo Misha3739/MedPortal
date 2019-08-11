@@ -48,7 +48,7 @@ export class SearchMapComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.initMaps(0, 0);
+    //this.initMaps(0, 0);
     this.routeParamsSubscription = this.route.params.subscribe(
       (params: Params) => {
         this.currentUrl = this.router.url;
@@ -71,7 +71,7 @@ export class SearchMapComponent implements OnInit {
     console.log('SearchMapComponent. Url changed to : ', this.router.url);
     if (this.city && this.searchInfoService.cities) {
       let cityObject = this.searchInfoService.cities.find(c => c.alias === this.city);
-      this.initMaps(cityObject.latitude, cityObject.longitude);
+      //this.initMaps(cityObject.latitude, cityObject.longitude);
     }
     this.clearSelectedValue();
   }
@@ -115,10 +115,10 @@ export class SearchMapComponent implements OnInit {
         const clinic = this.getClinic(this.navigateToAlias);
         if (clinic.latitude && clinic.longitude) {
           console.log("Latitude: " + clinic.latitude + " longitude: " + clinic.longitude);
-          this.initMaps(clinic.latitude, clinic.longitude);
+          //this.initMaps(clinic.latitude, clinic.longitude);
         } else {
           if (clinic.city) {
-            this.initMaps(clinic.city.latitude, clinic.city.longitude);
+            //this.initMaps(clinic.city.latitude, clinic.city.longitude);
           }
         }
       }
