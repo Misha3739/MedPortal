@@ -1,4 +1,9 @@
-<h3 *ngIf="doctors">Врачи({{doctors.length}}):</h3>
+<h3 *ngIf="doctors">Врачи({{dataSource.data.length}}):</h3>
 <div class="component-list" *ngFor="let doctor of doctors">
   <app-doctor-card [doctor]="doctor"></app-doctor-card>
 </div>
+<mat-paginator   #paginator
+                 (page) = "onPaged($event)"
+                 [pageSize]="pagination.pageSize"
+                 [pageSizeOptions]="pagination.sizeOptions"
+                 [showFirstLastButtons]="true"></mat-paginator>

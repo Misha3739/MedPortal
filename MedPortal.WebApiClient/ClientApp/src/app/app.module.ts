@@ -26,6 +26,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
 
 import { AgmCoreModule } from '@agm/core';
 import { DoctorSlotsService } from './services/slots-service';
@@ -65,6 +67,8 @@ import { DoctorSlotsService } from './services/slots-service';
     BrowserAnimationsModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatPaginatorModule,
+    MatTableModule,
     AgmCoreModule.forRoot({
       // please get your own API key here:
       // https://developers.google.com/maps/documentation/javascript/get-api-key?hl=en
