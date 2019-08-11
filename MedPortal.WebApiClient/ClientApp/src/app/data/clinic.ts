@@ -16,3 +16,4 @@ export interface IClinic {
 export interface IClinicDetails extends IClinic {
 
 }
+

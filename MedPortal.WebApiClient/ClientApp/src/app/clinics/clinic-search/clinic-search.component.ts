@@ -12,6 +12,7 @@ import { IClinic } from '../../data/clinic';
 import { GeolocationService } from '../../services/geolocation-service';
 import { IRange } from '../../data/location/range';
 import { ICoordinates } from '../../data/location/coordinates';
+import { UrlQueryParameters } from '../../data/constants/url-query-parameters';
 
 @Component({
   selector: 'app-clinic-search',
@@ -74,10 +75,10 @@ export class ClinicSearchComponent implements OnInit {
       });
 
     this.queryParamsSubscription = this.route.queryParamMap.subscribe(params => {
-      this.searchParams.speciality = params.get('speciality');
-      this.searchParams.location.type = +params.get('locationType') || LocationType.none;
-      this.searchParams.location.alias = params.get('location') || '';
-      this.searchParams.inRange.value = +params.get('inrangekm');
+      this.searchParams.speciality = params.get(UrlQueryParameters.SPECIALITY);
+      this.searchParams.location.type = +params.get(UrlQueryParameters.LOCATIONTYPE) || LocationType.none;
+      this.searchParams.location.alias = params.get(UrlQueryParameters.LOCATION) || '';
+      this.searchParams.inRange.value = +params.get(UrlQueryParameters.INRANGE);
       this.setCurrentValues();
     });
 
@@ -164,14 +165,14 @@ export class ClinicSearchComponent implements OnInit {
 
     let queryParams: any = {};
     if (this.searchParams.speciality) {
-      queryParams.speciality = this.searchParams.speciality;
+      queryParams[UrlQueryParameters.SPECIALITY] = this.searchParams.speciality;
     }
     if (this.searchParams.location && this.searchParams.location.type != LocationType.none) {
-      queryParams.locationType = this.searchParams.location.type;
-      queryParams.location = this.searchParams.location.alias;
+      queryParams[UrlQueryParameters.LOCATIONTYPE] = this.searchParams.location.type;
+      queryParams[UrlQueryParameters.LOCATION] = this.searchParams.location.alias;
     }
     if (this.searchParams.inRange.value > 0) {
-      queryParams.inrangekm = this.searchParams.inRange.value;
+      queryParams[UrlQueryParameters.INRANGE] = this.searchParams.inRange.value;
     }
 
     this.router.navigate([url], {

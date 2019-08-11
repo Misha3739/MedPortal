@@ -7,6 +7,7 @@ import { SearchInfoService } from '../../services/search-info-service';
 import { IClinicSearchParams } from '../../data/clinic-search-params';
 import { LocationType } from '../../data/location/location-type';
 import { GeolocationService } from '../../services/geolocation-service';
+import { UrlQueryParameters } from '../../data/constants/url-query-parameters';
 
 @Component({
   selector: 'app-clinic-list',
@@ -54,10 +55,10 @@ export class ClinicListComponent implements OnInit {
       });
 
     this.queryParamsSubscription = this.route.queryParamMap.subscribe(params => {
-      this.searchParams.speciality = params.get('speciality');
-      this.searchParams.location.type = +params.get('locationType');
-      this.searchParams.location.alias = params.get('location');
-      this.searchParams.inRange.value = +params.get('inrangekm');
+      this.searchParams.speciality = params.get(UrlQueryParameters.SPECIALITY);
+      this.searchParams.location.type = +params.get(UrlQueryParameters.LOCATIONTYPE) || LocationType.none;
+      this.searchParams.location.alias = params.get(UrlQueryParameters.LOCATION) || '';
+      this.searchParams.inRange.value = +params.get(UrlQueryParameters.INRANGE);
       console.log('ClinicListComponent. Search params: ', this.searchParams);
       this.clinicsService.getClinics(this.searchParams);
     });
