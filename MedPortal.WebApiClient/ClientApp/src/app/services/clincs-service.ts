@@ -3,7 +3,7 @@ import { IDoctor } from "../data/doctor";
 import { IClinic, IClinicDetails } from "../data/clinic";
 import { Subject } from "rxjs";
 import { HttpHeaders, HttpClient, HttpParams } from "@angular/common/http";
-import { IClinicSearchParams } from "../data/clinic-search-params";
+import { ISearchParams } from "../data/search-params";
 import { LocationType } from "../data/location/location-type";
 
 @Injectable()
@@ -78,7 +78,7 @@ export class ClinicsService {
     return clinics;
   }
 
-  getClinics(params: IClinicSearchParams) {
+  getClinics(params: ISearchParams) {
     let url = '/api/clinics/';
     let httpParams = new HttpParams();
     if (params.city) {

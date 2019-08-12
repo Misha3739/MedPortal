@@ -19,9 +19,7 @@ import { ClinicDetailsComponent } from './clinics/clinic-details/clinic-details.
 import { DoctorDetailsComponent } from './doctors/doctor-details/doctor-details.component';
 import { ClinicCardComponent } from './clinics/clinic-card/clinic-card.component';
 import { DoctorCardComponent } from './doctors/doctor-card/doctor-card.component';
-import { ClinicSearchComponent } from './clinics/clinic-search/clinic-search.component';
 import { GeolocationService } from './services/geolocation-service';
-import { DoctorSearchComponent } from './doctors/doctor-search/doctor-search.component';
 
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -32,6 +30,7 @@ import { MatTableModule } from '@angular/material/table';
 
 import { AgmCoreModule } from '@agm/core';
 import { DoctorSlotsService } from './services/slots-service';
+import { ClinicDoctorSearchComponent } from './search/clinic-doctor-search/clinic-doctor-search.component';
 
 @NgModule({
   declarations: [
@@ -41,11 +40,10 @@ import { DoctorSlotsService } from './services/slots-service';
     DoctorListComponent,
     DoctorCardComponent,
     DoctorDetailsComponent,
-    DoctorSearchComponent,
     ClinicListComponent,
     ClinicCardComponent,
     ClinicDetailsComponent,
-    ClinicSearchComponent
+    ClinicDoctorSearchComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -54,16 +52,16 @@ import { DoctorSlotsService } from './services/slots-service';
     RouterModule.forRoot([
       { path: '', component: SearchMapComponent, pathMatch: 'full' },
       { path: ':city', component: SearchMapComponent, },
-      { path: 'doctors', component: ClinicSearchComponent, children: [
+      { path: 'doctors', component: ClinicDoctorSearchComponent, children: [
           { path: '', component: DoctorListComponent }
       ]},
-      { path: ':city/doctors', component: ClinicSearchComponent, children: [
+      { path: ':city/doctors', component: ClinicDoctorSearchComponent, children: [
           { path: '', component: DoctorListComponent }
       ]},
-      { path: 'clinics', component: ClinicSearchComponent, children: [
+      { path: 'clinics', component: ClinicDoctorSearchComponent, children: [
         { path: '', component: ClinicListComponent }
       ]},
-      { path: ':city/clinics', component: ClinicSearchComponent, children: [
+      { path: ':city/clinics', component: ClinicDoctorSearchComponent, children: [
           { path: '', component: ClinicListComponent }
       ]},
       { path: 'clinics/:id', component: ClinicDetailsComponent },

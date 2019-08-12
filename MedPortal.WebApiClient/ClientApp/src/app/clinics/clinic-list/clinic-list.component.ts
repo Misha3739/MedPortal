@@ -4,7 +4,7 @@ import { Route, Router, ActivatedRoute, Params } from '@angular/router';
 import { IClinic } from '../../data/clinic';
 import { Subscription } from 'rxjs';
 import { SearchInfoService } from '../../services/search-info-service';
-import { IClinicSearchParams } from '../../data/clinic-search-params';
+import { ISearchParams } from '../../data/search-params';
 import { LocationType } from '../../data/location/location-type';
 import { GeolocationService } from '../../services/geolocation-service';
 import { UrlQueryParameters } from '../../data/constants/url-query-parameters';
@@ -25,7 +25,7 @@ export class ClinicListComponent implements OnInit {
   private routeParamsSubscription: Subscription;
   private queryParamsSubscription: Subscription;
 
-  private searchParams: IClinicSearchParams = {
+  private searchParams: ISearchParams = {
     city: '',
     speciality: '',
     location: {

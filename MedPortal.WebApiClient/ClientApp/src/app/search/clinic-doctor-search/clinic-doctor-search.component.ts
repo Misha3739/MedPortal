@@ -3,7 +3,7 @@ import { SearchInfoService } from '../../services/search-info-service';
 import { ISpeciality } from '../../data/speciality';
 import { Subscription } from 'rxjs';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { IClinicSearchParams } from '../../data/clinic-search-params';
+import { ISearchParams } from '../../data/search-params';
 import { ILocationCategory } from '../../data/location/location-category';
 import { ILocationObject } from '../../data/location/location-object';
 import { LocationType } from '../../data/location/location-type';
@@ -17,11 +17,11 @@ import { IDoctor } from '../../data/doctor';
 import { DoctorsService } from '../../services/doctors-service';
 
 @Component({
-  selector: 'app-clinic-search',
-  templateUrl: './clinic-search.component.html',
-  styleUrls: ['./clinic-search.component.css']
+  selector: 'app-clinic-doctor-search',
+  templateUrl: './clinic-doctor-search.component.html',
+  styleUrls: ['./clinic-doctor-search.component.css']
 })
-export class ClinicSearchComponent implements OnInit {
+export class ClinicDoctorSearchComponent implements OnInit {
   isClinicComponent = true;
 
   constructor(
@@ -35,7 +35,7 @@ export class ClinicSearchComponent implements OnInit {
   private routeParamsSubscription: Subscription;
   private queryParamsSubscription: Subscription;
 
-  private searchParams: IClinicSearchParams = {
+  private searchParams: ISearchParams = {
     city: '', speciality: 'noSpeciality',
     location: {
       type: LocationType.none,
@@ -50,7 +50,7 @@ export class ClinicSearchComponent implements OnInit {
 
   specialities: ISpeciality[] = [];
   locationCategories: ILocationCategory[];
-  ranges:IRange [] = [];
+  ranges: IRange[] = [];
   currentRange: IRange;
 
   nullSpeciality: ISpeciality = { id: 0, alias: 'noSpeciality', name: 'Не выбрано' };
@@ -66,16 +66,16 @@ export class ClinicSearchComponent implements OnInit {
   center: ICoordinates;
 
   ngOnInit() {
-    this.initRanges();
     this.initPosition();
     this.specialities.push(this.nullSpeciality);
     this.selectedSpeciality = this.nullSpeciality;
-   
+
 
     this.routeParamsSubscription = this.route.params.subscribe(
       (params: Params) => {
         this.searchParams.city = params['city'];
         this.isClinicComponent = this.router.url.indexOf('clinics') !== -1;
+        this.initRanges();
         this.selectedLocation = this.nullLocation.items[0];
         this.searchInfoService.getLocations(this.searchParams.city);
       });
@@ -97,7 +97,7 @@ export class ClinicSearchComponent implements OnInit {
         this.doctors = this.doctorsService.doctors;
       });
     }
-    
+
     this.searchInfoService.dataReceived.subscribe(event => {
       switch (event) {
         case 'clinicSpecialities':
