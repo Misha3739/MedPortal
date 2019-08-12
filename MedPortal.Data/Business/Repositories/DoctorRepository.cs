@@ -24,6 +24,7 @@ namespace MedPortal.Data.Repositories
                .Include(c => c.City)
                .Include(c => c.Clinics)
                .ThenInclude(c => c.Clinic)
+               .ThenInclude(c => c.HCity)
                .Include(c => c.Specialities)
                .ThenInclude(c => c.Speciality)
                .AsQueryable();

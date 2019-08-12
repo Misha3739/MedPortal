@@ -52,10 +52,11 @@
              [disableDefaultUI]="false"
              [zoom]="12"
              [zoomControl]="true">
-
-      <agm-marker *ngFor="let doctor of doctors"
-                  [latitude]="doctor.latitude !== 0 ? doctor.latitude : doctor.city.latitude"
-                  [longitude]="doctor.longitude  !== 0 ? doctor.longitude : doctor.city.longitude">
+      <agm-marker *ngFor="let doctor of doctors">
+        <agm-marker *ngFor="let clinic of doctor.clinics"
+                   [latitude]="clinic.latitude !== 0 ? clinic.latitude : clinic.city.latitude"
+                  [longitude]="clinic.longitude  !== 0 ? clinic.longitude : clinic.city.longitude">
+        </agm-marker>
       </agm-marker>
     </agm-map>
   </div>

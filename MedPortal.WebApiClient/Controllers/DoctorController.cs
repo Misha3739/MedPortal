@@ -19,7 +19,7 @@ namespace MedPortal.Proxy.Controllers
             _mapper = mapper;
         }
         [HttpGet("api/alldoctors")]
-        public async Task<IActionResult> GetClinics()
+        public async Task<IActionResult> GetDoctors()
         {
             var doctors = await _doctorsRepository.GetAsync();
             var result = _mapper.Map<List<DoctorModel>>(doctors);
@@ -27,7 +27,7 @@ namespace MedPortal.Proxy.Controllers
         }
 
         [HttpGet("api/doctors")]
-        public async Task<IActionResult> GetClinics(string city, string speciality)
+        public async Task<IActionResult> GetDoctors(string city, string speciality)
         {
             var doctors = await _doctorsRepository.FilterDoctorsAsync(city, speciality);
             var result = new List<DoctorModel>();
