@@ -13,6 +13,8 @@ import { GeolocationService } from '../../services/geolocation-service';
 import { IRange } from '../../data/location/range';
 import { ICoordinates } from '../../data/location/coordinates';
 import { UrlQueryParameters } from '../../data/constants/url-query-parameters';
+import { IDoctor } from '../../data/doctor';
+import { DoctorsService } from '../../services/doctors-service';
 
 @Component({
   selector: 'app-clinic-search',
@@ -20,11 +22,13 @@ import { UrlQueryParameters } from '../../data/constants/url-query-parameters';
   styleUrls: ['./clinic-search.component.css']
 })
 export class ClinicSearchComponent implements OnInit {
+  isClinicComponent = true;
 
   constructor(
     private searchInfoService: SearchInfoService,
     private geoService: GeolocationService,
     private clinicService: ClinicsService,
+    private doctorsService: DoctorsService,
     private route: ActivatedRoute,
     private router: Router) { }
 
@@ -42,6 +46,7 @@ export class ClinicSearchComponent implements OnInit {
   };
 
   clinics: IClinic[];
+  doctors: IDoctor[];
 
   specialities: ISpeciality[] = [];
   locationCategories: ILocationCategory[];
@@ -70,6 +75,7 @@ export class ClinicSearchComponent implements OnInit {
     this.routeParamsSubscription = this.route.params.subscribe(
       (params: Params) => {
         this.searchParams.city = params['city'];
+        this.isClinicComponent = this.router.url.indexOf('clinics') !== -1;
         this.selectedLocation = this.nullLocation.items[0];
         this.searchInfoService.getLocations(this.searchParams.city);
       });
@@ -82,14 +88,25 @@ export class ClinicSearchComponent implements OnInit {
       this.setCurrentValues();
     });
 
-    this.clinicService.dataReceived.subscribe(event => {
-      this.clinics = this.clinicService.clinics;
-    });
+    if (this.isClinicComponent) {
+      this.clinicService.dataReceived.subscribe(event => {
+        this.clinics = this.clinicService.clinics;
+      });
+    } else {
+      this.doctorsService.dataReceived.subscribe(event => {
+        this.doctors = this.doctorsService.doctors;
+      });
+    }
     
     this.searchInfoService.dataReceived.subscribe(event => {
       switch (event) {
         case 'clinicSpecialities':
           this.specialities = this.searchInfoService.clinicSpecialities;
+          this.specialities.unshift(this.nullSpeciality);
+          this.setCurrentValues();
+          break;
+        case 'doctorSpecialities':
+          this.specialities = this.searchInfoService.doctorSpecialities;
           this.specialities.unshift(this.nullSpeciality);
           this.setCurrentValues();
           break;
@@ -105,8 +122,11 @@ export class ClinicSearchComponent implements OnInit {
       this.initPosition();
     });
 
-    this.searchInfoService.getClinicSpecialities();
-    
+    if (this.isClinicComponent) {
+      this.searchInfoService.getClinicSpecialities();
+    } else {
+      this.searchInfoService.getDoctorSpecialities();
+    }
   }
 
   private initPosition() {
@@ -115,7 +135,8 @@ export class ClinicSearchComponent implements OnInit {
   }
 
   private initRanges() {
-    this.ranges.push({ name: 'Все клиники', id: 0 });
+    let name = this.isClinicComponent ? 'Все клиники' : 'Все доктора';
+    this.ranges.push({ name: name, id: 0 });
     for (let i = 1; i < 15; i++) {
       this.ranges.push({ id: i, name: i.toString() + ' km' });
     }
@@ -138,20 +159,20 @@ export class ClinicSearchComponent implements OnInit {
   }
 
   onSpecialityChanged() {
-    console.log('ClinicSearchComponent. Speciality changed to: ', this.selectedSpeciality.alias);
+    console.log('SearchComponent. Speciality changed to: ', this.selectedSpeciality.alias);
     this.searchParams.speciality = this.selectedSpeciality !== this.nullSpeciality ? this.selectedSpeciality.alias : undefined;
     this.navigate();
   }
 
   onLocationChanged(event) {
-    console.log('ClinicSearchComponent. Location changed to: ', this.selectedLocation);
+    console.log('SearchComponent. Location changed to: ', this.selectedLocation);
     this.searchParams.location.type = this.selectedLocation.type;
     this.searchParams.location.alias = this.selectedLocation.alias;
     this.navigate();
   }
 
   onRangeChanged(event) {
-    console.log('ClinicSearchComponent. Range changed to: ', this.currentRange);
+    console.log('SearchComponent. Range changed to: ', this.currentRange);
     this.searchParams.inRange.value = this.currentRange.id;
     this.navigate();
   }
@@ -161,7 +182,8 @@ export class ClinicSearchComponent implements OnInit {
     if (this.searchParams.city && this.searchParams.city !== '') {
       url += this.searchParams.city + '/';
     }
-    url += 'clinics';
+    let urlPart = this.isClinicComponent ? 'clinics' : 'doctors';
+    url += urlPart;
 
     let queryParams: any = {};
     if (this.searchParams.speciality) {

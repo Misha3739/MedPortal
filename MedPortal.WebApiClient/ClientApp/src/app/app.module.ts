@@ -52,12 +52,20 @@ import { DoctorSlotsService } from './services/slots-service';
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-      { path: '', component: SearchMapComponent, pathMatch: 'full' }, 
-      { path: 'doctors', component: DoctorSearchComponent },
-      { path: 'clinics', component: ClinicSearchComponent },
+      { path: '', component: SearchMapComponent, pathMatch: 'full' },
       { path: ':city', component: SearchMapComponent, },
-      { path: ':city/doctors', component: DoctorSearchComponent },
-      { path: ':city/clinics', component: ClinicSearchComponent },
+      { path: 'doctors', component: ClinicSearchComponent, children: [
+          { path: '', component: DoctorListComponent }
+      ]},
+      { path: ':city/doctors', component: ClinicSearchComponent, children: [
+          { path: '', component: DoctorListComponent }
+      ]},
+      { path: 'clinics', component: ClinicSearchComponent, children: [
+        { path: '', component: ClinicListComponent }
+      ]},
+      { path: ':city/clinics', component: ClinicSearchComponent, children: [
+          { path: '', component: ClinicListComponent }
+      ]},
       { path: 'clinics/:id', component: ClinicDetailsComponent },
       { path: 'doctors/:id', component: DoctorDetailsComponent },
       { path: ':city/clinics/:id', component: ClinicDetailsComponent },

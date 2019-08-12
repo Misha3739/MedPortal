@@ -1,4 +1,4 @@
-<h3>Поиск клиники:</h3>
+<h3>Поиск {{ isClinicComponent ? 'клиники' : 'врача' }}:</h3>
 <div class="row">
   <div class="col">
     <div class="form-control">
@@ -29,28 +29,42 @@
             {{item.name}}
           </mat-option>
         </mat-select>
-        </mat-form-field>
+      </mat-form-field>
     </div>
-    </div>
-    <div class="col">
-      <agm-map [latitude]="center.latitude"
-               [longitude]="center.longitude"
-               [disableDefaultUI]="false"
-               [zoom]="12"
-               [zoomControl]="true">
+  </div>
+  <div *ngIf="isClinicComponent" class="col">
+    <agm-map [latitude]="center.latitude"
+             [longitude]="center.longitude"
+             [disableDefaultUI]="false"
+             [zoom]="12"
+             [zoomControl]="true">
 
-        <agm-marker *ngFor="let clinic of clinics"
-                    [latitude]="clinic.latitude !== 0 ? clinic.latitude : clinic.city.latitude"
-                    [longitude]="clinic.longitude  !== 0 ? clinic.longitude : clinic.city.longitude">
-        </agm-marker>
-      </agm-map>
-    </div>
-    <!--<div class="form-control">
+      <agm-marker *ngFor="let clinic of clinics"
+                  [latitude]="clinic.latitude !== 0 ? clinic.latitude : clinic.city.latitude"
+                  [longitude]="clinic.longitude  !== 0 ? clinic.longitude : clinic.city.longitude">
+      </agm-marker>
+     
+    </agm-map>
+  </div>
+  <div *ngIf="!isClinicComponent" class="col">
+    <agm-map [latitude]="center.latitude"
+             [longitude]="center.longitude"
+             [disableDefaultUI]="false"
+             [zoom]="12"
+             [zoomControl]="true">
+
+      <agm-marker *ngFor="let doctor of doctors"
+                  [latitude]="doctor.latitude !== 0 ? doctor.latitude : doctor.city.latitude"
+                  [longitude]="doctor.longitude  !== 0 ? doctor.longitude : doctor.city.longitude">
+      </agm-marker>
+    </agm-map>
+  </div>
+  <!--<div class="form-control">
     <label for="specialities">По городу:</label>
     <select id="specialities">
       <option *ngFor="let city of cities" value="{{city.alias}}">{{city.name}}</option>
     </select>
   </div>-->
-    <!--<app-clinic-list></app-clinic-list>-->
-  </div>
-<app-clinic-list></app-clinic-list>
+  <!--<app-clinic-list></app-clinic-list>-->
+</div>
+<router-outlet></router-outlet>
