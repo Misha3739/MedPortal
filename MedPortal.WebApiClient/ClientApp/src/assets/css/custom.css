@@ -2,3 +2,22 @@
 /* Your custom styles below */
 /*============================================================================================*/
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+#city{
+    height: 30px;
+    padding-left: 5px;
+    border: 0;
+    border-radius: 3px;
+    box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.35);
+    font-weight: 500;
+    font-size: 16px;
+    font-size: 1rem;
+    color: #333;
+    margin-left: 5px;
+    margin-top: 2px;
+}
+
+ul#top_access li i {
+    font-size: 24px;
+    font-size: 1.525rem;
+    vertical-align: middle;
+}
