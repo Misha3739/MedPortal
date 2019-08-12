@@ -1,4 +1,5 @@
 using AutoMapper;
+using MedPortal.Data.Business.SearchParameters;
 using MedPortal.Data.Repositories;
 using MedPortal.WebApiClient.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -27,9 +28,24 @@ namespace MedPortal.Proxy.Controllers
         }
 
         [HttpGet("api/doctors")]
-        public async Task<IActionResult> GetDoctors(string city, string speciality)
+        public async Task<IActionResult> GetDoctors(string city,
+            string speciality,
+            LocationTypeEnum? locationType = null,
+            string location = null,
+            int? inrange = null,
+            double? latitude = null,
+            double? longitude = null)
         {
-            var doctors = await _doctorsRepository.FilterDoctorsAsync(city, speciality);
+            var locationSearchParameters = new LocationSearchParameters(city)
+            {
+                LocationType = locationType,
+                Location = location,
+                InRange = inrange,
+                Latitude = latitude,
+                Longitude = longitude
+            };
+
+            var doctors = await _doctorsRepository.FilterDoctorsAsync(locationSearchParameters, speciality);
             var result = new List<DoctorModel>();
             foreach (var doctor in doctors) {
                 var doctorModel = _mapper.Map<DoctorModel>(doctor);

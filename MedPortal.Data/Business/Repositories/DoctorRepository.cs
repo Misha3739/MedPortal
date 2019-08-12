@@ -1,4 +1,5 @@
-﻿using MedPortal.Data.DTO;
+﻿using MedPortal.Data.Business.SearchParameters;
+using MedPortal.Data.DTO;
 using MedPortal.Data.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Extensions;
@@ -18,7 +19,7 @@ namespace MedPortal.Data.Repositories
             
         }
 
-        public async Task<List<HDoctor>> FilterDoctorsAsync(string city, string speciality)
+        public async Task<List<HDoctor>> FilterDoctorsAsync(LocationSearchParameters locationSearchParameters, string speciality)
         {
             var query = _dbSet
                .Include(c => c.City)
@@ -28,13 +29,39 @@ namespace MedPortal.Data.Repositories
                .Include(c => c.Specialities)
                .ThenInclude(c => c.Speciality)
                .AsQueryable();
-            if (!string.IsNullOrEmpty(city))
+            if (!string.IsNullOrEmpty(locationSearchParameters.City))
             {
-                query = query.Where(c => c.City.Alias == city);
+                query = query.Where(c => c.City.Alias == locationSearchParameters.City);
             }
             if (!string.IsNullOrEmpty(speciality))
             {
                 query = query.Where(c => c.Specialities.Any(s => s.Speciality.Alias == speciality));
+            }
+            if (locationSearchParameters.LocationType.HasValue && !string.IsNullOrEmpty(locationSearchParameters.Location))
+            {
+                switch (locationSearchParameters.LocationType.Value)
+                {
+                    case LocationTypeEnum.District:
+                        query = query.Where(d => d.Clinics.Select(c => c.Clinic).Any(c => c.HDistrict.Alias == locationSearchParameters.Location));
+                        break;
+                    case LocationTypeEnum.Street:
+                        query = query.Where(d => d.Clinics.Select(c => c.Clinic).Any(c => c.HStreet.Alias == locationSearchParameters.Location));
+                        break;
+                    case LocationTypeEnum.MetroStation:
+                        query = query.Where(d => d.Clinics.Select(c => c.Clinic).Any(c => c.Stations.Any(s => s.Station.Alias == locationSearchParameters.Location)));
+                        break;
+                }
+
+            }
+            if (locationSearchParameters.InRange.HasValue && locationSearchParameters.Latitude.HasValue && locationSearchParameters.Longitude.HasValue)
+            {
+                const double oneKilometer = 0.015060;
+                query = query.Where(d => d.Clinics.Select(c => c.Clinic).Any(
+                    c => c.Latitude >= locationSearchParameters.Latitude.Value - oneKilometer * locationSearchParameters.InRange.Value
+                    && c.Latitude <= locationSearchParameters.Latitude.Value + oneKilometer * locationSearchParameters.InRange.Value
+                    && c.Longitude >= locationSearchParameters.Longitude.Value - oneKilometer * locationSearchParameters.InRange.Value
+                    && c.Longitude <= locationSearchParameters.Longitude.Value + oneKilometer * locationSearchParameters.InRange.Value
+                    ));
             }
             return await query.ToListAsync();
         }

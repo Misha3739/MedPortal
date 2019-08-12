@@ -3,6 +3,8 @@ import { Injectable, Inject } from "@angular/core";
 import { Subject } from "rxjs";
 import { HttpHeaders, HttpClient, HttpParams } from "@angular/common/http";
 import { IDoctorSearchParams } from "../data/doctor-search-params";
+import { ISearchParams } from "../data/search-params";
+import { LocationType } from "../data/location/location-type";
 
 @Injectable()
 export class DoctorsService {
@@ -66,7 +68,7 @@ export class DoctorsService {
     return doctors;
   }
 
-  getDoctors(params: IDoctorSearchParams) {
+  getDoctors(params: ISearchParams) {
     let url = '/api/doctors/';
     let httpParams = new HttpParams();
     if (params.city) {
@@ -75,6 +77,18 @@ export class DoctorsService {
     if (params.speciality) {
       httpParams = httpParams.set('speciality', params.speciality);
     }
+
+    if (params.location.type !== LocationType.none) {
+      httpParams = httpParams.set('locationType', params.location.type.toString());
+      httpParams = httpParams.set('location', params.location.alias);
+    }
+
+    if (params.inRange.value > 0 && params.inRange.coordinates) {
+      httpParams = httpParams.set('inrange', params.inRange.value.toString());
+      httpParams = httpParams.set('latitude', params.inRange.coordinates.latitude.toString());
+      httpParams = httpParams.set('longitude', params.inRange.coordinates.longitude.toString());
+    }
+
     return this.httpClient.get(this.baseUrl + url, { headers: this.headers, params: httpParams })
       .subscribe((result: IDoctor[]) => {
         console.log(url, params, result);
