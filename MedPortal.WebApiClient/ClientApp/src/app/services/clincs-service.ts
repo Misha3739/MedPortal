@@ -1,7 +1,7 @@
 import { Injectable, Inject } from "@angular/core";
 import { IDoctor } from "../data/doctor";
 import { IClinic, IClinicDetails } from "../data/clinic";
-import { Subject } from "rxjs";
+import { Subject, Observable } from "rxjs";
 import { HttpHeaders, HttpClient, HttpParams } from "@angular/common/http";
 import { ISearchParams } from "../data/search-params";
 import { LocationType } from "../data/location/location-type";
@@ -12,6 +12,7 @@ export class ClinicsService {
   static instance: ClinicsService;
 
   dataReceived = new Subject();
+  clinicDetailsReceived = new Subject<IClinicDetails>();
 
   clinics: IClinic[];
 
@@ -108,9 +109,13 @@ export class ClinicsService {
   }
 
 
-  getClinic(alias: string): IClinicDetails {
-    let clinic = this.getAllClinics().find(c => c.alias === alias) as IClinicDetails;
-
-    return clinic;
+  getClinicDetails(alias: string) {
+    let url = '/api/clinic/' + alias;
+    this.httpClient.get(this.baseUrl + url, { headers: this.headers }).subscribe(
+      (res: IClinicDetails) => {
+        console.log('ClinicsService. getClinicDetails() received: ', res);
+        this.clinicDetailsReceived.next(res);
+      }
+    );
   };
 }

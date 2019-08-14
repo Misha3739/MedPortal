@@ -11,25 +11,34 @@ import { ClinicsService } from '../../services/clincs-service';
 })
 export class ClinicDetailsComponent implements OnInit {
   private routeParamsSubscription: Subscription;
+  private clinicDetailsReceived: Subscription;
 
   alias: string;
-  clinic: IClinicDetails;
+  clinic: IClinicDetails = {} as IClinicDetails;
 
   constructor(private clinicsService: ClinicsService,
     private route: ActivatedRoute,
     private router: Router) { }
 
   ngOnInit() {
+    this.clinicDetailsReceived = this.clinicsService.clinicDetailsReceived.subscribe(res => {
+      this.clinic = res;
+    });
+
     this.routeParamsSubscription = this.route.params.subscribe(
       (params: Params) => {
         this.alias = params['id'];
-        this.clinic = this.clinicsService.getClinic(this.alias);
+        this.clinicsService.getClinicDetails(this.alias);
       });
   }
 
   ngOnDestroy() {
     if (this.routeParamsSubscription) {
       this.routeParamsSubscription.unsubscribe();
+    }
+
+    if (this.clinicDetailsReceived) {
+      this.clinicDetailsReceived.unsubscribe();
     }
   }
 

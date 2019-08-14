@@ -51,5 +51,12 @@ namespace MedPortal.Proxy.Controllers
             var result = _mapper.Map<List<ClinicModel>>(clinics);
             return Ok(result);
         }
+
+        [HttpGet("api/clinic/{alias}")]
+        public async Task<IActionResult> GetClinics(string alias) {
+            var clinic = await _clinicsRepository.FindAsync(c => c.RewriteName == alias);
+            var clinicModel = _mapper.Map<ClinicDetailsModel>(clinic);
+            return Ok(clinicModel);
+        }
     }
 }

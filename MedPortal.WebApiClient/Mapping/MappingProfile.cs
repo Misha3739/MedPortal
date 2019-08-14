@@ -20,21 +20,26 @@ namespace MedPortal.Proxy.Mapping
                 .ForMember(c => c.City, c=> c.MapFrom(hc => hc.HCity))
                 .ForMember(c => c.Alias, c => c.MapFrom(hc => hc.RewriteName));
             CreateMap<HClinic, ClinicModel>()
-                .ForMember(c => c.City, c => c.MapFrom(hc => hc.HCity))
-                .ForMember(c => c.Alias, c => c.MapFrom(hc => hc.RewriteName))
+                .IncludeBase<HClinic, ClinicSearchModel>()
                 .ForMember(c => c.Address, c => c.MapFrom(hc => $"{hc.HStreet.Name}, {hc.House}"));
+            CreateMap<HClinic, ClinicDetailsModel>()
+                .IncludeBase<HClinic, ClinicModel>();
+
             CreateMap<HDoctor, DoctorSearchModel>()
                 .ForMember(c => c.City, c => c.MapFrom(hc => hc.City));
             CreateMap<HDoctor, DoctorModel>()
-                .ForMember(c => c.City, c => c.MapFrom(hc => hc.City))
+                .IncludeBase<HDoctor, DoctorSearchModel>()
                 .ForMember(c => c.PhotoUrl, c => c.MapFrom(hc => hc.Img))
                 .ForMember(c => c.Specialities, c => c.Ignore())
                 .ForMember(c => c.Clinics, c => c.Ignore())
                 .ForMember(c => c.Experience, c => c.MapFrom(hc => hc.ExperienceYear));
+
             CreateMap<HSpeciality, ClinicSpecialitySearchModel>()
                 .ForMember(c => c.Alias, c => c.MapFrom(hc => hc.BranchAlias))
                 .ForMember(c => c.Name, c => c.MapFrom(hc => hc.BranchName));
-            CreateMap<HSpeciality, DoctorSpecialitySearchModel>();
+            CreateMap<HSpeciality, DoctorSpecialitySearchModel>()
+                .ForMember(c => c.Alias, c => c.MapFrom(hc => hc.BranchAlias))
+                .ForMember(c => c.Name, c => c.MapFrom(hc => hc.BranchName));
         }
     }
 }
