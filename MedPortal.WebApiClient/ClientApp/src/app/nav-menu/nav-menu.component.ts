@@ -22,8 +22,9 @@ export class NavMenuComponent {
   currentUrl: string = null;
   cityAlias: string;
 
-  routeParamsSubscription: Subscription;
+  private routerParamsSubscription: Subscription;
   private queryParamsSubscription: Subscription;
+  private geoServiceSubscription: Subscription;
 
   queryParameters: any = {};
 
@@ -37,14 +38,14 @@ export class NavMenuComponent {
 
     this.cities.push(this.nullCity);
 
-    this.router.events.subscribe(val => {
+    this.routerParamsSubscription = this.router.events.subscribe(val => {
       if (val instanceof NavigationEnd) {
         this.currentUrl = this.router.url;
         let splitted = this.currentUrl.split("/");
         this.cityAlias = splitted.length > 0 ? splitted[1] : null;
         console.log('NavMenuComponent', this.currentUrl, ' => ', this.cityAlias);
 
-        this.geoService.getPosition().subscribe(c => {
+        this.geoServiceSubscription = this.geoService.getPosition().subscribe(c => {
           console.log('NavMenuComponent. Location : ', c);
           this.geoService.getCity(c.coords.latitude, c.coords.longitude).subscribe(
             cityResult => {
@@ -67,7 +68,7 @@ export class NavMenuComponent {
       }
     });
 
-    this.queryParamsSubscription = this.route.queryParamMap.subscribe(params => {
+    this.queryParamsSubscription = this.queryParamsSubscription = this.route.queryParamMap.subscribe(params => {
       this.queryParameters[UrlQueryParameters.SPECIALITY] = params.get(UrlQueryParameters.SPECIALITY);
       this.queryParameters[UrlQueryParameters.LOCATIONTYPE] = +params.get(UrlQueryParameters.LOCATIONTYPE);
       this.queryParameters[UrlQueryParameters.LOCATION] = params.get(UrlQueryParameters.LOCATION);
@@ -118,11 +119,15 @@ export class NavMenuComponent {
   }
 
   ngOnDestroy() {
-    if (this.routeParamsSubscription) {
-      this.routeParamsSubscription.unsubscribe();
+    if (this.routerParamsSubscription) {
+      this.routerParamsSubscription.unsubscribe();
     }
     if (this.queryParamsSubscription) {
       this.queryParamsSubscription.unsubscribe();
+    }
+
+    if (this.geoServiceSubscription) {
+      this.geoServiceSubscription.unsubscribe();
     }
   }
 }
