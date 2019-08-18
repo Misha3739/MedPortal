@@ -37,6 +37,7 @@
     <None Remove="ClientApp\src\app\data\search-params.ts" />
     <None Remove="ClientApp\src\app\data\slots\doctor-slot.ts" />
     <None Remove="ClientApp\src\app\data\speciality.ts" />
+    <None Remove="ClientApp\src\app\services\cache-service.ts" />
     <None Remove="ClientApp\src\app\services\clincs-service.ts" />
     <None Remove="ClientApp\src\app\services\doctors-service.ts" />
     <None Remove="ClientApp\src\app\services\geolocation-service.ts" />
@@ -58,6 +59,7 @@
     <TypeScriptCompile Include="ClientApp\src\app\data\search-info.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\data\slots\doctor-slot.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\data\speciality.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\services\cache-service.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\services\slots-service.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>

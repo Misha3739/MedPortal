@@ -5,6 +5,8 @@ import { Router, ActivatedRoute, Params, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { GeolocationService } from '../services/geolocation-service';
 import { UrlQueryParameters } from '../data/constants/url-query-parameters';
+import { CacheService } from '../services/cache-service';
+import { ICoordinates } from '../data/location/coordinates';
 
 @Component({
   selector: 'app-nav-menu',
@@ -32,7 +34,8 @@ export class NavMenuComponent {
     private searchInfoService: SearchInfoService,
     private geoService: GeolocationService,
     private route: ActivatedRoute,
-    private router: Router) { }
+    private router: Router,
+    private cacheService: CacheService) { }
 
   ngOnInit() {
 
@@ -45,26 +48,16 @@ export class NavMenuComponent {
         this.cityAlias = splitted.length > 0 ? splitted[1] : null;
         console.log('NavMenuComponent', this.currentUrl, ' => ', this.cityAlias);
 
-        this.geoServiceSubscription = this.geoService.getPosition().subscribe(c => {
-          console.log('NavMenuComponent. Location : ', c);
-          this.geoService.getCity(c.coords.latitude, c.coords.longitude).subscribe(
-            cityResult => {
-              console.log('NavMenuComponent. City : ', cityResult);
-              this.cities = cityResult.cities;
-              this.cities.unshift(this.nullCity);
-              if (this.cityAlias) {
-                this.city = this.cities.find(c => c.alias === this.cityAlias);
-              } else if (!this.cityAlias && cityResult.current) {
-                this.city = this.cities.find(c => c.alias === cityResult.current.alias);
-                this.router.navigate([this.city.alias]);
-              } 
-            },
-            error => {
-              console.log('NavMenuComponent. City error: ', error);
-            }
-          );
-        });
-
+        let cahchedCoordinates: ICoordinates = this.cacheService.coordinates;
+        if (cahchedCoordinates) {
+          this.getCities(cahchedCoordinates);
+        } else {
+          this.geoServiceSubscription = this.geoService.getPosition().subscribe(c => {
+            console.log('NavMenuComponent. Location : ', c);
+            this.cacheService.coordinates = c.coords;
+            this.getCities(c.coords);
+          });
+        }
       }
     });
 
@@ -75,7 +68,27 @@ export class NavMenuComponent {
       this.queryParameters[UrlQueryParameters.INRANGE] = +params.get(UrlQueryParameters.INRANGE);
     });
 
-   
+
+  }
+
+  getCities(coords: ICoordinates) {
+    this.geoService.getCity(coords.latitude, coords.longitude).subscribe(
+      cityResult => {
+        console.log('NavMenuComponent. City : ', cityResult);
+        this.cities = cityResult.cities;
+        this.cities.unshift(this.nullCity);
+        if (this.cityAlias) {
+          this.city = this.cities.find(c => c.alias === this.cityAlias);
+        } else if (!this.cityAlias && cityResult.current) {
+          this.city = this.cities.find(c => c.alias === cityResult.current.alias);
+          this.router.navigate([this.city.alias]);
+        }
+      },
+      error => {
+        console.log('NavMenuComponent. City error: ', error);
+      }
+    );
+
   }
 
   onCityChanged() {

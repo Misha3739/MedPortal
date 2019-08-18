@@ -31,6 +31,7 @@ import { MatTableModule } from '@angular/material/table';
 import { AgmCoreModule } from '@agm/core';
 import { DoctorSlotsService } from './services/slots-service';
 import { ClinicDoctorSearchComponent } from './search/clinic-doctor-search/clinic-doctor-search.component';
+import { CacheService } from './services/cache-service';
 
 @NgModule({
   declarations: [
@@ -89,6 +90,7 @@ import { ClinicDoctorSearchComponent } from './search/clinic-doctor-search/clini
     SearchInfoService,
     GeolocationService,
     DoctorSlotsService,
+    CacheService,
     { provide: 'BASE_URL', useValue: 'http://localhost:5008' },
     { provide: 'DOCDOC_BASE_URL', useValue: 'https://api.docdoc.ru/public/rest/1.0.12' },
     { provide: APP_BASE_HREF, useValue: '/' }
