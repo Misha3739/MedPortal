@@ -33,6 +33,8 @@ namespace MedPortal.Proxy.Mapping
                 .ForMember(c => c.Specialities, c => c.Ignore())
                 .ForMember(c => c.Clinics, c => c.Ignore())
                 .ForMember(c => c.Experience, c => c.MapFrom(hc => hc.ExperienceYear));
+            CreateMap<HDoctor, DoctorDetailsModel>()
+             .IncludeBase<HDoctor, DoctorModel>();
 
             CreateMap<HSpeciality, ClinicSpecialitySearchModel>()
                 .ForMember(c => c.Alias, c => c.MapFrom(hc => hc.BranchAlias))

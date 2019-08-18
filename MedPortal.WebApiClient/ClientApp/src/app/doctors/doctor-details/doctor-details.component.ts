@@ -12,9 +12,10 @@ import { DoctorsService } from '../../services/doctors-service';
 export class DoctorDetailsComponent implements OnInit {
 
   alias: string;
-  doctor: IDoctorDetails;
+  doctor: IDoctorDetails = {} as IDoctorDetails;
 
   private routeParamsSubscription: Subscription;
+  private doctorDetailsSubscription: Subscription;
 
   constructor(private doctorService: DoctorsService,
     private route: ActivatedRoute,
@@ -24,13 +25,20 @@ export class DoctorDetailsComponent implements OnInit {
     this.routeParamsSubscription = this.route.params.subscribe(
       (params: Params) => {
         this.alias = params['id'];
-        this.doctor = this.doctorService.getDoctor(this.alias);
+        this.doctorService.getDoctorDetails(this.alias);
       });
+
+    this.doctorService.doctorDetailsReceived.subscribe(res => {
+      this.doctor = res;
+    });
   }
 
   ngOnDestroy() {
     if (this.routeParamsSubscription) {
       this.routeParamsSubscription.unsubscribe();
+    }
+    if (this.doctorDetailsSubscription) {
+      this.doctorDetailsSubscription.unsubscribe();
     }
   }
 

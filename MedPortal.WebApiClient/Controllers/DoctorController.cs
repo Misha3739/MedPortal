@@ -27,6 +27,14 @@ namespace MedPortal.Proxy.Controllers
             return Ok(result);
         }
 
+        [HttpGet("api/doctor/{alias}")]
+        public async Task<IActionResult> GetDoctors(string alias)
+        {
+            var doctor = await _doctorsRepository.FindAsync(d => d.Alias == alias);
+            var result = _mapper.Map<DoctorDetailsModel>(doctor);
+            return Ok(result);
+        }
+
         [HttpGet("api/doctors")]
         public async Task<IActionResult> GetDoctors(string city,
             string speciality,

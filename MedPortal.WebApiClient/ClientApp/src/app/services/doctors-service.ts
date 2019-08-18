@@ -12,6 +12,8 @@ export class DoctorsService {
 
   dataReceived = new Subject();
 
+  doctorDetailsReceived = new Subject();
+
   doctors: IDoctor[];
 
   private headers = new HttpHeaders({
@@ -102,9 +104,12 @@ export class DoctorsService {
     return doctors.filter(d => d.city && d.city.alias === city);
   }
 
-  getDoctor(alias: string): IDoctorDetails {
-    let doctor = this.getAllDoctors().find(d => d.alias === alias) as IDoctorDetails;
-
-    return doctor;
-  };
+  getDoctorDetails(alias: string): IDoctorDetails {
+    let url = '/api/doctor/' + alias;
+    this.httpClient.get(this.baseUrl + url, { headers: this.headers }).subscribe(
+      (res: IDoctorDetails) => {
+        console.log('DoctorsService. getDoctorDetails() received: ', res);
+        this.doctorDetailsReceived.next(res);
+      });
+  }
 }
