@@ -35,7 +35,10 @@
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.js",
-              "node_modules/select2/dist/js/select2.min.js"
+              "node_modules/select2/dist/js/select2.min.js",
+              "src/assets/js/common_scripts.min.js",
+              "src/assets/js/functions.js",
+              "src/assets/js/bootstrap-datepicker.js" //На страницах с записью
             ]
           },
           "configurations": {
