@@ -12,7 +12,7 @@ export class DoctorsService {
 
   dataReceived = new Subject();
 
-  doctorDetailsReceived = new Subject();
+  doctorDetailsReceived = new Subject<IDoctorDetails>();
 
   doctors: IDoctor[];
 
@@ -104,7 +104,7 @@ export class DoctorsService {
     return doctors.filter(d => d.city && d.city.alias === city);
   }
 
-  getDoctorDetails(alias: string): IDoctorDetails {
+  getDoctorDetails(alias: string) {
     let url = '/api/doctor/' + alias;
     this.httpClient.get(this.baseUrl + url, { headers: this.headers }).subscribe(
       (res: IDoctorDetails) => {

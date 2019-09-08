@@ -131,6 +131,18 @@ export class NavMenuComponent {
     this.isExpanded = !this.isExpanded;
   }
 
+  onDoctorsNavigate() {
+    if (this.city && this.city.alias && this.city.alias !== 'noCity') {
+      this.router.navigate([this.city.alias + "/doctors"]);
+    }
+  }
+
+  onClinicsNavigate() {
+    if (this.city && this.city.alias && this.city.alias !== 'noCity') {
+      this.router.navigate([this.city.alias + "/clinics"]);
+    }
+  }
+
   ngOnDestroy() {
     if (this.routerParamsSubscription) {
       this.routerParamsSubscription.unsubscribe();
