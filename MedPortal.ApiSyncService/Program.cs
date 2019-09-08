@@ -31,9 +31,11 @@ namespace MedPortal.ApiSyncService
 			
 
 			var engine = DIProvider.ServiceProvider.GetService<SyncEngine>();
+            var locationsGuard = DIProvider.ServiceProvider.GetService<GuardEngine>();
 
-			try {
-				engine.SyncAll().GetAwaiter().GetResult();
+            try {
+                //engine.SyncAll().GetAwaiter().GetResult();
+                locationsGuard.FixClinicLocationsAsync().GetAwaiter().GetResult();
 			} catch (Exception e) {
 				Console.WriteLine(e);
 			}
@@ -86,7 +88,11 @@ namespace MedPortal.ApiSyncService
 
 			services.AddTransient<SyncEngine>();
 
-			services.AddLogging(configure => configure.AddConsole());
+            services.AddTransient<IClinicRepository, ClinicRepository>();
+
+            services.AddTransient<GuardEngine>();
+
+            services.AddLogging(configure => configure.AddConsole());
 
 			services.Configure<RequestLocalizationOptions>(options =>
 				new RequestLocalizationOptions {

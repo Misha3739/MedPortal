@@ -64,7 +64,7 @@ namespace MedPortal.Data.Repositories
 
         public override Task<List<HClinic>> GetAsync(Expression<Func<HClinic, bool>> predicate = null)
         {
-            var query = _dbSet.AsNoTracking().Include(c => c.HCity);
+            var query = _dbSet.AsNoTracking().Include(c => c.HCity).Include(c => c.HStreet);
             return predicate != null ? query.Where(predicate).ToListAsync() : query.ToListAsync();
         }
     }

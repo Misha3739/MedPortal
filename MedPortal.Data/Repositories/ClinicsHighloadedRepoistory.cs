@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MedPortal.Data.DTO;
 using MedPortal.Data.Logging;
 using MedPortal.Data.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace MedPortal.Data.Repositories {
 	public class ClinicsHighloadedRepoistory : HighloadedRepository<HClinic> {
@@ -63,5 +65,10 @@ namespace MedPortal.Data.Repositories {
                 }
             }
         }
-	}
+
+        public override Task<List<HClinic>> GetAsync(Expression<Func<HClinic, bool>> predicate = null) {
+            var query = _dbSet.AsNoTracking().Include(c => c.HCity).Include(c => c.HStreet);
+            return predicate != null ? query.Where(predicate).ToListAsync() : query.ToListAsync();
+        }
+    }
 }
