@@ -34,6 +34,9 @@ export class ClinicDoctorSearchComponent implements OnInit {
 
   private routeParamsSubscription: Subscription;
   private queryParamsSubscription: Subscription;
+  private searchInfoServiceSubscription: Subscription;
+  private geoServiceSubscription: Subscription;
+  private dataServiceSubscription: Subscription;
 
   private searchParams: ISearchParams = {
     city: '', speciality: 'noSpeciality',
@@ -89,16 +92,16 @@ export class ClinicDoctorSearchComponent implements OnInit {
     });
 
     if (this.isClinicComponent) {
-      this.clinicService.dataReceived.subscribe(event => {
+      this.dataServiceSubscription = this.clinicService.dataReceived.subscribe(event => {
         this.clinics = this.clinicService.clinics;
       });
     } else {
-      this.doctorsService.dataReceived.subscribe(event => {
+      this.dataServiceSubscription = this.doctorsService.dataReceived.subscribe(event => {
         this.doctors = this.doctorsService.doctors;
       });
     }
 
-    this.searchInfoService.dataReceived.subscribe(event => {
+    this.searchInfoServiceSubscription = this.searchInfoService.dataReceived.subscribe(event => {
       switch (event) {
         case 'clinicSpecialities':
           this.specialities = this.searchInfoService.clinicSpecialities;
@@ -118,7 +121,7 @@ export class ClinicDoctorSearchComponent implements OnInit {
       }
     });
 
-    this.geoService.currentPositionChanged.subscribe(pos => {
+    this.geoServiceSubscription = this.geoService.currentPositionChanged.subscribe(pos => {
       this.initPosition();
     });
 
@@ -222,6 +225,14 @@ export class ClinicDoctorSearchComponent implements OnInit {
     if (this.queryParamsSubscription) {
       this.queryParamsSubscription.unsubscribe();
     }
+    if (this.searchInfoServiceSubscription) {
+      this.searchInfoServiceSubscription.unsubscribe();
+    }
+    if (this.geoServiceSubscription) {
+      this.geoServiceSubscription.unsubscribe();
+    }
+    if (this.dataServiceSubscription) {
+      this.dataServiceSubscription.unsubscribe();
+    }
   }
-
 }
