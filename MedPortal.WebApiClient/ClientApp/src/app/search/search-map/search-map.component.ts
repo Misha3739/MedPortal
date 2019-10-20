@@ -27,7 +27,6 @@ export class SearchMapComponent implements OnInit {
   navigateToResource: SearchInfoType;
   navigateToAlias: string;
 
-  clinicsSearchSelected = true;
   doctorsSearchSelected = true;
 
   currentUrl: string;
@@ -162,18 +161,12 @@ export class SearchMapComponent implements OnInit {
         this.router.navigate([this.currentUrl + '/clinics'], { queryParams: queryParams, queryParamsHandling: null });
       } else if (this.navigateToResource === SearchInfoType.doctorSpeciality) {
         this.router.navigate([this.currentUrl + '/doctors'], { queryParams: queryParams, queryParamsHandling: null });
-      } else if (this.clinicsSearchSelected) {
+      } else if (!this.doctorsSearchSelected) {
         this.router.navigate([this.currentUrl + '/clinics']);
       } else if (this.doctorsSearchSelected) {
         this.router.navigate([this.currentUrl + '/doctors']);
       }
     }
-  }
-
-  onDoctorCheckChanged() {
-  }
-
-  onClinicCheckChanged() {
   }
 
   makeOptionUniqueValue(category: ISearchCategory, item: ISearchItem) {

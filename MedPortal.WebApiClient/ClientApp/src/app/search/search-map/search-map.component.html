@@ -22,20 +22,20 @@
             </mat-autocomplete>
             <input type="submit" class="btn_search" value="Поиск" (click)="onRedirect()">
           </div>
-          <ul>
-            <li>
+          <!--<ul>
+            <<li>
               <input type="radio" id="all" name="radio_search" value="all" checked>
               <label for="all">Все</label>
             </li>
             <li>
-              <input type="radio" id="doctor" name="radio_search" value="doctor" [(ngModel)]="doctorsSearchSelected" (change)="onDoctorCheckChanged()" [disabled]="!clinicsSearchSelected">
-              <label for="doctor">Врачи</label>
+              <input type="radio" name="doctorRadio" value="true" [(ngModel)]="doctorsSearchSelected">
+              <label for="doctorRadio">Врачи</label>
             </li>
             <li>
-              <input type="radio" id="clinic" name="radio_search" value="clinic" [(ngModel)]="clinicsSearchSelected" (change)="onClinicCheckChanged()" [disabled]="!doctorsSearchSelected">
-              <label for="clinic">Клиники</label>
+              <input type="radio" name="clinicRadio" value="false"  [(ngModel)]="doctorsSearchSelected">
+              <label for="clinicRadio">Клиники</label>
             </li>
-          </ul>
+          </ul>-->
         </div>
     </div>
   </div>
